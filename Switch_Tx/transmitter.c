@@ -8,8 +8,23 @@ void Transmit_data(char);
 void main(void)
 {
 UART_Init();
+
+do{
+while(RI==0);
+}while(SBUF!=0x58);
+
+data=SBUF;
+RI=0;
+delay();
+Transmit_data('Y');
+delay();
+delay();
+delay();
+delay();
     while(1)
     {
+	
+Transmit_data('l');
 Transmit_data('X');
          P2 = 0xAA; // Turn ON all LED's connected to Port1
          delay();

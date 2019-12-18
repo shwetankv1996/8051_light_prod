@@ -12,7 +12,6 @@ C:   00000000  l_BSEG
 C:   00000000  l_BSEG_BYTES                    
 C:   00000000  l_CABS                          
 C:   00000000  l_CONST                         
-C:   00000000  l_GSINIT                        
 C:   00000000  l_GSINIT1                       
 C:   00000000  l_GSINIT5                       
 C:   00000000  l_IABS                          
@@ -46,14 +45,15 @@ C:   00000001  s_XISEG
 C:   00000001  s_XSEG                          
 C:   00000003  l_GSFINAL                       
 C:   00000003  l_GSINIT0                       
+C:   00000005  l_GSINIT                        
 C:   00000006  l_HOME                          
 C:   00000006  s_GSINIT0                       
 C:   00000008  l_REG_BANK_0                    
 C:   00000008  s_REG_BANK_1                    
-C:   00000008  s_SSEG                          
 C:   00000009  s_GSINIT1                       
 C:   00000009  s_GSINIT2                       
 C:   0000000A  l_GSINIT2                       
+C:   0000000A  s_SSEG                          
 C:   00000010  s_REG_BANK_2                    
 C:   00000013  s_GSINIT3                       
 C:   00000018  s_BIT_BANK                      
@@ -73,16 +73,16 @@ C:   00000020  s__CODE
 C:   00000022  l_GSINIT3                       
 C:   0000002A  l_GSINIT4                       
 C:   00000035  s_GSINIT4                       
-C:   0000005F  s_GSFINAL                       
 C:   0000005F  s_GSINIT                        
 C:   0000005F  s_GSINIT5                       
-C:   00000062  s_CSEG                          
-C:   00000079  l_CSEG                          
+C:   00000064  s_GSFINAL                       
+C:   00000067  s_CSEG                          
 C:   00000080  l_DSEG                          
-C:   000000DB  s_CONST                         
-C:   000000DB  s_XINIT                         
-C:   000000F8  l_SSEG                          
+C:   000000F6  l_SSEG                          
 C:   00000100  l_IRAM                          
+C:   0000017A  l_CSEG                          
+C:   000001E1  s_CONST                         
+C:   000001E1  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -251,16 +251,18 @@ DSEG                                00000000    00000080 =         128. bytes (R
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
+     00000008  _state                             transmitter
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                00000008    000000F8 =         248. bytes (REL,OVR)
+SSEG                                0000000A    000000F6 =         246. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000008  __start__stack                     transmitter
+     0000000A  __start__stack                     transmitter
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
@@ -321,7 +323,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             0000005F    00000003 =           3. bytes (REL,CON,CODE)
+GSINIT                              0000005F    00000005 =           5. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -330,17 +332,28 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000062    00000079 =         121. bytes (REL,CON,CODE)
+GSFINAL                             00000064    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000062  _main                              transmitter
-C:   00000079  _delay_s                           transmitter
-C:   00000099  _delay                             transmitter
-C:   000000C2  _UART_Init                         transmitter
-C:   000000CE  _Transmit_data                     transmitter
-C:   000000D7  __sdcc_external_startup            _startup
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+CSEG                                00000067    0000017A =         378. bytes (REL,CON,CODE)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+C:   00000067  _main                              transmitter
+C:   00000133  _delay                             transmitter
+C:   0000015C  _UART_Init                         transmitter
+C:   00000168  _Transmit_data                     transmitter
+C:   00000171  _startup                           transmitter
+C:   0000018F  _touch                             transmitter
+C:   000001DD  __sdcc_external_startup            _startup
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
 
 Files Linked                              [ module(s) ]
 
@@ -362,7 +375,7 @@ Libraries Linked                          [ object file ]
 /usr/local/bin/../share/sdcc/lib/small/libsdcc.lib
                                           [ _startup.rel ]
 
-ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
+ASxxxx Linker V03.00 + NoICE + sdld,  page 18.
 
 User Base Address Definitions
 

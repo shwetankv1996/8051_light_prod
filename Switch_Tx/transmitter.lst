@@ -128,556 +128,637 @@
                                     128 	.globl _DPL
                                     129 	.globl _SP
                                     130 	.globl _P0
-                                    131 	.globl _state
-                                    132 	.globl _delay
-                                    133 	.globl _UART_Init
-                                    134 	.globl _Transmit_data
-                                    135 	.globl _startup
-                                    136 	.globl _touch
-                                    137 ;--------------------------------------------------------
-                                    138 ; special function registers
-                                    139 ;--------------------------------------------------------
-                                    140 	.area RSEG    (ABS,DATA)
-      000000                        141 	.org 0x0000
-                           000080   142 _P0	=	0x0080
-                           000081   143 _SP	=	0x0081
-                           000082   144 _DPL	=	0x0082
-                           000083   145 _DPH	=	0x0083
-                           000087   146 _PCON	=	0x0087
-                           000088   147 _TCON	=	0x0088
-                           000089   148 _TMOD	=	0x0089
-                           00008A   149 _TL0	=	0x008a
-                           00008B   150 _TL1	=	0x008b
-                           00008C   151 _TH0	=	0x008c
-                           00008D   152 _TH1	=	0x008d
-                           000090   153 _P1	=	0x0090
-                           000098   154 _SCON	=	0x0098
-                           000099   155 _SBUF	=	0x0099
-                           0000A0   156 _P2	=	0x00a0
-                           0000A8   157 _IE	=	0x00a8
-                           0000B0   158 _P3	=	0x00b0
-                           0000B8   159 _IP	=	0x00b8
-                           0000D0   160 _PSW	=	0x00d0
-                           0000E0   161 _ACC	=	0x00e0
-                           0000F0   162 _B	=	0x00f0
-                           0000C8   163 _T2CON	=	0x00c8
-                           0000CA   164 _RCAP2L	=	0x00ca
-                           0000CB   165 _RCAP2H	=	0x00cb
-                           0000CC   166 _TL2	=	0x00cc
-                           0000CD   167 _TH2	=	0x00cd
-                                    168 ;--------------------------------------------------------
-                                    169 ; special function bits
-                                    170 ;--------------------------------------------------------
-                                    171 	.area RSEG    (ABS,DATA)
-      000000                        172 	.org 0x0000
-                           000080   173 _P0_0	=	0x0080
-                           000081   174 _P0_1	=	0x0081
-                           000082   175 _P0_2	=	0x0082
-                           000083   176 _P0_3	=	0x0083
-                           000084   177 _P0_4	=	0x0084
-                           000085   178 _P0_5	=	0x0085
-                           000086   179 _P0_6	=	0x0086
-                           000087   180 _P0_7	=	0x0087
-                           000088   181 _IT0	=	0x0088
-                           000089   182 _IE0	=	0x0089
-                           00008A   183 _IT1	=	0x008a
-                           00008B   184 _IE1	=	0x008b
-                           00008C   185 _TR0	=	0x008c
-                           00008D   186 _TF0	=	0x008d
-                           00008E   187 _TR1	=	0x008e
-                           00008F   188 _TF1	=	0x008f
-                           000090   189 _P1_0	=	0x0090
-                           000091   190 _P1_1	=	0x0091
-                           000092   191 _P1_2	=	0x0092
-                           000093   192 _P1_3	=	0x0093
-                           000094   193 _P1_4	=	0x0094
-                           000095   194 _P1_5	=	0x0095
-                           000096   195 _P1_6	=	0x0096
-                           000097   196 _P1_7	=	0x0097
-                           000098   197 _RI	=	0x0098
-                           000099   198 _TI	=	0x0099
-                           00009A   199 _RB8	=	0x009a
-                           00009B   200 _TB8	=	0x009b
-                           00009C   201 _REN	=	0x009c
-                           00009D   202 _SM2	=	0x009d
-                           00009E   203 _SM1	=	0x009e
-                           00009F   204 _SM0	=	0x009f
-                           0000A0   205 _P2_0	=	0x00a0
-                           0000A1   206 _P2_1	=	0x00a1
-                           0000A2   207 _P2_2	=	0x00a2
-                           0000A3   208 _P2_3	=	0x00a3
-                           0000A4   209 _P2_4	=	0x00a4
-                           0000A5   210 _P2_5	=	0x00a5
-                           0000A6   211 _P2_6	=	0x00a6
-                           0000A7   212 _P2_7	=	0x00a7
-                           0000A8   213 _EX0	=	0x00a8
-                           0000A9   214 _ET0	=	0x00a9
-                           0000AA   215 _EX1	=	0x00aa
-                           0000AB   216 _ET1	=	0x00ab
-                           0000AC   217 _ES	=	0x00ac
-                           0000AF   218 _EA	=	0x00af
-                           0000B0   219 _P3_0	=	0x00b0
-                           0000B1   220 _P3_1	=	0x00b1
-                           0000B2   221 _P3_2	=	0x00b2
-                           0000B3   222 _P3_3	=	0x00b3
-                           0000B4   223 _P3_4	=	0x00b4
-                           0000B5   224 _P3_5	=	0x00b5
-                           0000B6   225 _P3_6	=	0x00b6
-                           0000B7   226 _P3_7	=	0x00b7
-                           0000B0   227 _RXD	=	0x00b0
-                           0000B1   228 _TXD	=	0x00b1
-                           0000B2   229 _INT0	=	0x00b2
-                           0000B3   230 _INT1	=	0x00b3
-                           0000B4   231 _T0	=	0x00b4
-                           0000B5   232 _T1	=	0x00b5
-                           0000B6   233 _WR	=	0x00b6
-                           0000B7   234 _RD	=	0x00b7
-                           0000B8   235 _PX0	=	0x00b8
-                           0000B9   236 _PT0	=	0x00b9
-                           0000BA   237 _PX1	=	0x00ba
-                           0000BB   238 _PT1	=	0x00bb
-                           0000BC   239 _PS	=	0x00bc
-                           0000D0   240 _P	=	0x00d0
-                           0000D1   241 _F1	=	0x00d1
-                           0000D2   242 _OV	=	0x00d2
-                           0000D3   243 _RS0	=	0x00d3
-                           0000D4   244 _RS1	=	0x00d4
-                           0000D5   245 _F0	=	0x00d5
-                           0000D6   246 _AC	=	0x00d6
-                           0000D7   247 _CY	=	0x00d7
-                           0000AD   248 _ET2	=	0x00ad
-                           0000BD   249 _PT2	=	0x00bd
-                           0000C8   250 _T2CON_0	=	0x00c8
-                           0000C9   251 _T2CON_1	=	0x00c9
-                           0000CA   252 _T2CON_2	=	0x00ca
-                           0000CB   253 _T2CON_3	=	0x00cb
-                           0000CC   254 _T2CON_4	=	0x00cc
-                           0000CD   255 _T2CON_5	=	0x00cd
-                           0000CE   256 _T2CON_6	=	0x00ce
-                           0000CF   257 _T2CON_7	=	0x00cf
-                           0000C8   258 _CP_RL2	=	0x00c8
-                           0000C9   259 _C_T2	=	0x00c9
-                           0000CA   260 _TR2	=	0x00ca
-                           0000CB   261 _EXEN2	=	0x00cb
-                           0000CC   262 _TCLK	=	0x00cc
-                           0000CD   263 _RCLK	=	0x00cd
-                           0000CE   264 _EXF2	=	0x00ce
-                           0000CF   265 _TF2	=	0x00cf
-                                    266 ;--------------------------------------------------------
-                                    267 ; overlayable register banks
-                                    268 ;--------------------------------------------------------
-                                    269 	.area REG_BANK_0	(REL,OVR,DATA)
-      000000                        270 	.ds 8
+                                    131 	.globl _data_r
+                                    132 	.globl _state
+                                    133 	.globl _delay
+                                    134 	.globl _UART_Init
+                                    135 	.globl _Transmit_data
+                                    136 	.globl _receive_data
+                                    137 	.globl _check_x
+                                    138 	.globl _startup
+                                    139 	.globl _touch
+                                    140 ;--------------------------------------------------------
+                                    141 ; special function registers
+                                    142 ;--------------------------------------------------------
+                                    143 	.area RSEG    (ABS,DATA)
+      000000                        144 	.org 0x0000
+                           000080   145 _P0	=	0x0080
+                           000081   146 _SP	=	0x0081
+                           000082   147 _DPL	=	0x0082
+                           000083   148 _DPH	=	0x0083
+                           000087   149 _PCON	=	0x0087
+                           000088   150 _TCON	=	0x0088
+                           000089   151 _TMOD	=	0x0089
+                           00008A   152 _TL0	=	0x008a
+                           00008B   153 _TL1	=	0x008b
+                           00008C   154 _TH0	=	0x008c
+                           00008D   155 _TH1	=	0x008d
+                           000090   156 _P1	=	0x0090
+                           000098   157 _SCON	=	0x0098
+                           000099   158 _SBUF	=	0x0099
+                           0000A0   159 _P2	=	0x00a0
+                           0000A8   160 _IE	=	0x00a8
+                           0000B0   161 _P3	=	0x00b0
+                           0000B8   162 _IP	=	0x00b8
+                           0000D0   163 _PSW	=	0x00d0
+                           0000E0   164 _ACC	=	0x00e0
+                           0000F0   165 _B	=	0x00f0
+                           0000C8   166 _T2CON	=	0x00c8
+                           0000CA   167 _RCAP2L	=	0x00ca
+                           0000CB   168 _RCAP2H	=	0x00cb
+                           0000CC   169 _TL2	=	0x00cc
+                           0000CD   170 _TH2	=	0x00cd
+                                    171 ;--------------------------------------------------------
+                                    172 ; special function bits
+                                    173 ;--------------------------------------------------------
+                                    174 	.area RSEG    (ABS,DATA)
+      000000                        175 	.org 0x0000
+                           000080   176 _P0_0	=	0x0080
+                           000081   177 _P0_1	=	0x0081
+                           000082   178 _P0_2	=	0x0082
+                           000083   179 _P0_3	=	0x0083
+                           000084   180 _P0_4	=	0x0084
+                           000085   181 _P0_5	=	0x0085
+                           000086   182 _P0_6	=	0x0086
+                           000087   183 _P0_7	=	0x0087
+                           000088   184 _IT0	=	0x0088
+                           000089   185 _IE0	=	0x0089
+                           00008A   186 _IT1	=	0x008a
+                           00008B   187 _IE1	=	0x008b
+                           00008C   188 _TR0	=	0x008c
+                           00008D   189 _TF0	=	0x008d
+                           00008E   190 _TR1	=	0x008e
+                           00008F   191 _TF1	=	0x008f
+                           000090   192 _P1_0	=	0x0090
+                           000091   193 _P1_1	=	0x0091
+                           000092   194 _P1_2	=	0x0092
+                           000093   195 _P1_3	=	0x0093
+                           000094   196 _P1_4	=	0x0094
+                           000095   197 _P1_5	=	0x0095
+                           000096   198 _P1_6	=	0x0096
+                           000097   199 _P1_7	=	0x0097
+                           000098   200 _RI	=	0x0098
+                           000099   201 _TI	=	0x0099
+                           00009A   202 _RB8	=	0x009a
+                           00009B   203 _TB8	=	0x009b
+                           00009C   204 _REN	=	0x009c
+                           00009D   205 _SM2	=	0x009d
+                           00009E   206 _SM1	=	0x009e
+                           00009F   207 _SM0	=	0x009f
+                           0000A0   208 _P2_0	=	0x00a0
+                           0000A1   209 _P2_1	=	0x00a1
+                           0000A2   210 _P2_2	=	0x00a2
+                           0000A3   211 _P2_3	=	0x00a3
+                           0000A4   212 _P2_4	=	0x00a4
+                           0000A5   213 _P2_5	=	0x00a5
+                           0000A6   214 _P2_6	=	0x00a6
+                           0000A7   215 _P2_7	=	0x00a7
+                           0000A8   216 _EX0	=	0x00a8
+                           0000A9   217 _ET0	=	0x00a9
+                           0000AA   218 _EX1	=	0x00aa
+                           0000AB   219 _ET1	=	0x00ab
+                           0000AC   220 _ES	=	0x00ac
+                           0000AF   221 _EA	=	0x00af
+                           0000B0   222 _P3_0	=	0x00b0
+                           0000B1   223 _P3_1	=	0x00b1
+                           0000B2   224 _P3_2	=	0x00b2
+                           0000B3   225 _P3_3	=	0x00b3
+                           0000B4   226 _P3_4	=	0x00b4
+                           0000B5   227 _P3_5	=	0x00b5
+                           0000B6   228 _P3_6	=	0x00b6
+                           0000B7   229 _P3_7	=	0x00b7
+                           0000B0   230 _RXD	=	0x00b0
+                           0000B1   231 _TXD	=	0x00b1
+                           0000B2   232 _INT0	=	0x00b2
+                           0000B3   233 _INT1	=	0x00b3
+                           0000B4   234 _T0	=	0x00b4
+                           0000B5   235 _T1	=	0x00b5
+                           0000B6   236 _WR	=	0x00b6
+                           0000B7   237 _RD	=	0x00b7
+                           0000B8   238 _PX0	=	0x00b8
+                           0000B9   239 _PT0	=	0x00b9
+                           0000BA   240 _PX1	=	0x00ba
+                           0000BB   241 _PT1	=	0x00bb
+                           0000BC   242 _PS	=	0x00bc
+                           0000D0   243 _P	=	0x00d0
+                           0000D1   244 _F1	=	0x00d1
+                           0000D2   245 _OV	=	0x00d2
+                           0000D3   246 _RS0	=	0x00d3
+                           0000D4   247 _RS1	=	0x00d4
+                           0000D5   248 _F0	=	0x00d5
+                           0000D6   249 _AC	=	0x00d6
+                           0000D7   250 _CY	=	0x00d7
+                           0000AD   251 _ET2	=	0x00ad
+                           0000BD   252 _PT2	=	0x00bd
+                           0000C8   253 _T2CON_0	=	0x00c8
+                           0000C9   254 _T2CON_1	=	0x00c9
+                           0000CA   255 _T2CON_2	=	0x00ca
+                           0000CB   256 _T2CON_3	=	0x00cb
+                           0000CC   257 _T2CON_4	=	0x00cc
+                           0000CD   258 _T2CON_5	=	0x00cd
+                           0000CE   259 _T2CON_6	=	0x00ce
+                           0000CF   260 _T2CON_7	=	0x00cf
+                           0000C8   261 _CP_RL2	=	0x00c8
+                           0000C9   262 _C_T2	=	0x00c9
+                           0000CA   263 _TR2	=	0x00ca
+                           0000CB   264 _EXEN2	=	0x00cb
+                           0000CC   265 _TCLK	=	0x00cc
+                           0000CD   266 _RCLK	=	0x00cd
+                           0000CE   267 _EXF2	=	0x00ce
+                           0000CF   268 _TF2	=	0x00cf
+                                    269 ;--------------------------------------------------------
+                                    270 ; overlayable register banks
                                     271 ;--------------------------------------------------------
-                                    272 ; internal ram data
-                                    273 ;--------------------------------------------------------
-                                    274 	.area DSEG    (DATA)
-      000000                        275 _state::
-      000000                        276 	.ds 2
-                                    277 ;--------------------------------------------------------
-                                    278 ; overlayable items in internal ram 
-                                    279 ;--------------------------------------------------------
-                                    280 	.area	OSEG    (OVR,DATA)
-                                    281 	.area	OSEG    (OVR,DATA)
+                                    272 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        273 	.ds 8
+                                    274 ;--------------------------------------------------------
+                                    275 ; internal ram data
+                                    276 ;--------------------------------------------------------
+                                    277 	.area DSEG    (DATA)
+      000000                        278 _state::
+      000000                        279 	.ds 2
+      000002                        280 _data_r::
+      000002                        281 	.ds 1
                                     282 ;--------------------------------------------------------
-                                    283 ; Stack segment in internal ram 
+                                    283 ; overlayable items in internal ram 
                                     284 ;--------------------------------------------------------
-                                    285 	.area	SSEG
-      000000                        286 __start__stack:
-      000000                        287 	.ds	1
-                                    288 
+                                    285 	.area	OSEG    (OVR,DATA)
+                                    286 	.area	OSEG    (OVR,DATA)
+                                    287 ;--------------------------------------------------------
+                                    288 ; Stack segment in internal ram 
                                     289 ;--------------------------------------------------------
-                                    290 ; indirectly addressable internal ram data
-                                    291 ;--------------------------------------------------------
-                                    292 	.area ISEG    (DATA)
-                                    293 ;--------------------------------------------------------
-                                    294 ; absolute internal ram data
-                                    295 ;--------------------------------------------------------
-                                    296 	.area IABS    (ABS,DATA)
-                                    297 	.area IABS    (ABS,DATA)
+                                    290 	.area	SSEG
+      000000                        291 __start__stack:
+      000000                        292 	.ds	1
+                                    293 
+                                    294 ;--------------------------------------------------------
+                                    295 ; indirectly addressable internal ram data
+                                    296 ;--------------------------------------------------------
+                                    297 	.area ISEG    (DATA)
                                     298 ;--------------------------------------------------------
-                                    299 ; bit data
+                                    299 ; absolute internal ram data
                                     300 ;--------------------------------------------------------
-                                    301 	.area BSEG    (BIT)
-                                    302 ;--------------------------------------------------------
-                                    303 ; paged external ram data
-                                    304 ;--------------------------------------------------------
-                                    305 	.area PSEG    (PAG,XDATA)
-                                    306 ;--------------------------------------------------------
-                                    307 ; external ram data
-                                    308 ;--------------------------------------------------------
-                                    309 	.area XSEG    (XDATA)
-                                    310 ;--------------------------------------------------------
-                                    311 ; absolute external ram data
-                                    312 ;--------------------------------------------------------
-                                    313 	.area XABS    (ABS,XDATA)
-                                    314 ;--------------------------------------------------------
-                                    315 ; external initialized ram data
-                                    316 ;--------------------------------------------------------
-                                    317 	.area XISEG   (XDATA)
-                                    318 	.area HOME    (CODE)
-                                    319 	.area GSINIT0 (CODE)
-                                    320 	.area GSINIT1 (CODE)
-                                    321 	.area GSINIT2 (CODE)
-                                    322 	.area GSINIT3 (CODE)
-                                    323 	.area GSINIT4 (CODE)
-                                    324 	.area GSINIT5 (CODE)
-                                    325 	.area GSINIT  (CODE)
-                                    326 	.area GSFINAL (CODE)
-                                    327 	.area CSEG    (CODE)
-                                    328 ;--------------------------------------------------------
-                                    329 ; interrupt vector 
-                                    330 ;--------------------------------------------------------
-                                    331 	.area HOME    (CODE)
-      000000                        332 __interrupt_vect:
-      000000 02r00r00         [24]  333 	ljmp	__sdcc_gsinit_startup
-                                    334 ;--------------------------------------------------------
-                                    335 ; global & static initialisations
-                                    336 ;--------------------------------------------------------
-                                    337 	.area HOME    (CODE)
-                                    338 	.area GSINIT  (CODE)
-                                    339 	.area GSFINAL (CODE)
-                                    340 	.area GSINIT  (CODE)
-                                    341 	.globl __sdcc_gsinit_startup
-                                    342 	.globl __sdcc_program_startup
-                                    343 	.globl __start__stack
-                                    344 	.globl __mcs51_genXINIT
-                                    345 	.globl __mcs51_genXRAMCLEAR
-                                    346 	.globl __mcs51_genRAMCLEAR
-                                    347 ;	transmitter.c:3: int state = 0;
-      000000 E4               [12]  348 	clr	a
-      000001 F5*00            [12]  349 	mov	_state,a
-      000003 F5*01            [12]  350 	mov	(_state + 1),a
-                                    351 	.area GSFINAL (CODE)
-      000000 02r00r03         [24]  352 	ljmp	__sdcc_program_startup
-                                    353 ;--------------------------------------------------------
-                                    354 ; Home
-                                    355 ;--------------------------------------------------------
-                                    356 	.area HOME    (CODE)
-                                    357 	.area HOME    (CODE)
-      000003                        358 __sdcc_program_startup:
-      000003 02r00r00         [24]  359 	ljmp	_main
-                                    360 ;	return from main will return to caller
+                                    301 	.area IABS    (ABS,DATA)
+                                    302 	.area IABS    (ABS,DATA)
+                                    303 ;--------------------------------------------------------
+                                    304 ; bit data
+                                    305 ;--------------------------------------------------------
+                                    306 	.area BSEG    (BIT)
+                                    307 ;--------------------------------------------------------
+                                    308 ; paged external ram data
+                                    309 ;--------------------------------------------------------
+                                    310 	.area PSEG    (PAG,XDATA)
+                                    311 ;--------------------------------------------------------
+                                    312 ; external ram data
+                                    313 ;--------------------------------------------------------
+                                    314 	.area XSEG    (XDATA)
+                                    315 ;--------------------------------------------------------
+                                    316 ; absolute external ram data
+                                    317 ;--------------------------------------------------------
+                                    318 	.area XABS    (ABS,XDATA)
+                                    319 ;--------------------------------------------------------
+                                    320 ; external initialized ram data
+                                    321 ;--------------------------------------------------------
+                                    322 	.area XISEG   (XDATA)
+                                    323 	.area HOME    (CODE)
+                                    324 	.area GSINIT0 (CODE)
+                                    325 	.area GSINIT1 (CODE)
+                                    326 	.area GSINIT2 (CODE)
+                                    327 	.area GSINIT3 (CODE)
+                                    328 	.area GSINIT4 (CODE)
+                                    329 	.area GSINIT5 (CODE)
+                                    330 	.area GSINIT  (CODE)
+                                    331 	.area GSFINAL (CODE)
+                                    332 	.area CSEG    (CODE)
+                                    333 ;--------------------------------------------------------
+                                    334 ; interrupt vector 
+                                    335 ;--------------------------------------------------------
+                                    336 	.area HOME    (CODE)
+      000000                        337 __interrupt_vect:
+      000000 02r00r00         [24]  338 	ljmp	__sdcc_gsinit_startup
+                                    339 ;--------------------------------------------------------
+                                    340 ; global & static initialisations
+                                    341 ;--------------------------------------------------------
+                                    342 	.area HOME    (CODE)
+                                    343 	.area GSINIT  (CODE)
+                                    344 	.area GSFINAL (CODE)
+                                    345 	.area GSINIT  (CODE)
+                                    346 	.globl __sdcc_gsinit_startup
+                                    347 	.globl __sdcc_program_startup
+                                    348 	.globl __start__stack
+                                    349 	.globl __mcs51_genXINIT
+                                    350 	.globl __mcs51_genXRAMCLEAR
+                                    351 	.globl __mcs51_genRAMCLEAR
+                                    352 ;	transmitter.c:3: int state = 0;
+      000000 E4               [12]  353 	clr	a
+      000001 F5*00            [12]  354 	mov	_state,a
+      000003 F5*01            [12]  355 	mov	(_state + 1),a
+                                    356 ;	transmitter.c:13: char data_r=0;
+                                    357 ;	1-genFromRTrack replaced	mov	_data_r,#0x00
+      000005 F5*02            [12]  358 	mov	_data_r,a
+                                    359 	.area GSFINAL (CODE)
+      000000 02r00r03         [24]  360 	ljmp	__sdcc_program_startup
                                     361 ;--------------------------------------------------------
-                                    362 ; code
+                                    362 ; Home
                                     363 ;--------------------------------------------------------
-                                    364 	.area CSEG    (CODE)
-                                    365 ;------------------------------------------------------------
-                                    366 ;Allocation info for local variables in function 'main'
-                                    367 ;------------------------------------------------------------
-                                    368 ;	transmitter.c:11: void main(void)
-                                    369 ;	-----------------------------------------
-                                    370 ;	 function main
-                                    371 ;	-----------------------------------------
-      000000                        372 _main:
-                           000007   373 	ar7 = 0x07
-                           000006   374 	ar6 = 0x06
-                           000005   375 	ar5 = 0x05
-                           000004   376 	ar4 = 0x04
-                           000003   377 	ar3 = 0x03
-                           000002   378 	ar2 = 0x02
-                           000001   379 	ar1 = 0x01
-                           000000   380 	ar0 = 0x00
-                                    381 ;	transmitter.c:13: P1 = 0xff;
-      000000 75 90 FF         [24]  382 	mov	_P1,#0xff
-                                    383 ;	transmitter.c:14: P2 = 0x00;
-                                    384 ;	transmitter.c:15: state = 0;
-      000003 E4               [12]  385 	clr	a
-      000004 F5 A0            [12]  386 	mov	_P2,a
-      000006 F5*00            [12]  387 	mov	_state,a
-      000008 F5*01            [12]  388 	mov	(_state + 1),a
-                                    389 ;	transmitter.c:16: UART_Init();
-      00000A 12r00rF5         [24]  390 	lcall	_UART_Init
-                                    391 ;	transmitter.c:17: startup();
-      00000D 12r01r0A         [24]  392 	lcall	_startup
-                                    393 ;	transmitter.c:24: Transmit_data('Y');
-      000010 75 82 59         [24]  394 	mov	dpl,#0x59
-      000013 12r01r01         [24]  395 	lcall	_Transmit_data
-                                    396 ;	transmitter.c:26: while(1)
-      000016                        397 00111$:
-                                    398 ;	transmitter.c:28: touch();
-      000016 12r01r28         [24]  399 	lcall	_touch
-                                    400 ;	transmitter.c:29: switch(state)
-      000019 E5*01            [12]  401 	mov	a,(_state + 1)
-      00001B 20 E7 F8         [24]  402 	jb	acc.7,00111$
-      00001E C3               [12]  403 	clr	c
-      00001F 74 06            [12]  404 	mov	a,#0x06
-      000021 95*00            [12]  405 	subb	a,_state
-      000023 74 80            [12]  406 	mov	a,#(0x00 ^ 0x80)
-      000025 85*01 F0         [24]  407 	mov	b,(_state + 1)
-      000028 63 F0 80         [24]  408 	xrl	b,#0x80
-      00002B 95 F0            [12]  409 	subb	a,b
-      00002D 40 E7            [24]  410 	jc	00111$
-      00002F E5*00            [12]  411 	mov	a,_state
-      000031 75 F0 03         [24]  412 	mov	b,#0x03
-      000034 A4               [48]  413 	mul	ab
-      000035 90r00r39         [24]  414 	mov	dptr,#00129$
-      000038 73               [24]  415 	jmp	@a+dptr
-      000039                        416 00129$:
-      000039 02r00r4E         [24]  417 	ljmp	00101$
-      00003C 02r00r62         [24]  418 	ljmp	00102$
-      00003F 02r00r6D         [24]  419 	ljmp	00103$
-      000042 02r00r81         [24]  420 	ljmp	00104$
-      000045 02r00r96         [24]  421 	ljmp	00105$
-      000048 02r00rAB         [24]  422 	ljmp	00106$
-      00004B 02r00rC0         [24]  423 	ljmp	00107$
-                                    424 ;	transmitter.c:31: case 0: P2 = 0xA0; // Turn ON all LED's connected to Port1
-      00004E                        425 00101$:
-      00004E 75 A0 A0         [24]  426 	mov	_P2,#0xa0
-                                    427 ;	transmitter.c:32: delay();
-      000051 12r00rCC         [24]  428 	lcall	_delay
-                                    429 ;	transmitter.c:33: P2 = 0x00; // Turn OFF all LED's connected to Port1
-      000054 75 A0 00         [24]  430 	mov	_P2,#0x00
-                                    431 ;	transmitter.c:34: delay();
-      000057 12r00rCC         [24]  432 	lcall	_delay
-                                    433 ;	transmitter.c:35: Transmit_data('l');
-      00005A 75 82 6C         [24]  434 	mov	dpl,#0x6c
-      00005D 12r01r01         [24]  435 	lcall	_Transmit_data
-                                    436 ;	transmitter.c:36: break;
-                                    437 ;	transmitter.c:37: case 1: P2 = 0x80; // Turn ON all LED's connected to Port1
-      000060 80 B4            [24]  438 	sjmp	00111$
-      000062                        439 00102$:
-      000062 75 A0 80         [24]  440 	mov	_P2,#0x80
-                                    441 ;	transmitter.c:38: Transmit_data('a');
-      000065 75 82 61         [24]  442 	mov	dpl,#0x61
-      000068 12r01r01         [24]  443 	lcall	_Transmit_data
-                                    444 ;	transmitter.c:39: break;
-                                    445 ;	transmitter.c:40: case 2: P2 = 0x80; // Turn ON all LED's connected to Port1
-      00006B 80 A9            [24]  446 	sjmp	00111$
-      00006D                        447 00103$:
-      00006D 75 A0 80         [24]  448 	mov	_P2,#0x80
-                                    449 ;	transmitter.c:41: delay();
-      000070 12r00rCC         [24]  450 	lcall	_delay
-                                    451 ;	transmitter.c:42: P2 = 0x00; // Turn OFF all LED's connected to Port1
-      000073 75 A0 00         [24]  452 	mov	_P2,#0x00
-                                    453 ;	transmitter.c:43: delay();
-      000076 12r00rCC         [24]  454 	lcall	_delay
-                                    455 ;	transmitter.c:44: Transmit_data('b');
-      000079 75 82 62         [24]  456 	mov	dpl,#0x62
-      00007C 12r01r01         [24]  457 	lcall	_Transmit_data
-                                    458 ;	transmitter.c:45: break;
-                                    459 ;	transmitter.c:46: case 3: P2 = 0xC0; // Turn ON all LED's connected to Port1
-      00007F 80 95            [24]  460 	sjmp	00111$
-      000081                        461 00104$:
-      000081 75 A0 C0         [24]  462 	mov	_P2,#0xc0
-                                    463 ;	transmitter.c:47: delay();
-      000084 12r00rCC         [24]  464 	lcall	_delay
-                                    465 ;	transmitter.c:48: P2 = 0x00; // Turn OFF all LED's connected to Port1
-      000087 75 A0 00         [24]  466 	mov	_P2,#0x00
-                                    467 ;	transmitter.c:49: delay();
-      00008A 12r00rCC         [24]  468 	lcall	_delay
-                                    469 ;	transmitter.c:50: Transmit_data('c');
-      00008D 75 82 63         [24]  470 	mov	dpl,#0x63
-      000090 12r01r01         [24]  471 	lcall	_Transmit_data
-                                    472 ;	transmitter.c:51: break;
-      000093 02r00r16         [24]  473 	ljmp	00111$
-                                    474 ;	transmitter.c:52: case 4: P2 = 0x60; // Turn ON all LED's connected to Port1
-      000096                        475 00105$:
-      000096 75 A0 60         [24]  476 	mov	_P2,#0x60
-                                    477 ;	transmitter.c:53: delay();
-      000099 12r00rCC         [24]  478 	lcall	_delay
-                                    479 ;	transmitter.c:54: P2 = 0x00; // Turn OFF all LED's connected to Port1
-      00009C 75 A0 00         [24]  480 	mov	_P2,#0x00
-                                    481 ;	transmitter.c:55: delay();
-      00009F 12r00rCC         [24]  482 	lcall	_delay
-                                    483 ;	transmitter.c:56: Transmit_data('e');
-      0000A2 75 82 65         [24]  484 	mov	dpl,#0x65
-      0000A5 12r01r01         [24]  485 	lcall	_Transmit_data
-                                    486 ;	transmitter.c:57: break;
-      0000A8 02r00r16         [24]  487 	ljmp	00111$
-                                    488 ;	transmitter.c:58: case 5: P2 = 0x20; // Turn ON all LED's connected to Port1
-      0000AB                        489 00106$:
-      0000AB 75 A0 20         [24]  490 	mov	_P2,#0x20
-                                    491 ;	transmitter.c:59: delay();
-      0000AE 12r00rCC         [24]  492 	lcall	_delay
-                                    493 ;	transmitter.c:60: P2 = 0x00; // Turn OFF all LED's connected to Port1
-      0000B1 75 A0 00         [24]  494 	mov	_P2,#0x00
-                                    495 ;	transmitter.c:61: delay();
-      0000B4 12r00rCC         [24]  496 	lcall	_delay
-                                    497 ;	transmitter.c:62: Transmit_data('f');
-      0000B7 75 82 66         [24]  498 	mov	dpl,#0x66
-      0000BA 12r01r01         [24]  499 	lcall	_Transmit_data
-                                    500 ;	transmitter.c:63: break;
-      0000BD 02r00r16         [24]  501 	ljmp	00111$
-                                    502 ;	transmitter.c:64: case 6: P2 = 0x20; // Turn ON all LED's connected to Port1
-      0000C0                        503 00107$:
-      0000C0 75 A0 20         [24]  504 	mov	_P2,#0x20
-                                    505 ;	transmitter.c:65: Transmit_data('g');
-      0000C3 75 82 67         [24]  506 	mov	dpl,#0x67
-      0000C6 12r01r01         [24]  507 	lcall	_Transmit_data
-                                    508 ;	transmitter.c:66: break;
-                                    509 ;	transmitter.c:68: }
-                                    510 ;	transmitter.c:70: }
-      0000C9 02r00r16         [24]  511 	ljmp	00111$
-                                    512 ;------------------------------------------------------------
-                                    513 ;Allocation info for local variables in function 'delay'
-                                    514 ;------------------------------------------------------------
-                                    515 ;i                         Allocated to registers r6 r7 
-                                    516 ;j                         Allocated to registers r4 r5 
-                                    517 ;------------------------------------------------------------
-                                    518 ;	transmitter.c:73: void delay(void)
-                                    519 ;	-----------------------------------------
-                                    520 ;	 function delay
-                                    521 ;	-----------------------------------------
-      0000CC                        522 _delay:
-                                    523 ;	transmitter.c:76: for(i=0;i<0x77;i++)
-      0000CC 7E 00            [12]  524 	mov	r6,#0x00
-      0000CE 7F 00            [12]  525 	mov	r7,#0x00
-      0000D0                        526 00106$:
-                                    527 ;	transmitter.c:77: for(j=0;j<0xff;j++);
-      0000D0 7C FF            [12]  528 	mov	r4,#0xff
-      0000D2 7D 00            [12]  529 	mov	r5,#0x00
-      0000D4                        530 00105$:
-      0000D4 EC               [12]  531 	mov	a,r4
-      0000D5 24 FF            [12]  532 	add	a,#0xff
-      0000D7 FA               [12]  533 	mov	r2,a
-      0000D8 ED               [12]  534 	mov	a,r5
-      0000D9 34 FF            [12]  535 	addc	a,#0xff
-      0000DB FB               [12]  536 	mov	r3,a
-      0000DC 8A 04            [24]  537 	mov	ar4,r2
-      0000DE 8B 05            [24]  538 	mov	ar5,r3
-      0000E0 EA               [12]  539 	mov	a,r2
-      0000E1 4B               [12]  540 	orl	a,r3
-      0000E2 70 F0            [24]  541 	jnz	00105$
-                                    542 ;	transmitter.c:76: for(i=0;i<0x77;i++)
-      0000E4 0E               [12]  543 	inc	r6
-      0000E5 BE 00 01         [24]  544 	cjne	r6,#0x00,00124$
-      0000E8 0F               [12]  545 	inc	r7
-      0000E9                        546 00124$:
-      0000E9 C3               [12]  547 	clr	c
-      0000EA EE               [12]  548 	mov	a,r6
-      0000EB 94 77            [12]  549 	subb	a,#0x77
-      0000ED EF               [12]  550 	mov	a,r7
-      0000EE 64 80            [12]  551 	xrl	a,#0x80
-      0000F0 94 80            [12]  552 	subb	a,#0x80
-      0000F2 40 DC            [24]  553 	jc	00106$
-                                    554 ;	transmitter.c:78: }
-      0000F4 22               [24]  555 	ret
-                                    556 ;------------------------------------------------------------
-                                    557 ;Allocation info for local variables in function 'UART_Init'
-                                    558 ;------------------------------------------------------------
-                                    559 ;	transmitter.c:80: void UART_Init()
-                                    560 ;	-----------------------------------------
-                                    561 ;	 function UART_Init
-                                    562 ;	-----------------------------------------
-      0000F5                        563 _UART_Init:
-                                    564 ;	transmitter.c:82: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
-      0000F5 75 89 20         [24]  565 	mov	_TMOD,#0x20
-                                    566 ;	transmitter.c:83: TH1 = 0xFD;		/* Load value for 9600 baud rate */
-      0000F8 75 8D FD         [24]  567 	mov	_TH1,#0xfd
-                                    568 ;	transmitter.c:84: SCON = 0x50;		/* Mode 1, reception enable */
-      0000FB 75 98 50         [24]  569 	mov	_SCON,#0x50
-                                    570 ;	transmitter.c:85: TR1 = 1;		/* Start timer 1 */
-                                    571 ;	assignBit
-      0000FE D2 8E            [12]  572 	setb	_TR1
-                                    573 ;	transmitter.c:86: }
-      000100 22               [24]  574 	ret
-                                    575 ;------------------------------------------------------------
-                                    576 ;Allocation info for local variables in function 'Transmit_data'
-                                    577 ;------------------------------------------------------------
-                                    578 ;tx_data                   Allocated to registers 
-                                    579 ;------------------------------------------------------------
-                                    580 ;	transmitter.c:88: void Transmit_data(char tx_data)
-                                    581 ;	-----------------------------------------
-                                    582 ;	 function Transmit_data
-                                    583 ;	-----------------------------------------
-      000101                        584 _Transmit_data:
-      000101 85 82 99         [24]  585 	mov	_SBUF,dpl
-                                    586 ;	transmitter.c:91: while (TI==0);		/* Wait until stop bit transmit */
-      000104                        587 00101$:
-                                    588 ;	transmitter.c:92: TI = 0;			/* Clear TI flag */
-                                    589 ;	assignBit
-      000104 10 99 02         [24]  590 	jbc	_TI,00114$
-      000107 80 FB            [24]  591 	sjmp	00101$
-      000109                        592 00114$:
-                                    593 ;	transmitter.c:93: }
-      000109 22               [24]  594 	ret
-                                    595 ;------------------------------------------------------------
-                                    596 ;Allocation info for local variables in function 'startup'
-                                    597 ;------------------------------------------------------------
-                                    598 ;	transmitter.c:95: void startup(void)
-                                    599 ;	-----------------------------------------
-                                    600 ;	 function startup
-                                    601 ;	-----------------------------------------
-      00010A                        602 _startup:
-                                    603 ;	transmitter.c:97: P2 = 0x00;
-      00010A 75 A0 00         [24]  604 	mov	_P2,#0x00
-                                    605 ;	transmitter.c:98: delay();
-      00010D 12r00rCC         [24]  606 	lcall	_delay
-                                    607 ;	transmitter.c:99: P2 = 0xE0;
-      000110 75 A0 E0         [24]  608 	mov	_P2,#0xe0
-                                    609 ;	transmitter.c:100: delay();
-      000113 12r00rCC         [24]  610 	lcall	_delay
-                                    611 ;	transmitter.c:101: P2 = 0x80;
-      000116 75 A0 80         [24]  612 	mov	_P2,#0x80
-                                    613 ;	transmitter.c:102: delay();
-      000119 12r00rCC         [24]  614 	lcall	_delay
-                                    615 ;	transmitter.c:103: P2 = 0x40;
-      00011C 75 A0 40         [24]  616 	mov	_P2,#0x40
-                                    617 ;	transmitter.c:104: delay();
-      00011F 12r00rCC         [24]  618 	lcall	_delay
-                                    619 ;	transmitter.c:105: P2 = 0x20;
-      000122 75 A0 20         [24]  620 	mov	_P2,#0x20
-                                    621 ;	transmitter.c:106: delay();
-                                    622 ;	transmitter.c:107: }
-      000125 02r00rCC         [24]  623 	ljmp	_delay
-                                    624 ;------------------------------------------------------------
-                                    625 ;Allocation info for local variables in function 'touch'
-                                    626 ;------------------------------------------------------------
-                                    627 ;	transmitter.c:109: void touch(void)
-                                    628 ;	-----------------------------------------
-                                    629 ;	 function touch
-                                    630 ;	-----------------------------------------
-      000128                        631 _touch:
-                                    632 ;	transmitter.c:111: if(P1 == 0x3e)state = 1;
-      000128 74 3E            [12]  633 	mov	a,#0x3e
-      00012A B5 90 07         [24]  634 	cjne	a,_P1,00117$
-      00012D 75*00 01         [24]  635 	mov	_state,#0x01
-      000130 75*01 00         [24]  636 	mov	(_state + 1),#0x00
-      000133 22               [24]  637 	ret
-      000134                        638 00117$:
-                                    639 ;	transmitter.c:113: else if(P1 == 0x3d)state = 2;
-      000134 74 3D            [12]  640 	mov	a,#0x3d
-      000136 B5 90 07         [24]  641 	cjne	a,_P1,00114$
-      000139 75*00 02         [24]  642 	mov	_state,#0x02
-      00013C 75*01 00         [24]  643 	mov	(_state + 1),#0x00
-      00013F 22               [24]  644 	ret
-      000140                        645 00114$:
-                                    646 ;	transmitter.c:115: else if(P1 == 0x3b)state = 3;
-      000140 74 3B            [12]  647 	mov	a,#0x3b
-      000142 B5 90 07         [24]  648 	cjne	a,_P1,00111$
-      000145 75*00 03         [24]  649 	mov	_state,#0x03
-      000148 75*01 00         [24]  650 	mov	(_state + 1),#0x00
-      00014B 22               [24]  651 	ret
-      00014C                        652 00111$:
-                                    653 ;	transmitter.c:117: else if(P1 == 0x37)state = 4;
-      00014C 74 37            [12]  654 	mov	a,#0x37
-      00014E B5 90 07         [24]  655 	cjne	a,_P1,00108$
-      000151 75*00 04         [24]  656 	mov	_state,#0x04
-      000154 75*01 00         [24]  657 	mov	(_state + 1),#0x00
-      000157 22               [24]  658 	ret
-      000158                        659 00108$:
-                                    660 ;	transmitter.c:119: else if(P1 == 0x2f)state = 5;
-      000158 74 2F            [12]  661 	mov	a,#0x2f
-      00015A B5 90 07         [24]  662 	cjne	a,_P1,00105$
-      00015D 75*00 05         [24]  663 	mov	_state,#0x05
-      000160 75*01 00         [24]  664 	mov	(_state + 1),#0x00
-      000163 22               [24]  665 	ret
-      000164                        666 00105$:
-                                    667 ;	transmitter.c:121: else if(P1 == 0x1f)state = 6;
-      000164 74 1F            [12]  668 	mov	a,#0x1f
-      000166 B5 90 07         [24]  669 	cjne	a,_P1,00102$
-      000169 75*00 06         [24]  670 	mov	_state,#0x06
-      00016C 75*01 00         [24]  671 	mov	(_state + 1),#0x00
-      00016F 22               [24]  672 	ret
-      000170                        673 00102$:
-                                    674 ;	transmitter.c:123: else state = 0;
-      000170 E4               [12]  675 	clr	a
-      000171 F5*00            [12]  676 	mov	_state,a
-      000173 F5*01            [12]  677 	mov	(_state + 1),a
-                                    678 ;	transmitter.c:124: }
-      000175 22               [24]  679 	ret
-                                    680 	.area CSEG    (CODE)
-                                    681 	.area CONST   (CODE)
-                                    682 	.area XINIT   (CODE)
-                                    683 	.area CABS    (ABS,CODE)
+                                    364 	.area HOME    (CODE)
+                                    365 	.area HOME    (CODE)
+      000003                        366 __sdcc_program_startup:
+      000003 02r00r00         [24]  367 	ljmp	_main
+                                    368 ;	return from main will return to caller
+                                    369 ;--------------------------------------------------------
+                                    370 ; code
+                                    371 ;--------------------------------------------------------
+                                    372 	.area CSEG    (CODE)
+                                    373 ;------------------------------------------------------------
+                                    374 ;Allocation info for local variables in function 'main'
+                                    375 ;------------------------------------------------------------
+                                    376 ;	transmitter.c:14: void main(void)
+                                    377 ;	-----------------------------------------
+                                    378 ;	 function main
+                                    379 ;	-----------------------------------------
+      000000                        380 _main:
+                           000007   381 	ar7 = 0x07
+                           000006   382 	ar6 = 0x06
+                           000005   383 	ar5 = 0x05
+                           000004   384 	ar4 = 0x04
+                           000003   385 	ar3 = 0x03
+                           000002   386 	ar2 = 0x02
+                           000001   387 	ar1 = 0x01
+                           000000   388 	ar0 = 0x00
+                                    389 ;	transmitter.c:17: P1 = 0xff;
+      000000 75 90 FF         [24]  390 	mov	_P1,#0xff
+                                    391 ;	transmitter.c:18: P2 = 0x00;
+                                    392 ;	transmitter.c:19: state = 0;
+      000003 E4               [12]  393 	clr	a
+      000004 F5 A0            [12]  394 	mov	_P2,a
+      000006 F5*00            [12]  395 	mov	_state,a
+      000008 F5*01            [12]  396 	mov	(_state + 1),a
+                                    397 ;	transmitter.c:20: UART_Init();
+      00000A 12r00r66         [24]  398 	lcall	_UART_Init
+                                    399 ;	transmitter.c:21: startup();
+      00000D 12r00r97         [24]  400 	lcall	_startup
+                                    401 ;	transmitter.c:22: start:while(!data_r)
+      000010                        402 00102$:
+      000010 E5*02            [12]  403 	mov	a,_data_r
+      000012 70 13            [24]  404 	jnz	00104$
+                                    405 ;	transmitter.c:23: {		data_r=SBUF;
+      000014 85 99*02         [24]  406 	mov	_data_r,_SBUF
+                                    407 ;	transmitter.c:24: RI=0;
+                                    408 ;	assignBit
+      000017 C2 98            [12]  409 	clr	_RI
+                                    410 ;	transmitter.c:25: P2 = 0xA0; // Turn ON all LED's connected to Port1
+      000019 75 A0 A0         [24]  411 	mov	_P2,#0xa0
+                                    412 ;	transmitter.c:26: delay();
+      00001C 12r00r3D         [24]  413 	lcall	_delay
+                                    414 ;	transmitter.c:27: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      00001F 75 A0 00         [24]  415 	mov	_P2,#0x00
+                                    416 ;	transmitter.c:28: delay();
+      000022 12r00r3D         [24]  417 	lcall	_delay
+      000025 80 E9            [24]  418 	sjmp	00102$
+      000027                        419 00104$:
+                                    420 ;	transmitter.c:31: if(data_r=='x')
+      000027 74 78            [12]  421 	mov	a,#0x78
+      000029 B5*02 E4         [24]  422 	cjne	a,_data_r,00102$
+                                    423 ;	transmitter.c:33: Transmit_data('y');
+      00002C 75 82 79         [24]  424 	mov	dpl,#0x79
+      00002F 12r00r72         [24]  425 	lcall	_Transmit_data
+                                    426 ;	transmitter.c:34: data_r=0;
+      000032 75*02 00         [24]  427 	mov	_data_r,#0x00
+                                    428 ;	transmitter.c:38: while(1)
+      000035                        429 00109$:
+                                    430 ;	transmitter.c:40: touch();
+      000035 12r00rD3         [24]  431 	lcall	_touch
+                                    432 ;	transmitter.c:41: check_x();
+      000038 12r00r84         [24]  433 	lcall	_check_x
+                                    434 ;	transmitter.c:44: }
+      00003B 80 F8            [24]  435 	sjmp	00109$
+                                    436 ;------------------------------------------------------------
+                                    437 ;Allocation info for local variables in function 'delay'
+                                    438 ;------------------------------------------------------------
+                                    439 ;i                         Allocated to registers r6 r7 
+                                    440 ;j                         Allocated to registers r4 r5 
+                                    441 ;------------------------------------------------------------
+                                    442 ;	transmitter.c:47: void delay(void)
+                                    443 ;	-----------------------------------------
+                                    444 ;	 function delay
+                                    445 ;	-----------------------------------------
+      00003D                        446 _delay:
+                                    447 ;	transmitter.c:50: for(i=0;i<0x33;i++)
+      00003D 7E 00            [12]  448 	mov	r6,#0x00
+      00003F 7F 00            [12]  449 	mov	r7,#0x00
+      000041                        450 00106$:
+                                    451 ;	transmitter.c:51: for(j=0;j<0xff;j++);
+      000041 7C FF            [12]  452 	mov	r4,#0xff
+      000043 7D 00            [12]  453 	mov	r5,#0x00
+      000045                        454 00105$:
+      000045 EC               [12]  455 	mov	a,r4
+      000046 24 FF            [12]  456 	add	a,#0xff
+      000048 FA               [12]  457 	mov	r2,a
+      000049 ED               [12]  458 	mov	a,r5
+      00004A 34 FF            [12]  459 	addc	a,#0xff
+      00004C FB               [12]  460 	mov	r3,a
+      00004D 8A 04            [24]  461 	mov	ar4,r2
+      00004F 8B 05            [24]  462 	mov	ar5,r3
+      000051 EA               [12]  463 	mov	a,r2
+      000052 4B               [12]  464 	orl	a,r3
+      000053 70 F0            [24]  465 	jnz	00105$
+                                    466 ;	transmitter.c:50: for(i=0;i<0x33;i++)
+      000055 0E               [12]  467 	inc	r6
+      000056 BE 00 01         [24]  468 	cjne	r6,#0x00,00124$
+      000059 0F               [12]  469 	inc	r7
+      00005A                        470 00124$:
+      00005A C3               [12]  471 	clr	c
+      00005B EE               [12]  472 	mov	a,r6
+      00005C 94 33            [12]  473 	subb	a,#0x33
+      00005E EF               [12]  474 	mov	a,r7
+      00005F 64 80            [12]  475 	xrl	a,#0x80
+      000061 94 80            [12]  476 	subb	a,#0x80
+      000063 40 DC            [24]  477 	jc	00106$
+                                    478 ;	transmitter.c:52: }
+      000065 22               [24]  479 	ret
+                                    480 ;------------------------------------------------------------
+                                    481 ;Allocation info for local variables in function 'UART_Init'
+                                    482 ;------------------------------------------------------------
+                                    483 ;	transmitter.c:54: void UART_Init()
+                                    484 ;	-----------------------------------------
+                                    485 ;	 function UART_Init
+                                    486 ;	-----------------------------------------
+      000066                        487 _UART_Init:
+                                    488 ;	transmitter.c:56: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
+      000066 75 89 20         [24]  489 	mov	_TMOD,#0x20
+                                    490 ;	transmitter.c:57: TH1 = 0xFD;		/* Load value for 9600 baud rate */
+      000069 75 8D FD         [24]  491 	mov	_TH1,#0xfd
+                                    492 ;	transmitter.c:58: SCON = 0x50;		/* Mode 1, reception enable */
+      00006C 75 98 50         [24]  493 	mov	_SCON,#0x50
+                                    494 ;	transmitter.c:59: TR1 = 1;		/* Start timer 1 */
+                                    495 ;	assignBit
+      00006F D2 8E            [12]  496 	setb	_TR1
+                                    497 ;	transmitter.c:60: }
+      000071 22               [24]  498 	ret
+                                    499 ;------------------------------------------------------------
+                                    500 ;Allocation info for local variables in function 'Transmit_data'
+                                    501 ;------------------------------------------------------------
+                                    502 ;tx_data                   Allocated to registers 
+                                    503 ;------------------------------------------------------------
+                                    504 ;	transmitter.c:62: void Transmit_data(char tx_data)
+                                    505 ;	-----------------------------------------
+                                    506 ;	 function Transmit_data
+                                    507 ;	-----------------------------------------
+      000072                        508 _Transmit_data:
+      000072 85 82 99         [24]  509 	mov	_SBUF,dpl
+                                    510 ;	transmitter.c:65: while (TI==0);		/* Wait until stop bit transmit */
+      000075                        511 00101$:
+                                    512 ;	transmitter.c:66: TI = 0;			/* Clear TI flag */
+                                    513 ;	assignBit
+      000075 10 99 02         [24]  514 	jbc	_TI,00114$
+      000078 80 FB            [24]  515 	sjmp	00101$
+      00007A                        516 00114$:
+                                    517 ;	transmitter.c:67: }
+      00007A 22               [24]  518 	ret
+                                    519 ;------------------------------------------------------------
+                                    520 ;Allocation info for local variables in function 'receive_data'
+                                    521 ;------------------------------------------------------------
+                                    522 ;	transmitter.c:69: void receive_data()
+                                    523 ;	-----------------------------------------
+                                    524 ;	 function receive_data
+                                    525 ;	-----------------------------------------
+      00007B                        526 _receive_data:
+                                    527 ;	transmitter.c:71: while (RI==0);		/* Wait until stop bit transmit */
+      00007B                        528 00101$:
+      00007B 30 98 FD         [24]  529 	jnb	_RI,00101$
+                                    530 ;	transmitter.c:72: data_r = SBUF;		/* Load char in SBUF register */
+      00007E 85 99*02         [24]  531 	mov	_data_r,_SBUF
+                                    532 ;	transmitter.c:73: RI = 0;			/* Clear TI flag */
+                                    533 ;	assignBit
+      000081 C2 98            [12]  534 	clr	_RI
+                                    535 ;	transmitter.c:74: }
+      000083 22               [24]  536 	ret
+                                    537 ;------------------------------------------------------------
+                                    538 ;Allocation info for local variables in function 'check_x'
+                                    539 ;------------------------------------------------------------
+                                    540 ;	transmitter.c:77: void check_x()
+                                    541 ;	-----------------------------------------
+                                    542 ;	 function check_x
+                                    543 ;	-----------------------------------------
+      000084                        544 _check_x:
+                                    545 ;	transmitter.c:80: TI=0;
+                                    546 ;	assignBit
+      000084 C2 99            [12]  547 	clr	_TI
+                                    548 ;	transmitter.c:81: data_r = SBUF;		/* Load char in SBUF register */
+      000086 85 99*02         [24]  549 	mov	_data_r,_SBUF
+                                    550 ;	transmitter.c:82: RI = 0;			/* Clear TI flag */
+                                    551 ;	assignBit
+      000089 C2 98            [12]  552 	clr	_RI
+                                    553 ;	transmitter.c:83: if(data_r=='x')
+      00008B 74 78            [12]  554 	mov	a,#0x78
+      00008D B5*02 06         [24]  555 	cjne	a,_data_r,00103$
+                                    556 ;	transmitter.c:84: Transmit_data('y');
+      000090 75 82 79         [24]  557 	mov	dpl,#0x79
+                                    558 ;	transmitter.c:85: }
+      000093 02r00r72         [24]  559 	ljmp	_Transmit_data
+      000096                        560 00103$:
+      000096 22               [24]  561 	ret
+                                    562 ;------------------------------------------------------------
+                                    563 ;Allocation info for local variables in function 'startup'
+                                    564 ;------------------------------------------------------------
+                                    565 ;	transmitter.c:86: void startup(void)
+                                    566 ;	-----------------------------------------
+                                    567 ;	 function startup
+                                    568 ;	-----------------------------------------
+      000097                        569 _startup:
+                                    570 ;	transmitter.c:88: P2 = 0x00;
+      000097 75 A0 00         [24]  571 	mov	_P2,#0x00
+                                    572 ;	transmitter.c:89: delay();delay();delay();
+      00009A 12r00r3D         [24]  573 	lcall	_delay
+      00009D 12r00r3D         [24]  574 	lcall	_delay
+      0000A0 12r00r3D         [24]  575 	lcall	_delay
+                                    576 ;	transmitter.c:90: P2 = 0xE0;
+      0000A3 75 A0 E0         [24]  577 	mov	_P2,#0xe0
+                                    578 ;	transmitter.c:91: delay();delay();delay();
+      0000A6 12r00r3D         [24]  579 	lcall	_delay
+      0000A9 12r00r3D         [24]  580 	lcall	_delay
+      0000AC 12r00r3D         [24]  581 	lcall	_delay
+                                    582 ;	transmitter.c:92: P2 = 0x80;
+      0000AF 75 A0 80         [24]  583 	mov	_P2,#0x80
+                                    584 ;	transmitter.c:93: delay();delay();delay();
+      0000B2 12r00r3D         [24]  585 	lcall	_delay
+      0000B5 12r00r3D         [24]  586 	lcall	_delay
+      0000B8 12r00r3D         [24]  587 	lcall	_delay
+                                    588 ;	transmitter.c:94: P2 = 0x40;
+      0000BB 75 A0 40         [24]  589 	mov	_P2,#0x40
+                                    590 ;	transmitter.c:95: delay();delay();delay();
+      0000BE 12r00r3D         [24]  591 	lcall	_delay
+      0000C1 12r00r3D         [24]  592 	lcall	_delay
+      0000C4 12r00r3D         [24]  593 	lcall	_delay
+                                    594 ;	transmitter.c:96: P2 = 0x20;
+      0000C7 75 A0 20         [24]  595 	mov	_P2,#0x20
+                                    596 ;	transmitter.c:97: delay();delay();delay();
+      0000CA 12r00r3D         [24]  597 	lcall	_delay
+      0000CD 12r00r3D         [24]  598 	lcall	_delay
+                                    599 ;	transmitter.c:98: }
+      0000D0 02r00r3D         [24]  600 	ljmp	_delay
+                                    601 ;------------------------------------------------------------
+                                    602 ;Allocation info for local variables in function 'touch'
+                                    603 ;------------------------------------------------------------
+                                    604 ;	transmitter.c:100: void touch(void)
+                                    605 ;	-----------------------------------------
+                                    606 ;	 function touch
+                                    607 ;	-----------------------------------------
+      0000D3                        608 _touch:
+                                    609 ;	transmitter.c:102: switch(P1)
+      0000D3 AF 90            [24]  610 	mov	r7,_P1
+      0000D5 BF 1F 03         [24]  611 	cjne	r7,#0x1f,00140$
+      0000D8 02r01rA1         [24]  612 	ljmp	00107$
+      0000DB                        613 00140$:
+      0000DB BF 2F 03         [24]  614 	cjne	r7,#0x2f,00141$
+      0000DE 02r01r83         [24]  615 	ljmp	00106$
+      0000E1                        616 00141$:
+      0000E1 BF 37 03         [24]  617 	cjne	r7,#0x37,00142$
+      0000E4 02r01r65         [24]  618 	ljmp	00105$
+      0000E7                        619 00142$:
+      0000E7 BF 3B 02         [24]  620 	cjne	r7,#0x3b,00143$
+      0000EA 80 5B            [24]  621 	sjmp	00104$
+      0000EC                        622 00143$:
+      0000EC BF 3D 02         [24]  623 	cjne	r7,#0x3d,00144$
+      0000EF 80 38            [24]  624 	sjmp	00103$
+      0000F1                        625 00144$:
+      0000F1 BF 3E 02         [24]  626 	cjne	r7,#0x3e,00145$
+      0000F4 80 24            [24]  627 	sjmp	00102$
+      0000F6                        628 00145$:
+      0000F6 BF 3F 02         [24]  629 	cjne	r7,#0x3f,00146$
+      0000F9 80 01            [24]  630 	sjmp	00147$
+      0000FB                        631 00146$:
+      0000FB 22               [24]  632 	ret
+      0000FC                        633 00147$:
+                                    634 ;	transmitter.c:105: Transmit_data('l');
+      0000FC 75 82 6C         [24]  635 	mov	dpl,#0x6c
+      0000FF 12r00r72         [24]  636 	lcall	_Transmit_data
+                                    637 ;	transmitter.c:106: P2 = 0xA0; // Turn ON all LED's connected to Port1
+      000102 75 A0 A0         [24]  638 	mov	_P2,#0xa0
+                                    639 ;	transmitter.c:107: delay();
+      000105 12r00r3D         [24]  640 	lcall	_delay
+                                    641 ;	transmitter.c:108: delay();
+      000108 12r00r3D         [24]  642 	lcall	_delay
+                                    643 ;	transmitter.c:109: delay();
+      00010B 12r00r3D         [24]  644 	lcall	_delay
+                                    645 ;	transmitter.c:110: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      00010E 75 A0 00         [24]  646 	mov	_P2,#0x00
+                                    647 ;	transmitter.c:111: delay();
+      000111 12r00r3D         [24]  648 	lcall	_delay
+                                    649 ;	transmitter.c:112: delay();
+      000114 12r00r3D         [24]  650 	lcall	_delay
+                                    651 ;	transmitter.c:113: delay();
+                                    652 ;	transmitter.c:114: break;
+      000117 02r00r3D         [24]  653 	ljmp	_delay
+                                    654 ;	transmitter.c:115: case 0x3e:				Transmit_data('a');
+      00011A                        655 00102$:
+      00011A 75 82 61         [24]  656 	mov	dpl,#0x61
+      00011D 12r00r72         [24]  657 	lcall	_Transmit_data
+                                    658 ;	transmitter.c:116: P2 = 0x80; // Turn ON all LED's connected to Port1
+      000120 75 A0 80         [24]  659 	mov	_P2,#0x80
+                                    660 ;	transmitter.c:117: delay();
+      000123 12r00r3D         [24]  661 	lcall	_delay
+                                    662 ;	transmitter.c:118: delay();
+                                    663 ;	transmitter.c:119: break;
+      000126 02r00r3D         [24]  664 	ljmp	_delay
+                                    665 ;	transmitter.c:120: case 0x3d:				Transmit_data('b');
+      000129                        666 00103$:
+      000129 75 82 62         [24]  667 	mov	dpl,#0x62
+      00012C 12r00r72         [24]  668 	lcall	_Transmit_data
+                                    669 ;	transmitter.c:121: P2 = 0x80; // Turn ON all LED's connected to Port1
+      00012F 75 A0 80         [24]  670 	mov	_P2,#0x80
+                                    671 ;	transmitter.c:122: delay();
+      000132 12r00r3D         [24]  672 	lcall	_delay
+                                    673 ;	transmitter.c:123: delay();
+      000135 12r00r3D         [24]  674 	lcall	_delay
+                                    675 ;	transmitter.c:124: delay();
+      000138 12r00r3D         [24]  676 	lcall	_delay
+                                    677 ;	transmitter.c:125: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      00013B 75 A0 00         [24]  678 	mov	_P2,#0x00
+                                    679 ;	transmitter.c:126: delay();
+      00013E 12r00r3D         [24]  680 	lcall	_delay
+                                    681 ;	transmitter.c:127: delay();
+      000141 12r00r3D         [24]  682 	lcall	_delay
+                                    683 ;	transmitter.c:128: delay();
+                                    684 ;	transmitter.c:129: break;
+                                    685 ;	transmitter.c:130: case 0x3b:				Transmit_data('c');
+      000144 02r00r3D         [24]  686 	ljmp	_delay
+      000147                        687 00104$:
+      000147 75 82 63         [24]  688 	mov	dpl,#0x63
+      00014A 12r00r72         [24]  689 	lcall	_Transmit_data
+                                    690 ;	transmitter.c:131: P2 = 0xC0; // Turn ON all LED's connected to Port1
+      00014D 75 A0 C0         [24]  691 	mov	_P2,#0xc0
+                                    692 ;	transmitter.c:132: delay();
+      000150 12r00r3D         [24]  693 	lcall	_delay
+                                    694 ;	transmitter.c:133: delay();
+      000153 12r00r3D         [24]  695 	lcall	_delay
+                                    696 ;	transmitter.c:134: delay();
+      000156 12r00r3D         [24]  697 	lcall	_delay
+                                    698 ;	transmitter.c:135: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      000159 75 A0 00         [24]  699 	mov	_P2,#0x00
+                                    700 ;	transmitter.c:136: delay();
+      00015C 12r00r3D         [24]  701 	lcall	_delay
+                                    702 ;	transmitter.c:137: delay();
+      00015F 12r00r3D         [24]  703 	lcall	_delay
+                                    704 ;	transmitter.c:138: delay();
+                                    705 ;	transmitter.c:140: break;
+                                    706 ;	transmitter.c:141: case 0x37:				Transmit_data('e');
+      000162 02r00r3D         [24]  707 	ljmp	_delay
+      000165                        708 00105$:
+      000165 75 82 65         [24]  709 	mov	dpl,#0x65
+      000168 12r00r72         [24]  710 	lcall	_Transmit_data
+                                    711 ;	transmitter.c:142: P2 = 0x60; // Turn ON all LED's connected to Port1
+      00016B 75 A0 60         [24]  712 	mov	_P2,#0x60
+                                    713 ;	transmitter.c:143: delay();
+      00016E 12r00r3D         [24]  714 	lcall	_delay
+                                    715 ;	transmitter.c:144: delay();
+      000171 12r00r3D         [24]  716 	lcall	_delay
+                                    717 ;	transmitter.c:145: delay();
+      000174 12r00r3D         [24]  718 	lcall	_delay
+                                    719 ;	transmitter.c:146: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      000177 75 A0 00         [24]  720 	mov	_P2,#0x00
+                                    721 ;	transmitter.c:147: delay();
+      00017A 12r00r3D         [24]  722 	lcall	_delay
+                                    723 ;	transmitter.c:148: delay();
+      00017D 12r00r3D         [24]  724 	lcall	_delay
+                                    725 ;	transmitter.c:149: delay();
+                                    726 ;	transmitter.c:150: break;
+                                    727 ;	transmitter.c:151: case 0x2f:				Transmit_data('f');
+      000180 02r00r3D         [24]  728 	ljmp	_delay
+      000183                        729 00106$:
+      000183 75 82 66         [24]  730 	mov	dpl,#0x66
+      000186 12r00r72         [24]  731 	lcall	_Transmit_data
+                                    732 ;	transmitter.c:152: P2 = 0x20; // Turn ON all LED's connected to Port1
+      000189 75 A0 20         [24]  733 	mov	_P2,#0x20
+                                    734 ;	transmitter.c:153: delay();
+      00018C 12r00r3D         [24]  735 	lcall	_delay
+                                    736 ;	transmitter.c:154: delay();
+      00018F 12r00r3D         [24]  737 	lcall	_delay
+                                    738 ;	transmitter.c:155: delay();
+      000192 12r00r3D         [24]  739 	lcall	_delay
+                                    740 ;	transmitter.c:156: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      000195 75 A0 00         [24]  741 	mov	_P2,#0x00
+                                    742 ;	transmitter.c:157: delay();
+      000198 12r00r3D         [24]  743 	lcall	_delay
+                                    744 ;	transmitter.c:158: delay();
+      00019B 12r00r3D         [24]  745 	lcall	_delay
+                                    746 ;	transmitter.c:159: delay();
+                                    747 ;	transmitter.c:160: break;
+                                    748 ;	transmitter.c:161: case 0x1f:				Transmit_data('g');
+      00019E 02r00r3D         [24]  749 	ljmp	_delay
+      0001A1                        750 00107$:
+      0001A1 75 82 67         [24]  751 	mov	dpl,#0x67
+      0001A4 12r00r72         [24]  752 	lcall	_Transmit_data
+                                    753 ;	transmitter.c:162: P2 = 0x20; // Turn ON all LED's connected to Port1
+      0001A7 75 A0 20         [24]  754 	mov	_P2,#0x20
+                                    755 ;	transmitter.c:163: delay();
+      0001AA 12r00r3D         [24]  756 	lcall	_delay
+                                    757 ;	transmitter.c:164: delay();
+                                    758 ;	transmitter.c:167: }
+                                    759 ;	transmitter.c:168: }
+      0001AD 02r00r3D         [24]  760 	ljmp	_delay
+                                    761 	.area CSEG    (CODE)
+                                    762 	.area CONST   (CODE)
+                                    763 	.area XINIT   (CODE)
+                                    764 	.area CABS    (ABS,CODE)

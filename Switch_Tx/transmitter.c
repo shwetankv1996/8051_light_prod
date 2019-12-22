@@ -1,79 +1,53 @@
-#include <8052.h>
+#include "8052.h"
  
 int state = 0;
 
 void delay(void);
 void UART_Init(void);
 void Transmit_data(char);
+void receive_data();
 void startup(void);
 void touch(void);
+void check_x(void);
 
+char data_r=0;
 void main(void)
 {
+
 P1 = 0xff;
 P2 = 0x00;
 state = 0;
 UART_Init();
 startup();
-/*do{
-while(RI==0);
-}while(SBUF!=0x58);
-*/
-//data=SBUF;
-//RI=0;
-Transmit_data('Y');
+start:while(!data_r)
+{		data_r=SBUF;
+	RI=0;
+							P2 = 0xA0; // Turn ON all LED's connected to Port1
+							delay();
+							P2 = 0x00; // Turn OFF all LED's connected to Port1
+							delay();
+}
 
-    while(1)
+	if(data_r=='x')
+					{
+					Transmit_data('y');
+					data_r=0;
+					}
+	else goto start;
+
+				while(1)
     {
-	touch();
-	switch(state)
-		{
-		case 0: P2 = 0xA0; // Turn ON all LED's connected to Port1
-			delay();
-        		P2 = 0x00; // Turn OFF all LED's connected to Port1
-        		delay();
-			Transmit_data('l');
-			break;
-		case 1: P2 = 0x80; // Turn ON all LED's connected to Port1
-			Transmit_data('a');
-			break;
-		case 2: P2 = 0x80; // Turn ON all LED's connected to Port1
-			delay();
-        		P2 = 0x00; // Turn OFF all LED's connected to Port1
-        		delay();
-			Transmit_data('b');
-			break;
-		case 3: P2 = 0xC0; // Turn ON all LED's connected to Port1
-			delay();
-        		P2 = 0x00; // Turn OFF all LED's connected to Port1
-        		delay();
-			Transmit_data('c');
-			break;
-		case 4: P2 = 0x60; // Turn ON all LED's connected to Port1
-			delay();
-        		P2 = 0x00; // Turn OFF all LED's connected to Port1
-        		delay();
-			Transmit_data('e');
-			break;
-		case 5: P2 = 0x20; // Turn ON all LED's connected to Port1
-			delay();
-        		P2 = 0x00; // Turn OFF all LED's connected to Port1
-        		delay();
-			Transmit_data('f');
-			break;
-		case 6: P2 = 0x20; // Turn ON all LED's connected to Port1
-			Transmit_data('g');
-			break;
-		default:break;
-		}
-    }
+			touch();
+			check_x();
+			
+			}
 }
  
 
 void delay(void)
 {
     int i,j;
-    for(i=0;i<0x77;i++)
+    for(i=0;i<0x33;i++)
          for(j=0;j<0xff;j++);
 }
 
@@ -92,33 +66,103 @@ void Transmit_data(char tx_data)
 	TI = 0;			/* Clear TI flag */
 }
 
+void receive_data()
+{
+	while (RI==0);		/* Wait until stop bit transmit */
+	data_r = SBUF;		/* Load char in SBUF register */
+	RI = 0;			/* Clear TI flag */
+}
+
+
+void check_x()
+{
+	data_r=0;
+	TI=0;
+	data_r = SBUF;		/* Load char in SBUF register */
+	RI = 0;			/* Clear TI flag */
+	if(data_r=='x')
+	Transmit_data('y');
+}
 void startup(void)
 {
 P2 = 0x00;
-delay();
+delay();delay();delay();
 P2 = 0xE0;
-delay();
+delay();delay();delay();
 P2 = 0x80;
-delay();
+delay();delay();delay();
 P2 = 0x40;
-delay();
+delay();delay();delay();
 P2 = 0x20;
-delay();
+delay();delay();delay();
 }
 
 void touch(void)
 {
-    if(P1 == 0x3e)state = 1;
+	switch(P1)
+			{
+			case 0x3f:
+				Transmit_data('l');
+					P2 = 0xA0; // Turn ON all LED's connected to Port1
+					delay();
+					delay();
+					delay();
+					P2 = 0x00; // Turn OFF all LED's connected to Port1
+					delay();
+					delay();
+					delay();
+					break;
+			case 0x3e:				Transmit_data('a');
+ P2 = 0x80; // Turn ON all LED's connected to Port1
+							delay();
+							delay();
+				break;
+			case 0x3d:				Transmit_data('b');
+ P2 = 0x80; // Turn ON all LED's connected to Port1
+				delay();
+							delay();
+							delay();
+							P2 = 0x00; // Turn OFF all LED's connected to Port1
+							delay();
+							delay();
+							delay();
+				break;
+			case 0x3b:				Transmit_data('c');
+ P2 = 0xC0; // Turn ON all LED's connected to Port1
+							delay();
+							delay();
+				delay();
+							P2 = 0x00; // Turn OFF all LED's connected to Port1
+							delay();
+							delay();
+							delay();
 
-    else if(P1 == 0x3d)state = 2;
-
-    else if(P1 == 0x3b)state = 3;
-
-    else if(P1 == 0x37)state = 4;
-
-    else if(P1 == 0x2f)state = 5;
-
-    else if(P1 == 0x1f)state = 6;
-
-    else state = 0;
+				break;
+			case 0x37:				Transmit_data('e');
+ P2 = 0x60; // Turn ON all LED's connected to Port1
+							delay();
+							delay();
+				delay();
+							P2 = 0x00; // Turn OFF all LED's connected to Port1
+							delay();
+							delay();
+							delay();
+				break;
+			case 0x2f:				Transmit_data('f');
+ P2 = 0x20; // Turn ON all LED's connected to Port1
+							delay();
+							delay();
+				delay();
+							P2 = 0x00; // Turn OFF all LED's connected to Port1
+							delay();
+							delay();
+							delay();
+				break;
+			case 0x1f:				Transmit_data('g');
+  P2 = 0x20; // Turn ON all LED's connected to Port1
+							delay();
+							delay();
+				break;
+		default:break;
+			}
 }

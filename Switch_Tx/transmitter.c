@@ -73,7 +73,7 @@ Transmit_data('Y');
 void delay(void)
 {
     int i,j;
-    for(i=0;i<0xff;i++)
+    for(i=0;i<0x77;i++)
          for(j=0;j<0xff;j++);
 }
 

@@ -520,7 +520,7 @@ _main:
 ;	 function delay
 ;	-----------------------------------------
 _delay:
-;	transmitter.c:76: for(i=0;i<0xff;i++)
+;	transmitter.c:76: for(i=0;i<0x77;i++)
 	mov	r6,#0x00
 	mov	r7,#0x00
 00106$:
@@ -539,14 +539,14 @@ _delay:
 	mov	a,r2
 	orl	a,r3
 	jnz	00105$
-;	transmitter.c:76: for(i=0;i<0xff;i++)
+;	transmitter.c:76: for(i=0;i<0x77;i++)
 	inc	r6
 	cjne	r6,#0x00,00124$
 	inc	r7
 00124$:
 	clr	c
 	mov	a,r6
-	subb	a,#0xff
+	subb	a,#0x77
 	mov	a,r7
 	xrl	a,#0x80
 	subb	a,#0x80

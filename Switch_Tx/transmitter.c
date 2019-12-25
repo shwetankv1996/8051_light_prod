@@ -5,42 +5,89 @@ int state = 0;
 void delay(void);
 void UART_Init(void);
 void Transmit_data(char);
-void receive_data();
 void startup(void);
 void touch(void);
 void check_x(void);
+void InitTimer1(void);
 
 char data_r=0;
-void main(void)
-{
+volatile int timerCount = 0;
+volatile int time_delay = 20;
 
-P1 = 0xff;
-P2 = 0x00;
-state = 0;
-UART_Init();
-startup();
-start:while(!data_r)
-{		data_r=SBUF;
-	RI=0;
-							P2 = 0xA0; // Turn ON all LED's connected to Port1
-							delay();
-							P2 = 0x00; // Turn OFF all LED's connected to Port1
-							delay();
+void isr_timer0(void) __interrupt 1   // It is called after every 50msec
+{
+    TH0  = 0X4B;         // ReLoad the timer value for 50ms
+    TL0  = 0XFD;
+    timerCount++;
+
+
+   if(timerCount <= time_delay) // count for 1sec delay(50msx20 = 1000ms = 1sec)
+    {
+        switch(state)
+	{
+	case 0:P2 =0xA0;break;	
+	case 1:P2 =0x80;break;
+	case 2:P2 =0x80;break;
+	case 3:P2 =0xc0;break;
+	case 4:P2 =0x60;break;
+	case 5:P2 =0x20;break;
+	case 6:P2 =0x20;break;
+	default:break;}
+    }
+
+   else if((timerCount > time_delay) &&(timerCount<time_delay*2))
+    {
+        switch(state)
+	{
+	case 0:	
+	case 1:
+	case 3:
+	case 4:
+	case 6:P2 =0x00;break;
+	case 2:P2 =0x80;break;
+	case 5:P2 =0x20;break;
+	default:break;}
+    }
+
+   else
+	timerCount = 0;
 }
 
+void main(void)
+{
+	P1 = 0xff;
+	P2 = 0x00;
+	state = 0;
+	startup();
+	P2 = 0x00;
+	UART_Init();
+	start:while(!data_r)
+	{
+		data_r=SBUF;
+		RI=0;
+		P2 = 0xA0; // Turn ON all LED's connected to Port1
+		delay();
+		P2 = 0x00; // Turn OFF all LED's connected to Port1
+		delay();
+	}
+
 	if(data_r=='x')
-					{
-					Transmit_data('y');
-					data_r=0;
-					}
+		{
+		Transmit_data('y');
+		data_r=0;
+		}
+
 	else goto start;
 
-				while(1)
-    {
-			touch();
-			check_x();
-			
-			}
+	InitTimer1();
+	ET0 = 1;         // Enable Timer1 interrupts	
+	EA  = 1;         // Global interrupt enable
+
+	while(1)
+		{
+		touch();
+		check_x();
+		}
 }
  
 
@@ -66,12 +113,6 @@ void Transmit_data(char tx_data)
 	TI = 0;			/* Clear TI flag */
 }
 
-void receive_data()
-{
-	while (RI==0);		/* Wait until stop bit transmit */
-	data_r = SBUF;		/* Load char in SBUF register */
-	RI = 0;			/* Clear TI flag */
-}
 
 
 void check_x()
@@ -86,83 +127,75 @@ void check_x()
 void startup(void)
 {
 P2 = 0x00;
-delay();delay();delay();
+delay();delay();delay();delay();
 P2 = 0xE0;
-delay();delay();delay();
+delay();delay();delay();delay();
 P2 = 0x80;
-delay();delay();delay();
+delay();delay();delay();delay();
 P2 = 0x40;
-delay();delay();delay();
+delay();delay();delay();delay();
 P2 = 0x20;
-delay();delay();delay();
+delay();delay();delay();delay();
 }
 
 void touch(void)
 {
 	switch(P1)
-			{
-			case 0x3f:
-				Transmit_data('l');
-					P2 = 0xA0; // Turn ON all LED's connected to Port1
-					delay();
-					delay();
-					delay();
-					P2 = 0x00; // Turn OFF all LED's connected to Port1
-					delay();
-					delay();
-					delay();
-					break;
-			case 0x3e:				Transmit_data('a');
- P2 = 0x80; // Turn ON all LED's connected to Port1
-							delay();
-							delay();
-				break;
-			case 0x3d:				Transmit_data('b');
- P2 = 0x80; // Turn ON all LED's connected to Port1
-				delay();
-							delay();
-							delay();
-							P2 = 0x00; // Turn OFF all LED's connected to Port1
-							delay();
-							delay();
-							delay();
-				break;
-			case 0x3b:				Transmit_data('c');
- P2 = 0xC0; // Turn ON all LED's connected to Port1
-							delay();
-							delay();
-				delay();
-							P2 = 0x00; // Turn OFF all LED's connected to Port1
-							delay();
-							delay();
-							delay();
+	{
+	case 0x3f:
+		Transmit_data('l');
+		time_delay=10;
+		state = 0;
+		break;
 
-				break;
-			case 0x37:				Transmit_data('e');
- P2 = 0x60; // Turn ON all LED's connected to Port1
-							delay();
-							delay();
-				delay();
-							P2 = 0x00; // Turn OFF all LED's connected to Port1
-							delay();
-							delay();
-							delay();
-				break;
-			case 0x2f:				Transmit_data('f');
- P2 = 0x20; // Turn ON all LED's connected to Port1
-							delay();
-							delay();
-				delay();
-							P2 = 0x00; // Turn OFF all LED's connected to Port1
-							delay();
-							delay();
-							delay();
-				break;
-			case 0x1f:				Transmit_data('g');
-  P2 = 0x20; // Turn ON all LED's connected to Port1
-							delay();
-							delay();
-				break;
-		default:break;
-			}
+	case 0x3e:
+		Transmit_data('a');
+		time_delay=120;
+		state = 1;
+		break;
+		
+	case 0x3d:
+		Transmit_data('b');
+		state = 2;
+		time_delay=5;
+		break;
+
+	case 0x3b:
+		Transmit_data('c');
+		time_delay=10;
+		state = 3;
+		break;
+
+	case 0x37:
+		Transmit_data('e');
+		state = 4;
+		time_delay=10;
+		break;
+
+	case 0x2f:
+		Transmit_data('f');
+		state = 5;
+		time_delay=5;
+		break;
+
+	case 0x1f:
+		Transmit_data('g');
+		state = 6;
+		time_delay=120;
+		break;
+
+	default:break;
+	}
 }
+
+
+
+void InitTimer1(void)
+{
+	TMOD |= 0x01;    // Set timer0 in mode 1
+	TH0 = 0x4B;      // 50 msec reloading time
+	TL0 = 0xFD;      // First time value
+	TR0 = 1;         // Start Timer 1
+	ET0 = 1;         // Enable Timer1 interrupts	
+}
+

@@ -13,84 +13,47 @@ void InitTimer1(void);
 char data_r=0;
 char received=1;
 volatile int timerCount = 0;
-volatile int time_delay = 15;
-char button='l';
+volatile int time_delay = 20;
 
 void isr_timer0(void) __interrupt 1   // It is called after every 50msec
 {
-    TH0  = 0XDC;         // ReLoad the timer value for 50ms
-    TL0  = 0X00;
+    TH0  = 0X4B;         // ReLoad the timer value for 50ms
+    TL0  = 0XFD;
     timerCount++;
-	switch(P1)
+
+
+   if(timerCount <= time_delay) // count for 1sec delay(50msx20 = 1000ms = 1sec)
+    {
+        switch(state)
 	{
-	case 0x3f:
-	//	Transmit_data('l');
-		time_delay=10;
-		state = 0;
-		button = 'l';
-		break;
+	case 0:		Transmit_data('l');P2 =0xA0;break;	
+	case 1:		Transmit_data('a');P2 =0x80;break;
+	case 2:		Transmit_data('b');P2 =0x80;break;
+	case 3:		Transmit_data('c');P2 =0xc0;break;
+	case 4:		Transmit_data('e');P2 =0x60;break;
+	case 5:		Transmit_data('f');P2 =0x20;break;
+	case 6:		Transmit_data('g');P2 =0x20;break;
+	case 7:		Transmit_data('d');P2 =0x40;break;
+	default:break;}
+    }
 
-	case 0x3e:
-	//	Transmit_data('a');
-		time_delay=120;
-		state = 1;
-		button = 'a';
-		break;
-		
-	case 0x3d:
-	//	Transmit_data('b');
-		state = 2;
-		time_delay=5;
-		button = 'b';
-		break;
+   else if((timerCount > time_delay) &&(timerCount<time_delay*2))
+    {
+        switch(state)
+	{
+	case 0:	
+	case 1:
+	case 3:
+	case 4:
+	case 6:
+	case 7:P2 =0x00;break;
+	case 2:P2 =0x80;break;
+	case 5:P2 =0x20;break;
+	default:break;}
+    }
 
-	case 0x3b:
-		if(received)
-		{//Transmit_data('d');
-		state = 7;
-		button = 'd';
-		}
-		else
-		{//Transmit_data('c');
-		state = 3;
-		button = 'c';
-		}
-		time_delay=10;
-		break;
-
-	case 0x37:
-		if(received)
-		{//Transmit_data('d');
-		state = 7;
-		button = 'd';
-		}
-		else
-		{//Transmit_data('e');
-		state = 4;
-		button = 'e';
-		}
-		time_delay=10;
-		break;
-
-	case 0x2f:
-	//	Transmit_data('f');
-		state = 5;
-		time_delay=5;
-		button = 'f';
-		break;
-
-	case 0x1f:
-	//	Transmit_data('g');
-		state = 6;
-		button = 'g';
-		time_delay=120;
-		break;
-
-	default:break;
-	}
-
-	if(timerCount == 30)
-	Transmit_data(button);
+   else
+	timerCount = 0;
 }
 
 void main(void)
@@ -184,42 +147,63 @@ delay();delay();delay();delay();
 
 void touch(void)
 {
-   if(timerCount <= (time_delay*5)) // count for 1sec delay(50msx20 = 1000ms = 1sec)
-    {
-        switch(state)
+	switch(P1)
 	{
-	case 0:	P2 =0xA0;break;	
-	case 1:	P2 =0x80;break;
-	case 2:	P2 =0x80;break;
-	case 3:	P2 =0xc0;break;
-	case 4:	P2 =0x60;break;
-	case 5:	P2 =0x20;break;
-	case 6:	P2 =0x20;break;
-	case 7:	P2 =0x40;break;
-	default:break;}
-    }
+	case 0x3f:
+		Transmit_data('l');
+		time_delay=10;
+		state = 0;
+		break;
 
-/*   else if(timerCount==time_delay)
-	Transmit_data(button);
-*/
-   else if((timerCount > time_delay) &&(timerCount<time_delay*10))
-    {
-        switch(state)
-	{
-	case 0:	
-	case 1:
-	case 3:
-	case 4:
-	case 6:
-	case 7:P2 =0x00;break;
-	case 2:P2 =0x80;break;
-	case 5:P2 =0x20;break;
-	default:break;}
-    }
+	case 0x3e:
+		Transmit_data('a');
+		time_delay=120;
+		state = 1;
+		break;
+		
+	case 0x3d:
+		Transmit_data('b');
+		state = 2;
+		time_delay=5;
+		break;
 
-   else
-	timerCount = 0;
+	case 0x3b:
+		if(received)
+		{Transmit_data('d');
+		state = 7;
+		}
+		else
+		{Transmit_data('c');
+		state = 3;
+		}
+		time_delay=10;
+		break;
 
+	case 0x37:
+		if(received)
+		{Transmit_data('d');
+		state = 7;
+		}
+		else
+		{Transmit_data('e');
+		state = 4;
+		}
+		time_delay=10;
+		break;
+
+	case 0x2f:
+		Transmit_data('f');
+		state = 5;
+		time_delay=5;
+		break;
+
+	case 0x1f:
+		state = 6;
+		time_delay=120;
+		break;
+
+	default:break;
+	}
 }
 
 
@@ -227,8 +211,8 @@ void touch(void)
 void InitTimer1(void)
 {
 	TMOD |= 0x01;    // Set timer0 in mode 1
-	TH0 = 0xDC;      // 50 msec reloading time
-	TL0 = 0x00;      // First time value
+	TH0 = 0x4B;      // 50 msec reloading time
+	TL0 = 0xFD;      // First time value
 	TR0 = 1;         // Start Timer 1
 	ET0 = 1;         // Enable Timer1 interrupts	
 }

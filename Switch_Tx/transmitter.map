@@ -51,11 +51,11 @@ C:   0000000A  l_GSINIT2
 C:   00000010  s_REG_BANK_2                    
 C:   00000011  l_HOME                          
 C:   00000011  s_GSINIT0                       
-C:   00000011  s_OSEG                          
+C:   00000013  s_OSEG                          
 C:   00000014  s_GSINIT1                       
 C:   00000014  s_GSINIT2                       
-C:   00000016  l_GSINIT                        
 C:   00000018  s_REG_BANK_3                    
+C:   0000001A  l_GSINIT                        
 C:   0000001E  s_GSINIT3                       
 ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
 Hexadecimal  [32-Bits]
@@ -75,14 +75,14 @@ C:   0000002A  l_GSINIT4
 C:   00000040  s_GSINIT4                       
 C:   0000006A  s_GSINIT                        
 C:   0000006A  s_GSINIT5                       
-C:   00000073  l_DSEG                          
-C:   00000080  s_GSFINAL                       
-C:   00000083  s_CSEG                          
+C:   00000075  l_DSEG                          
+C:   00000084  s_GSFINAL                       
+C:   00000087  s_CSEG                          
 C:   000000DF  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   00000339  l_CSEG                          
-C:   000003BC  s_CONST                         
-C:   000003BC  s_XINIT                         
+C:   000003A7  l_CSEG                          
+C:   0000042E  s_CONST                         
+C:   0000042E  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -256,26 +256,28 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-DSEG                                00000000    00000073 =         115. bytes (REL,CON)
+DSEG                                00000000    00000075 =         117. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00000008  _state                             transmitter
-     0000000A  _data_r                            transmitter
-     0000000B  _received                          transmitter
-     0000000C  _timerCount                        transmitter
-     0000000E  _time_delay                        transmitter
-     00000010  _button                            transmitter
+     0000000A  _state_was                         transmitter
+     0000000C  _data_r                            transmitter
+     0000000D  _received                          transmitter
+     0000000E  _timerCount                        transmitter
+     00000010  _time_delay                        transmitter
+     00000012  _button                            transmitter
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                00000011    00000002 =           2. bytes (REL,OVR)
+OSEG                                00000013    00000002 =           2. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00000011  __mulint_PARM_2                    _mulint
+     00000013  __mulint_PARM_2                    _mulint
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 Hexadecimal  [32-Bits]
@@ -347,7 +349,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSINIT                              0000006A    00000016 =          22. bytes (REL,CON,CODE)
+GSINIT                              0000006A    0000001A =          26. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -356,7 +358,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-GSFINAL                             00000080    00000003 =           3. bytes (REL,CON,CODE)
+GSFINAL                             00000084    00000003 =           3. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -365,22 +367,22 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000083    00000339 =         825. bytes (REL,CON,CODE)
+CSEG                                00000087    000003A7 =         935. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-C:   00000083  _isr_timer0                        transmitter
-C:   000001A1  _main                              transmitter
-C:   000001E8  _delay                             transmitter
-C:   00000211  _UART_Init                         transmitter
-C:   0000021D  _Transmit_data                     transmitter
-C:   00000226  _check_x                           transmitter
-C:   00000251  _startup                           transmitter
-C:   0000028D  _touch                             transmitter
-C:   0000038D  _InitTimer1                        transmitter
-C:   0000039B  __mulint                           _mulint
-C:   0000039B  __mulint_dummy                     _mulint
-C:   000003B8  __sdcc_external_startup            _startup
+C:   00000087  _isr_timer0                        transmitter
+C:   00000317  _main                              transmitter
+C:   0000032A  _delay                             transmitter
+C:   00000353  _UART_Init                         transmitter
+C:   0000035F  _handshake                         transmitter
+C:   00000385  _Transmit_data                     transmitter
+C:   0000038E  _check_x                           transmitter
+C:   000003B9  _startup                           transmitter
+C:   000003FF  _InitTimer1                        transmitter
+C:   0000040D  __mulint                           _mulint
+C:   0000040D  __mulint_dummy                     _mulint
+C:   0000042A  __sdcc_external_startup            _startup
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 
 Files Linked                              [ module(s) ]

@@ -80,9 +80,9 @@ C:   00000084  s_GSFINAL
 C:   00000087  s_CSEG                          
 C:   000000DF  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   000003A7  l_CSEG                          
-C:   0000042E  s_CONST                         
-C:   0000042E  s_XINIT                         
+C:   000003A2  l_CSEG                          
+C:   00000429  s_CONST                         
+C:   00000429  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -367,22 +367,22 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                00000087    000003A7 =         935. bytes (REL,CON,CODE)
+CSEG                                00000087    000003A2 =         930. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   00000087  _isr_timer0                        transmitter
-C:   00000317  _main                              transmitter
-C:   0000032A  _delay                             transmitter
-C:   00000353  _UART_Init                         transmitter
-C:   0000035F  _handshake                         transmitter
-C:   00000385  _Transmit_data                     transmitter
-C:   0000038E  _check_x                           transmitter
-C:   000003B9  _startup                           transmitter
-C:   000003FF  _InitTimer1                        transmitter
-C:   0000040D  __mulint                           _mulint
-C:   0000040D  __mulint_dummy                     _mulint
-C:   0000042A  __sdcc_external_startup            _startup
+C:   000002E9  _main                              transmitter
+C:   00000325  _delay                             transmitter
+C:   0000034E  _UART_Init                         transmitter
+C:   0000035A  _handshake                         transmitter
+C:   00000380  _Transmit_data                     transmitter
+C:   00000389  _check_x                           transmitter
+C:   000003B4  _startup                           transmitter
+C:   000003FA  _InitTimer1                        transmitter
+C:   00000408  __mulint                           _mulint
+C:   00000408  __mulint_dummy                     _mulint
+C:   00000425  __sdcc_external_startup            _startup
 ASxxxx Linker V03.00 + NoICE + sdld,  page 19.
 
 Files Linked                              [ module(s) ]

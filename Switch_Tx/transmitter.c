@@ -27,14 +27,14 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 	{
 	case 0x3f:
 	//	Transmit_data('l');
-		time_delay=15;
+		//time_delay=15;
 		state = 0;
-		button = 'l';
+	//	button = 'l';
 		break;
 
 	case 0x3e:
 		Transmit_data('a');
-		time_delay=120;
+		time_delay=10;
 		state = 1;
 		button = 'a';
 		break;
@@ -57,7 +57,7 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 		state = 3;
 		button = 'c';
 		}
-		time_delay=7;
+		time_delay=10;
 		break;
 
 	case 0x37:
@@ -71,7 +71,7 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 		state = 4;
 		button = 'e';
 		}
-		time_delay=7;
+		time_delay=10;
 		break;
 
 	case 0x2f:
@@ -85,7 +85,7 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 		Transmit_data('g');
 		state = 6;
 		button = 'g';
-		time_delay=120;
+		time_delay=10;
 		break;
 
 	default:break;
@@ -100,7 +100,7 @@ if(((state_was==2)||(state_was==5))&&(state_was!=state))
     {
         switch(state)
 	{
-	case 0:	P2 =0xA0;break;	
+	//case 0:	P2 =0xA0;break;	
 	case 1:	P2 =0x80;break;
 //	case 2:	P2 =0x80;break;
 	case 3:	P2 =0xc0;break;
@@ -112,14 +112,12 @@ if(((state_was==2)||(state_was==5))&&(state_was!=state))
 	default:break;}
     }
 
- /*  else if(timerCount==(time_delay*10))
-	Transmit_data(button);
-*/
+
    else if((timerCount > time_delay) &&(timerCount<time_delay*20)) // count for LED-ON delay
     {
         switch(state)
 	{
-	case 0:	
+	//case 0:	
 	case 1:
 	case 3:
 	case 4:
@@ -151,7 +149,21 @@ void main(void)
 
 	while(1)
 		{
-//		touch();
+		if(state)
+		delay();
+		else
+		{
+		button = 'l';
+		delay();
+		P2=0x00;
+		delay();
+		delay();
+		delay();
+		P2=0xA0;
+		delay();
+		delay();
+		delay();
+		}
 		check_x();
 		}
 }
@@ -237,47 +249,6 @@ delay();delay();delay();delay();
 P2 = 0x00;
 }
 
-/*
-void touch(void)
-{
-   if(timerCount < (time_delay*10)) // count for LED-ON delay
-    {
-        switch(state)
-	{
-	case 0:	P2 =0xA0;break;	
-	case 1:	P2 =0x80;break;
-//	case 2:	P2 =0x80;break;
-	case 3:	P2 =0xc0;break;
-	case 4:	P2 =0x60;break;
-//	case 5:	P2 =0x20;break;
-	case 6:	P2 =0x20;break;
-	case 7:	P2 =0x40;break;
-	default:break;}
-    }
-
-   else if(timerCount==(time_delay*10))
-	Transmit_data(button);
-*/
- /*  else if((timerCount > time_delay) &&(timerCount<time_delay*20)) // count for LED-ON delay
-    {
-        switch(state)
-	{
-	case 0:	
-	case 1:
-	case 3:
-	case 4:
-	case 6:
-	case 7:P2 =0x00;break;
-//	case 2:P2 =0x80;break;
-//	case 5:P2 =0x20;break;
-	default:break;}
-    }
-
-   else
-	timerCount = 0;
-
-}
-*/
 
 
 void InitTimer1(void)

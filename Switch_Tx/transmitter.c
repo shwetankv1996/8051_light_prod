@@ -1,7 +1,4 @@
 #include "8052.h"
- 
-volatile int state = 0;
-volatile int state_was = 0;
 
 void delay(void);
 void UART_Init(void);
@@ -11,104 +8,142 @@ void touch(void);
 void check_x(void);
 void InitTimer1(void);
 void handshake(void);
+void default_and_a_g(void);
+
+volatile int state = 0;
+volatile int state_was = 0;
+volatile int timerCount = 0;
+volatile int time_delay = 15;
+volatile __bit a_g=0;
+volatile __bit pushed=0;
+volatile char button='l';
 
 char data_r=0;
 char received=1;
-volatile int timerCount = 0;
-volatile int time_delay = 15;
-char button='l';
 
 void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 {
     TH0  = 0Xee;         // ReLoad the timer value for 5ms
     TL0  = 0X00;
     timerCount++;
-	switch(P1)
+
+	if(!pushed)
 	{
-	case 0x3f:
-	//	Transmit_data('l');
-		//time_delay=15;
-		state = 0;
-	//	button = 'l';
-		break;
+		switch(P1)
+		{
+		case 0x3f:
+			pushed = 0;
+			break;
 
-	case 0x3e:
-		Transmit_data('a');
-		time_delay=10;
-		state = 1;
-		button = 'a';
-		break;
-		
-	case 0x3d:
-		Transmit_data('b');
-		state = 2;
-		P2 =0x80;
-		button = 'b';
-		break;
+		case 0x3e:
+			pushed = 1;
+			Transmit_data('a');
+			P2 =0x80;
+			state = 1;
+			button = 'a';
+			a_g=1;
+			break;
+			
+		case 0x3d:
+			pushed = 1;
+			Transmit_data('b');
+			time_delay=3;
+			state = 2;
+			button = 'b';
+			a_g=0;
+			break;
 
-	case 0x3b:
-		if(received)
-		{Transmit_data('d');
-		state = 7;
-		button = 'd';
+		case 0x3b:
+			if(received)
+			{		pushed = 1;
+				Transmit_data('d');
+			state = 7;
+			button = 'd';
+			}
+			else
+			{		pushed = 1;
+				Transmit_data('c');
+			state = 3;
+			button = 'c';
+			}
+			time_delay=3;
+			a_g=0;
+			break;
+
+		case 0x37:
+			if(received)
+			{		pushed = 1;
+				Transmit_data('d');
+			state = 7;
+			button = 'd';
+			}
+			else
+			{
+			pushed = 1;
+			Transmit_data('e');
+			state = 4;
+			button = 'e';
+			}
+			time_delay=3;
+			a_g=0;
+			break;
+
+		case 0x2f:
+			pushed = 1;
+			Transmit_data('f');
+			state = 5;
+			button = 'f';
+			time_delay=3;
+			a_g=0;
+			break;
+
+		case 0x1f:
+			pushed = 1;
+			Transmit_data('g');
+			P2 =0x20;
+			state = 6;
+			button = 'g';
+			a_g=1;
+			break;
+
+		case 0x33:
+			pushed = 1;
+			Transmit_data('d');
+			state = 7;
+			button = 'd';
+			time_delay=3;
+			a_g=0;
+			break;
+
+		default:pushed = 0;
+				break;
 		}
-		else
-		{Transmit_data('c');
-		state = 3;
-		button = 'c';
-		}
-		time_delay=10;
-		break;
-
-	case 0x37:
-		if(received)
-		{Transmit_data('d');
-		state = 7;
-		button = 'd';
-		}
-		else
-		{Transmit_data('e');
-		state = 4;
-		button = 'e';
-		}
-		time_delay=10;
-		break;
-
-	case 0x2f:
-		Transmit_data('f');
-		state = 5;
-		P2 =0x20;
-		button = 'f';
-		break;
-
-	case 0x1f:
-		Transmit_data('g');
-		state = 6;
-		button = 'g';
-		time_delay=10;
-		break;
-
-	default:break;
 	}
 
-	if(timerCount == 60)
-	Transmit_data(button);
+/************Send Button Data*****************************/
 
-if(((state_was==2)||(state_was==5))&&(state_was!=state))
-	{state = 8;button='u';}
-   if(timerCount < (time_delay*10)) // count for LED-ON delay
+if(timerCount == 60)
+	{
+	pushed=0;
+	Transmit_data(button);
+	}
+
+/************blink LEDs***********************************/
+
+if(timerCount < (time_delay*10)) // count for LED-ON delay
     {
         switch(state)
 	{
-	//case 0:	P2 =0xA0;break;	
+//	case 0:	P2 =0xA0;break;	
 	case 1:	P2 =0x80;break;
-//	case 2:	P2 =0x80;break;
+	case 2:	P2 =0x80;break;
 	case 3:	P2 =0xc0;break;
 	case 4:	P2 =0x60;break;
-//	case 5:	P2 =0x20;break;
+	case 5:	P2 =0x20;break;
 	case 6:	P2 =0x20;break;
 	case 7:	P2 =0x40;break;
 	case 8:	P2 =0x80;break;
+	case 9:	P2 =0x20;break;
 	default:break;}
     }
 
@@ -118,20 +153,20 @@ if(((state_was==2)||(state_was==5))&&(state_was!=state))
         switch(state)
 	{
 	//case 0:	
-	case 1:
+	case 2:
 	case 3:
 	case 4:
-	case 6:
+	case 5:
 	case 7:
-	case 8:P2 =0x00;break;
-//	case 2:P2 =0x80;break;
-//	case 5:P2 =0x20;break;
+	case 8:
+	case 9:P2 =0x00;break;
+	case 1:P2 =0x80;break;
+	case 6:P2 =0x20;break;
 	default:break;}
     }
 
    else
 	timerCount = 0;
-
 
 state_was=state;
 }
@@ -149,22 +184,17 @@ void main(void)
 
 	while(1)
 		{
-		if(state)
-		delay();
-		else
-		{
-		button = 'l';
-		delay();
-		P2=0x00;
-		delay();
-		delay();
-		delay();
-		P2=0xA0;
-		delay();
-		delay();
-		delay();
-		}
-		check_x();
+			back:				
+			if(!pushed)
+			{
+				delay();
+				if(!pushed)
+				{
+				default_and_a_g();
+				}
+			}
+			delay();
+			check_x();
 		}
 }
  
@@ -260,3 +290,36 @@ void InitTimer1(void)
 	ET0 = 1;         // Enable Timer1 interrupts	
 }
 
+
+void default_and_a_g()
+{
+
+		if(a_g)
+		{
+			if(((state_was==1)||(state_was==8))&&(!pushed))
+				{state = 8;		Transmit_data('n');		time_delay=10;
+				button='n';
+				}
+			else if(((state_was==6)||(state_was==9))&&(!pushed))
+				{state = 9;		Transmit_data('u');		time_delay=10;
+				button='u';
+				}
+		}
+		else
+		{
+			a_g=0;
+			state=0;
+			button = 'l';	
+			Transmit_data('l');
+			P2=0xA0;
+			delay();
+			delay();
+			delay();
+			P2=0x00;
+			delay();
+			delay();
+			delay();
+		}
+}
+	
+	

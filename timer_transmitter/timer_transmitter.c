@@ -4,11 +4,8 @@ void delay(void);
 void UART_Init(void);
 void Transmit_data(char);
 void startup(void);
-void touch(void);
-void check_x(void);
 void InitTimer1(void);
 void handshake(void);
-void default_and_a_g(void);
 
 volatile int state = 0;
 volatile int state_was = 0;
@@ -16,7 +13,9 @@ volatile int timerCount = 0;
 volatile int time_delay = 15;
 volatile __bit a_g=0;
 volatile __bit pushed=0;
+volatile __bit state_l=0;
 volatile char button='l';
+volatile int count=15;
 
 char data_r=0;
 char received=1;
@@ -32,7 +31,13 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 		switch(P1)
 		{
 		case 0x3f:
-			pushed = 0;
+		count--;
+		pushed = 0;
+			if(!count)
+			{
+			state_l=1;
+			count=15;
+			}
 			break;
 
 		case 0x3e:
@@ -134,7 +139,7 @@ if(timerCount < (time_delay*10)) // count for LED-ON delay
     {
         switch(state)
 	{
-//	case 0:	P2 =0xA0;break;	
+	case 0:	P2 =0xA0;break;	
 	case 1:	P2 =0x80;break;
 	case 2:	P2 =0x80;break;
 	case 3:	P2 =0xc0;break;
@@ -152,7 +157,7 @@ if(timerCount < (time_delay*10)) // count for LED-ON delay
     {
         switch(state)
 	{
-	//case 0:	
+	case 0:	
 	case 2:
 	case 3:
 	case 4:
@@ -168,6 +173,51 @@ if(timerCount < (time_delay*10)) // count for LED-ON delay
    else
 	timerCount = 0;
 
+
+
+if((state_l)&&(!pushed))
+{
+/*	if((!pushed)&&(timerCount%12==0))
+	{
+		if((!pushed)&&(timerCount%17==0))
+		{*/
+			if(a_g)
+			{
+				if(((state_was==1)||(state_was==8))&&(!pushed))
+					{state = 8;		Transmit_data('n');		time_delay=10;
+					button='n';
+					}
+				else if(((state_was==6)||(state_was==9))&&(!pushed))
+					{state = 9;		Transmit_data('u');		time_delay=10;
+					button='u';
+					}
+			}
+			else
+			{
+				a_g=0;
+				state=0;
+				button = 'l';
+				time_delay=15;
+			}
+	//	}
+//	}
+}
+
+
+if(timerCount%13==0)
+{
+	data_r=0;
+	TI=0;
+	data_r = SBUF;		/* Load char in SBUF register */
+	RI = 0;			/* Clear TI flag */
+	if(data_r=='x')
+	Transmit_data('y');
+	else if((data_r=='m')||(data_r=='h'))
+	received = 0;
+	else if(data_r=='l')
+	received = 1;
+}	
+	
 state_was=state;
 }
 
@@ -184,20 +234,7 @@ void main(void)
 
 	while(1)
 		{
-			if(!pushed)
-			{
-				delay();
-				if(!pushed)
-				{
-				default_and_a_g();
-				}
-			}
-			else if(pushed)
-			{
-			delay();
-			check_x();
-			}
-			else {}
+
 		}
 }
  
@@ -207,24 +244,6 @@ void delay(void)
     int i,j;
     for(i=0;i<0x33;i++)
          for(j=0;j<0xff;j++);
-}
-
-
-
-void startup(void)
-{
-P1 = 0xff;
-P2 = 0x00;
-delay();delay();
-P2 = 0xE0;
-delay();
-P2 = 0x80;
-delay();delay();delay();delay();
-P2 = 0x40;
-delay();delay();delay();delay();
-P2 = 0x20;
-delay();delay();delay();delay();
-P2 = 0x00;
 }
 
 
@@ -268,18 +287,21 @@ void Transmit_data(char tx_data)
 
 
 
-void check_x()
+void startup(void)
 {
-	data_r=0;
-	TI=0;
-	data_r = SBUF;		/* Load char in SBUF register */
-	RI = 0;			/* Clear TI flag */
-	if(data_r=='x')
-	Transmit_data('y');
-	else if((data_r=='m')||(data_r=='h'))
-	received = 0;
-	else if(data_r=='l')
-	received = 1;
+P1 = 0xff;
+P2 = 0x00;
+P2 = 0x00;
+delay();delay();
+P2 = 0xE0;
+delay();
+P2 = 0x80;
+delay();delay();delay();delay();
+P2 = 0x40;
+delay();delay();delay();delay();
+P2 = 0x20;
+delay();delay();delay();delay();
+P2 = 0x00;
 }
 
 
@@ -292,37 +314,4 @@ void InitTimer1(void)
 	TR0 = 1;         // Start Timer 1
 	ET0 = 1;         // Enable Timer1 interrupts	
 }
-
-
-void default_and_a_g()
-{
-
-		if(a_g)
-		{
-			if(((state_was==1)||(state_was==8))&&(!pushed))
-				{state = 8;		Transmit_data('n');		time_delay=10;
-				button='n';
-				}
-			else if(((state_was==6)||(state_was==9))&&(!pushed))
-				{state = 9;		Transmit_data('u');		time_delay=10;
-				button='u';
-				}
-		}
-		else
-		{
-			a_g=0;
-			state=0;
-			button = 'l';	
-			//Transmit_data('l');
-			P2=0xA0;
-			delay();
-			delay();
-			delay();
-			P2=0x00;
-			delay();
-			delay();
-			delay();
-		}
-}
-	
 	

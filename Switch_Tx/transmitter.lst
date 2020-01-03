@@ -139,11 +139,11 @@
                                     139 	.globl _state_was
                                     140 	.globl _state
                                     141 	.globl _delay
-                                    142 	.globl _UART_Init
-                                    143 	.globl _handshake
-                                    144 	.globl _Transmit_data
-                                    145 	.globl _check_x
-                                    146 	.globl _startup
+                                    142 	.globl _startup
+                                    143 	.globl _UART_Init
+                                    144 	.globl _handshake
+                                    145 	.globl _Transmit_data
+                                    146 	.globl _check_x
                                     147 	.globl _InitTimer1
                                     148 	.globl _default_and_a_g
                                     149 ;--------------------------------------------------------
@@ -518,7 +518,7 @@
       00006E D2*01            [12]  518 	setb	_pushed
                                     519 ;	transmitter.c:40: Transmit_data('a');
       000070 75 82 61         [24]  520 	mov	dpl,#0x61
-      000073 12r03r39         [24]  521 	lcall	_Transmit_data
+      000073 12r03r81         [24]  521 	lcall	_Transmit_data
                                     522 ;	transmitter.c:41: P2 =0x80;
       000076 75 A0 80         [24]  523 	mov	_P2,#0x80
                                     524 ;	transmitter.c:42: state = 1;
@@ -538,7 +538,7 @@
       000087 D2*01            [12]  538 	setb	_pushed
                                     539 ;	transmitter.c:49: Transmit_data('b');
       000089 75 82 62         [24]  540 	mov	dpl,#0x62
-      00008C 12r03r39         [24]  541 	lcall	_Transmit_data
+      00008C 12r03r81         [24]  541 	lcall	_Transmit_data
                                     542 ;	transmitter.c:50: time_delay=3;
       00008F 75*06 03         [24]  543 	mov	_time_delay,#0x03
       000092 75*07 00         [24]  544 	mov	(_time_delay + 1),#0x00
@@ -562,7 +562,7 @@
       0000A7 D2*01            [12]  562 	setb	_pushed
                                     563 ;	transmitter.c:59: Transmit_data('d');
       0000A9 75 82 64         [24]  564 	mov	dpl,#0x64
-      0000AC 12r03r39         [24]  565 	lcall	_Transmit_data
+      0000AC 12r03r81         [24]  565 	lcall	_Transmit_data
                                     566 ;	transmitter.c:60: state = 7;
       0000AF 75*00 07         [24]  567 	mov	_state,#0x07
       0000B2 75*01 00         [24]  568 	mov	(_state + 1),#0x00
@@ -575,7 +575,7 @@
       0000BA D2*01            [12]  575 	setb	_pushed
                                     576 ;	transmitter.c:65: Transmit_data('c');
       0000BC 75 82 63         [24]  577 	mov	dpl,#0x63
-      0000BF 12r03r39         [24]  578 	lcall	_Transmit_data
+      0000BF 12r03r81         [24]  578 	lcall	_Transmit_data
                                     579 ;	transmitter.c:66: state = 3;
       0000C2 75*00 03         [24]  580 	mov	_state,#0x03
       0000C5 75*01 00         [24]  581 	mov	(_state + 1),#0x00
@@ -600,7 +600,7 @@
       0000DA D2*01            [12]  600 	setb	_pushed
                                     601 ;	transmitter.c:76: Transmit_data('d');
       0000DC 75 82 64         [24]  602 	mov	dpl,#0x64
-      0000DF 12r03r39         [24]  603 	lcall	_Transmit_data
+      0000DF 12r03r81         [24]  603 	lcall	_Transmit_data
                                     604 ;	transmitter.c:77: state = 7;
       0000E2 75*00 07         [24]  605 	mov	_state,#0x07
       0000E5 75*01 00         [24]  606 	mov	(_state + 1),#0x00
@@ -613,7 +613,7 @@
       0000ED D2*01            [12]  613 	setb	_pushed
                                     614 ;	transmitter.c:83: Transmit_data('e');
       0000EF 75 82 65         [24]  615 	mov	dpl,#0x65
-      0000F2 12r03r39         [24]  616 	lcall	_Transmit_data
+      0000F2 12r03r81         [24]  616 	lcall	_Transmit_data
                                     617 ;	transmitter.c:84: state = 4;
       0000F5 75*00 04         [24]  618 	mov	_state,#0x04
       0000F8 75*01 00         [24]  619 	mov	(_state + 1),#0x00
@@ -635,7 +635,7 @@
       000108 D2*01            [12]  635 	setb	_pushed
                                     636 ;	transmitter.c:93: Transmit_data('f');
       00010A 75 82 66         [24]  637 	mov	dpl,#0x66
-      00010D 12r03r39         [24]  638 	lcall	_Transmit_data
+      00010D 12r03r81         [24]  638 	lcall	_Transmit_data
                                     639 ;	transmitter.c:94: state = 5;
       000110 75*00 05         [24]  640 	mov	_state,#0x05
       000113 75*01 00         [24]  641 	mov	(_state + 1),#0x00
@@ -656,7 +656,7 @@
       000123 D2*01            [12]  656 	setb	_pushed
                                     657 ;	transmitter.c:102: Transmit_data('g');
       000125 75 82 67         [24]  658 	mov	dpl,#0x67
-      000128 12r03r39         [24]  659 	lcall	_Transmit_data
+      000128 12r03r81         [24]  659 	lcall	_Transmit_data
                                     660 ;	transmitter.c:103: P2 =0x20;
       00012B 75 A0 20         [24]  661 	mov	_P2,#0x20
                                     662 ;	transmitter.c:104: state = 6;
@@ -676,7 +676,7 @@
       00013B D2*01            [12]  676 	setb	_pushed
                                     677 ;	transmitter.c:111: Transmit_data('d');
       00013D 75 82 64         [24]  678 	mov	dpl,#0x64
-      000140 12r03r39         [24]  679 	lcall	_Transmit_data
+      000140 12r03r81         [24]  679 	lcall	_Transmit_data
                                     680 ;	transmitter.c:112: state = 7;
       000143 75*00 07         [24]  681 	mov	_state,#0x07
       000146 75*01 00         [24]  682 	mov	(_state + 1),#0x00
@@ -696,8 +696,8 @@
       000156 C2*01            [12]  696 	clr	_pushed
                                     697 ;	transmitter.c:120: }
       000158                        698 00118$:
-                                    699 ;	transmitter.c:125: if(timerCount == 60)
-      000158 74 3C            [12]  700 	mov	a,#0x3c
+                                    699 ;	transmitter.c:125: if(timerCount == 40)
+      000158 74 28            [12]  700 	mov	a,#0x28
       00015A B5*04 06         [24]  701 	cjne	a,_timerCount,00240$
       00015D E4               [12]  702 	clr	a
       00015E B5*05 02         [24]  703 	cjne	a,(_timerCount + 1),00240$
@@ -710,7 +710,7 @@
       000165 C2*01            [12]  710 	clr	_pushed
                                     711 ;	transmitter.c:128: Transmit_data(button);
       000167 85*08 82         [24]  712 	mov	dpl,_button
-      00016A 12r03r39         [24]  713 	lcall	_Transmit_data
+      00016A 12r03r81         [24]  713 	lcall	_Transmit_data
       00016D                        714 00120$:
                                     715 ;	transmitter.c:133: if(timerCount < (time_delay*10)) // count for LED-ON delay
       00016D 85*06*00         [24]  716 	mov	__mulint_PARM_2,_time_delay
@@ -944,363 +944,361 @@
                                     944 ;	-----------------------------------------
       0002BC                        945 _main:
                                     946 ;	transmitter.c:176: startup();
-      0002BC 12r03r6D         [24]  947 	lcall	_startup
+      0002BC 12r03r0C         [24]  947 	lcall	_startup
                                     948 ;	transmitter.c:178: UART_Init();
-      0002BF 12r03r07         [24]  949 	lcall	_UART_Init
+      0002BF 12r03r4F         [24]  949 	lcall	_UART_Init
                                     950 ;	transmitter.c:179: handshake();
-      0002C2 12r03r13         [24]  951 	lcall	_handshake
+      0002C2 12r03r5B         [24]  951 	lcall	_handshake
                                     952 ;	transmitter.c:181: InitTimer1();
-      0002C5 12r03rB3         [24]  953 	lcall	_InitTimer1
+      0002C5 12r03rB5         [24]  953 	lcall	_InitTimer1
                                     954 ;	transmitter.c:183: EA  = 1;         // Global interrupt enable
                                     955 ;	assignBit
       0002C8 D2 AF            [12]  956 	setb	_EA
                                     957 ;	transmitter.c:185: while(1)
-      0002CA                        958 00107$:
-                                    959 ;	transmitter.c:188: if(!pushed)
-      0002CA 20*01 09         [24]  960 	jb	_pushed,00105$
-                                    961 ;	transmitter.c:190: delay();
-      0002CD 12r02rDE         [24]  962 	lcall	_delay
-                                    963 ;	transmitter.c:191: if(!pushed)
-      0002D0 20*01 03         [24]  964 	jb	_pushed,00105$
-                                    965 ;	transmitter.c:193: default_and_a_g();
-      0002D3 12r03rC1         [24]  966 	lcall	_default_and_a_g
-      0002D6                        967 00105$:
-                                    968 ;	transmitter.c:196: delay();
-      0002D6 12r02rDE         [24]  969 	lcall	_delay
-                                    970 ;	transmitter.c:197: check_x();
-      0002D9 12r03r42         [24]  971 	lcall	_check_x
-                                    972 ;	transmitter.c:199: }
-      0002DC 80 EC            [24]  973 	sjmp	00107$
-                                    974 ;------------------------------------------------------------
-                                    975 ;Allocation info for local variables in function 'delay'
-                                    976 ;------------------------------------------------------------
-                                    977 ;i                         Allocated to registers r6 r7 
-                                    978 ;j                         Allocated to registers r4 r5 
+      0002CA                        958 00109$:
+                                    959 ;	transmitter.c:187: if(!pushed)
+      0002CA 20*01 0B         [24]  960 	jb	_pushed,00106$
+                                    961 ;	transmitter.c:189: delay();
+      0002CD 12r02rE3         [24]  962 	lcall	_delay
+                                    963 ;	transmitter.c:190: if(!pushed)
+      0002D0 20*01 F7         [24]  964 	jb	_pushed,00109$
+                                    965 ;	transmitter.c:192: default_and_a_g();
+      0002D3 12r03rC3         [24]  966 	lcall	_default_and_a_g
+      0002D6 80 F2            [24]  967 	sjmp	00109$
+      0002D8                        968 00106$:
+                                    969 ;	transmitter.c:195: else if(pushed)
+      0002D8 30*01 EF         [24]  970 	jnb	_pushed,00109$
+                                    971 ;	transmitter.c:197: delay();
+      0002DB 12r02rE3         [24]  972 	lcall	_delay
+                                    973 ;	transmitter.c:198: check_x();
+      0002DE 12r03r8A         [24]  974 	lcall	_check_x
+                                    975 ;	transmitter.c:202: }
+      0002E1 80 E7            [24]  976 	sjmp	00109$
+                                    977 ;------------------------------------------------------------
+                                    978 ;Allocation info for local variables in function 'delay'
                                     979 ;------------------------------------------------------------
-                                    980 ;	transmitter.c:202: void delay(void)
-                                    981 ;	-----------------------------------------
-                                    982 ;	 function delay
-                                    983 ;	-----------------------------------------
-      0002DE                        984 _delay:
-                                    985 ;	transmitter.c:205: for(i=0;i<0x33;i++)
-      0002DE 7E 00            [12]  986 	mov	r6,#0x00
-      0002E0 7F 00            [12]  987 	mov	r7,#0x00
-      0002E2                        988 00106$:
-                                    989 ;	transmitter.c:206: for(j=0;j<0xff;j++);
-      0002E2 7C FF            [12]  990 	mov	r4,#0xff
-      0002E4 7D 00            [12]  991 	mov	r5,#0x00
-      0002E6                        992 00105$:
-      0002E6 EC               [12]  993 	mov	a,r4
-      0002E7 24 FF            [12]  994 	add	a,#0xff
-      0002E9 FA               [12]  995 	mov	r2,a
-      0002EA ED               [12]  996 	mov	a,r5
-      0002EB 34 FF            [12]  997 	addc	a,#0xff
-      0002ED FB               [12]  998 	mov	r3,a
-      0002EE 8A 04            [24]  999 	mov	ar4,r2
-      0002F0 8B 05            [24] 1000 	mov	ar5,r3
-      0002F2 EA               [12] 1001 	mov	a,r2
-      0002F3 4B               [12] 1002 	orl	a,r3
-      0002F4 70 F0            [24] 1003 	jnz	00105$
-                                   1004 ;	transmitter.c:205: for(i=0;i<0x33;i++)
-      0002F6 0E               [12] 1005 	inc	r6
-      0002F7 BE 00 01         [24] 1006 	cjne	r6,#0x00,00124$
-      0002FA 0F               [12] 1007 	inc	r7
-      0002FB                       1008 00124$:
-      0002FB C3               [12] 1009 	clr	c
-      0002FC EE               [12] 1010 	mov	a,r6
-      0002FD 94 33            [12] 1011 	subb	a,#0x33
-      0002FF EF               [12] 1012 	mov	a,r7
-      000300 64 80            [12] 1013 	xrl	a,#0x80
-      000302 94 80            [12] 1014 	subb	a,#0x80
-      000304 40 DC            [24] 1015 	jc	00106$
-                                   1016 ;	transmitter.c:207: }
-      000306 22               [24] 1017 	ret
-                                   1018 ;------------------------------------------------------------
-                                   1019 ;Allocation info for local variables in function 'UART_Init'
-                                   1020 ;------------------------------------------------------------
-                                   1021 ;	transmitter.c:210: void UART_Init()
-                                   1022 ;	-----------------------------------------
-                                   1023 ;	 function UART_Init
-                                   1024 ;	-----------------------------------------
-      000307                       1025 _UART_Init:
-                                   1026 ;	transmitter.c:212: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
-      000307 75 89 20         [24] 1027 	mov	_TMOD,#0x20
-                                   1028 ;	transmitter.c:213: TH1 = 0xFD;		/* Load value for 9600 baud rate */
-      00030A 75 8D FD         [24] 1029 	mov	_TH1,#0xfd
-                                   1030 ;	transmitter.c:214: SCON = 0x50;		/* Mode 1, reception enable */
-      00030D 75 98 50         [24] 1031 	mov	_SCON,#0x50
-                                   1032 ;	transmitter.c:215: TR1 = 1;		/* Start timer 1 */
-                                   1033 ;	assignBit
-      000310 D2 8E            [12] 1034 	setb	_TR1
-                                   1035 ;	transmitter.c:216: }
-      000312 22               [24] 1036 	ret
-                                   1037 ;------------------------------------------------------------
-                                   1038 ;Allocation info for local variables in function 'handshake'
-                                   1039 ;------------------------------------------------------------
-                                   1040 ;	transmitter.c:219: void handshake()
-                                   1041 ;	-----------------------------------------
-                                   1042 ;	 function handshake
-                                   1043 ;	-----------------------------------------
-      000313                       1044 _handshake:
-                                   1045 ;	transmitter.c:221: start:while(!data_r)
-      000313                       1046 00102$:
-      000313 E5*09            [12] 1047 	mov	a,_data_r
-      000315 70 13            [24] 1048 	jnz	00104$
-                                   1049 ;	transmitter.c:223: data_r=SBUF;
-      000317 85 99*09         [24] 1050 	mov	_data_r,_SBUF
-                                   1051 ;	transmitter.c:224: RI=0;
-                                   1052 ;	assignBit
-      00031A C2 98            [12] 1053 	clr	_RI
-                                   1054 ;	transmitter.c:225: P2 = 0xA0; // Turn ON all LED's connected to Port1
-      00031C 75 A0 A0         [24] 1055 	mov	_P2,#0xa0
-                                   1056 ;	transmitter.c:226: delay();
-      00031F 12r02rDE         [24] 1057 	lcall	_delay
-                                   1058 ;	transmitter.c:227: P2 = 0x00; // Turn OFF all LED's connected to Port1
-      000322 75 A0 00         [24] 1059 	mov	_P2,#0x00
-                                   1060 ;	transmitter.c:228: delay();
-      000325 12r02rDE         [24] 1061 	lcall	_delay
-      000328 80 E9            [24] 1062 	sjmp	00102$
-      00032A                       1063 00104$:
-                                   1064 ;	transmitter.c:231: if(data_r=='x')
-      00032A 74 78            [12] 1065 	mov	a,#0x78
-      00032C B5*09 E4         [24] 1066 	cjne	a,_data_r,00102$
-                                   1067 ;	transmitter.c:233: Transmit_data('y');
-      00032F 75 82 79         [24] 1068 	mov	dpl,#0x79
-      000332 12r03r39         [24] 1069 	lcall	_Transmit_data
-                                   1070 ;	transmitter.c:234: data_r=0;
-      000335 75*09 00         [24] 1071 	mov	_data_r,#0x00
-                                   1072 ;	transmitter.c:237: else goto start;
-                                   1073 ;	transmitter.c:238: }
-      000338 22               [24] 1074 	ret
-                                   1075 ;------------------------------------------------------------
-                                   1076 ;Allocation info for local variables in function 'Transmit_data'
-                                   1077 ;------------------------------------------------------------
-                                   1078 ;tx_data                   Allocated to registers 
-                                   1079 ;------------------------------------------------------------
-                                   1080 ;	transmitter.c:241: void Transmit_data(char tx_data)
-                                   1081 ;	-----------------------------------------
-                                   1082 ;	 function Transmit_data
-                                   1083 ;	-----------------------------------------
-      000339                       1084 _Transmit_data:
-      000339 85 82 99         [24] 1085 	mov	_SBUF,dpl
-                                   1086 ;	transmitter.c:244: while (TI==0);		/* Wait until stop bit transmit */
-      00033C                       1087 00101$:
-                                   1088 ;	transmitter.c:245: TI = 0;			/* Clear TI flag */
-                                   1089 ;	assignBit
-      00033C 10 99 02         [24] 1090 	jbc	_TI,00114$
-      00033F 80 FB            [24] 1091 	sjmp	00101$
-      000341                       1092 00114$:
-                                   1093 ;	transmitter.c:246: }
-      000341 22               [24] 1094 	ret
-                                   1095 ;------------------------------------------------------------
-                                   1096 ;Allocation info for local variables in function 'check_x'
-                                   1097 ;------------------------------------------------------------
-                                   1098 ;	transmitter.c:250: void check_x()
-                                   1099 ;	-----------------------------------------
-                                   1100 ;	 function check_x
-                                   1101 ;	-----------------------------------------
-      000342                       1102 _check_x:
-                                   1103 ;	transmitter.c:253: TI=0;
-                                   1104 ;	assignBit
-      000342 C2 99            [12] 1105 	clr	_TI
-                                   1106 ;	transmitter.c:254: data_r = SBUF;		/* Load char in SBUF register */
-      000344 85 99*09         [24] 1107 	mov	_data_r,_SBUF
-                                   1108 ;	transmitter.c:255: RI = 0;			/* Clear TI flag */
-                                   1109 ;	assignBit
-      000347 C2 98            [12] 1110 	clr	_RI
-                                   1111 ;	transmitter.c:256: if(data_r=='x')
-      000349 74 78            [12] 1112 	mov	a,#0x78
-      00034B B5*09 06         [24] 1113 	cjne	a,_data_r,00108$
-                                   1114 ;	transmitter.c:257: Transmit_data('y');
-      00034E 75 82 79         [24] 1115 	mov	dpl,#0x79
-      000351 02r03r39         [24] 1116 	ljmp	_Transmit_data
-      000354                       1117 00108$:
-                                   1118 ;	transmitter.c:258: else if((data_r=='m')||(data_r=='h'))
-      000354 74 6D            [12] 1119 	mov	a,#0x6d
-      000356 B5*09 02         [24] 1120 	cjne	a,_data_r,00126$
-      000359 80 05            [24] 1121 	sjmp	00103$
-      00035B                       1122 00126$:
-      00035B 74 68            [12] 1123 	mov	a,#0x68
-      00035D B5*09 04         [24] 1124 	cjne	a,_data_r,00104$
-      000360                       1125 00103$:
-                                   1126 ;	transmitter.c:259: received = 0;
-      000360 75*0A 00         [24] 1127 	mov	_received,#0x00
-      000363 22               [24] 1128 	ret
-      000364                       1129 00104$:
-                                   1130 ;	transmitter.c:260: else if(data_r=='l')
-      000364 74 6C            [12] 1131 	mov	a,#0x6c
-      000366 B5*09 03         [24] 1132 	cjne	a,_data_r,00110$
-                                   1133 ;	transmitter.c:261: received = 1;
-      000369 75*0A 01         [24] 1134 	mov	_received,#0x01
-      00036C                       1135 00110$:
-                                   1136 ;	transmitter.c:262: }
-      00036C 22               [24] 1137 	ret
-                                   1138 ;------------------------------------------------------------
-                                   1139 ;Allocation info for local variables in function 'startup'
-                                   1140 ;------------------------------------------------------------
-                                   1141 ;	transmitter.c:265: void startup(void)
-                                   1142 ;	-----------------------------------------
-                                   1143 ;	 function startup
-                                   1144 ;	-----------------------------------------
-      00036D                       1145 _startup:
-                                   1146 ;	transmitter.c:267: P1 = 0xff;
-      00036D 75 90 FF         [24] 1147 	mov	_P1,#0xff
-                                   1148 ;	transmitter.c:268: P2 = 0x00;
-      000370 75 A0 00         [24] 1149 	mov	_P2,#0x00
-                                   1150 ;	transmitter.c:269: P2 = 0x00;
-      000373 75 A0 00         [24] 1151 	mov	_P2,#0x00
-                                   1152 ;	transmitter.c:270: delay();delay();
-      000376 12r02rDE         [24] 1153 	lcall	_delay
-      000379 12r02rDE         [24] 1154 	lcall	_delay
-                                   1155 ;	transmitter.c:271: P2 = 0xE0;
-      00037C 75 A0 E0         [24] 1156 	mov	_P2,#0xe0
-                                   1157 ;	transmitter.c:272: delay();
-      00037F 12r02rDE         [24] 1158 	lcall	_delay
-                                   1159 ;	transmitter.c:273: P2 = 0x80;
-      000382 75 A0 80         [24] 1160 	mov	_P2,#0x80
-                                   1161 ;	transmitter.c:274: delay();delay();delay();delay();
-      000385 12r02rDE         [24] 1162 	lcall	_delay
-      000388 12r02rDE         [24] 1163 	lcall	_delay
-      00038B 12r02rDE         [24] 1164 	lcall	_delay
-      00038E 12r02rDE         [24] 1165 	lcall	_delay
-                                   1166 ;	transmitter.c:275: P2 = 0x40;
-      000391 75 A0 40         [24] 1167 	mov	_P2,#0x40
-                                   1168 ;	transmitter.c:276: delay();delay();delay();delay();
-      000394 12r02rDE         [24] 1169 	lcall	_delay
-      000397 12r02rDE         [24] 1170 	lcall	_delay
-      00039A 12r02rDE         [24] 1171 	lcall	_delay
-      00039D 12r02rDE         [24] 1172 	lcall	_delay
-                                   1173 ;	transmitter.c:277: P2 = 0x20;
-      0003A0 75 A0 20         [24] 1174 	mov	_P2,#0x20
-                                   1175 ;	transmitter.c:278: delay();delay();delay();delay();
-      0003A3 12r02rDE         [24] 1176 	lcall	_delay
-      0003A6 12r02rDE         [24] 1177 	lcall	_delay
-      0003A9 12r02rDE         [24] 1178 	lcall	_delay
-      0003AC 12r02rDE         [24] 1179 	lcall	_delay
-                                   1180 ;	transmitter.c:279: P2 = 0x00;
-      0003AF 75 A0 00         [24] 1181 	mov	_P2,#0x00
-                                   1182 ;	transmitter.c:280: }
-      0003B2 22               [24] 1183 	ret
-                                   1184 ;------------------------------------------------------------
-                                   1185 ;Allocation info for local variables in function 'InitTimer1'
-                                   1186 ;------------------------------------------------------------
-                                   1187 ;	transmitter.c:284: void InitTimer1(void)
-                                   1188 ;	-----------------------------------------
-                                   1189 ;	 function InitTimer1
-                                   1190 ;	-----------------------------------------
-      0003B3                       1191 _InitTimer1:
-                                   1192 ;	transmitter.c:286: TMOD |= 0x01;    // Set timer0 in mode 1
-      0003B3 43 89 01         [24] 1193 	orl	_TMOD,#0x01
-                                   1194 ;	transmitter.c:287: TH0 = 0xee;      // 5 msec reloading time
-      0003B6 75 8C EE         [24] 1195 	mov	_TH0,#0xee
-                                   1196 ;	transmitter.c:288: TL0 = 0x00;      // First time value
-      0003B9 75 8A 00         [24] 1197 	mov	_TL0,#0x00
-                                   1198 ;	transmitter.c:289: TR0 = 1;         // Start Timer 1
-                                   1199 ;	assignBit
-      0003BC D2 8C            [12] 1200 	setb	_TR0
-                                   1201 ;	transmitter.c:290: ET0 = 1;         // Enable Timer1 interrupts	
-                                   1202 ;	assignBit
-      0003BE D2 A9            [12] 1203 	setb	_ET0
-                                   1204 ;	transmitter.c:291: }
-      0003C0 22               [24] 1205 	ret
-                                   1206 ;------------------------------------------------------------
-                                   1207 ;Allocation info for local variables in function 'default_and_a_g'
-                                   1208 ;------------------------------------------------------------
-                                   1209 ;	transmitter.c:294: void default_and_a_g()
-                                   1210 ;	-----------------------------------------
-                                   1211 ;	 function default_and_a_g
-                                   1212 ;	-----------------------------------------
-      0003C1                       1213 _default_and_a_g:
-                                   1214 ;	transmitter.c:297: if(a_g)
-      0003C1 30*00 61         [24] 1215 	jnb	_a_g,00111$
-                                   1216 ;	transmitter.c:299: if(((state_was==1)||(state_was==8))&&(!pushed))
-      0003C4 74 01            [12] 1217 	mov	a,#0x01
-      0003C6 B5*02 06         [24] 1218 	cjne	a,_state_was,00136$
-      0003C9 14               [12] 1219 	dec	a
-      0003CA B5*03 02         [24] 1220 	cjne	a,(_state_was + 1),00136$
-      0003CD 80 0D            [24] 1221 	sjmp	00109$
-      0003CF                       1222 00136$:
-      0003CF 74 08            [12] 1223 	mov	a,#0x08
-      0003D1 B5*02 06         [24] 1224 	cjne	a,_state_was,00137$
-      0003D4 E4               [12] 1225 	clr	a
-      0003D5 B5*03 02         [24] 1226 	cjne	a,(_state_was + 1),00137$
-      0003D8 80 02            [24] 1227 	sjmp	00138$
-      0003DA                       1228 00137$:
-      0003DA 80 19            [24] 1229 	sjmp	00106$
-      0003DC                       1230 00138$:
-      0003DC                       1231 00109$:
-      0003DC 20*01 16         [24] 1232 	jb	_pushed,00106$
-                                   1233 ;	transmitter.c:300: {state = 8;		Transmit_data('n');		time_delay=10;
-      0003DF 75*00 08         [24] 1234 	mov	_state,#0x08
-      0003E2 75*01 00         [24] 1235 	mov	(_state + 1),#0x00
-      0003E5 75 82 6E         [24] 1236 	mov	dpl,#0x6e
-      0003E8 12r03r39         [24] 1237 	lcall	_Transmit_data
-      0003EB 75*06 0A         [24] 1238 	mov	_time_delay,#0x0a
-      0003EE 75*07 00         [24] 1239 	mov	(_time_delay + 1),#0x00
-                                   1240 ;	transmitter.c:301: button='n';
-      0003F1 75*08 6E         [24] 1241 	mov	_button,#0x6e
-      0003F4 22               [24] 1242 	ret
-      0003F5                       1243 00106$:
-                                   1244 ;	transmitter.c:303: else if(((state_was==6)||(state_was==9))&&(!pushed))
-      0003F5 74 06            [12] 1245 	mov	a,#0x06
-      0003F7 B5*02 06         [24] 1246 	cjne	a,_state_was,00140$
-      0003FA E4               [12] 1247 	clr	a
-      0003FB B5*03 02         [24] 1248 	cjne	a,(_state_was + 1),00140$
-      0003FE 80 0C            [24] 1249 	sjmp	00104$
-      000400                       1250 00140$:
-      000400 74 09            [12] 1251 	mov	a,#0x09
-      000402 B5*02 06         [24] 1252 	cjne	a,_state_was,00141$
-      000405 E4               [12] 1253 	clr	a
-      000406 B5*03 02         [24] 1254 	cjne	a,(_state_was + 1),00141$
-      000409 80 01            [24] 1255 	sjmp	00142$
-      00040B                       1256 00141$:
-      00040B 22               [24] 1257 	ret
-      00040C                       1258 00142$:
-      00040C                       1259 00104$:
-      00040C 20*01 3E         [24] 1260 	jb	_pushed,00113$
-                                   1261 ;	transmitter.c:304: {state = 9;		Transmit_data('u');		time_delay=10;
-      00040F 75*00 09         [24] 1262 	mov	_state,#0x09
-      000412 75*01 00         [24] 1263 	mov	(_state + 1),#0x00
-      000415 75 82 75         [24] 1264 	mov	dpl,#0x75
-      000418 12r03r39         [24] 1265 	lcall	_Transmit_data
-      00041B 75*06 0A         [24] 1266 	mov	_time_delay,#0x0a
-      00041E 75*07 00         [24] 1267 	mov	(_time_delay + 1),#0x00
-                                   1268 ;	transmitter.c:305: button='u';
-      000421 75*08 75         [24] 1269 	mov	_button,#0x75
-      000424 22               [24] 1270 	ret
-      000425                       1271 00111$:
-                                   1272 ;	transmitter.c:310: a_g=0;
-                                   1273 ;	assignBit
-      000425 C2*00            [12] 1274 	clr	_a_g
-                                   1275 ;	transmitter.c:311: state=0;
-      000427 E4               [12] 1276 	clr	a
-      000428 F5*00            [12] 1277 	mov	_state,a
-      00042A F5*01            [12] 1278 	mov	(_state + 1),a
-                                   1279 ;	transmitter.c:312: button = 'l';	
-      00042C 75*08 6C         [24] 1280 	mov	_button,#0x6c
-                                   1281 ;	transmitter.c:313: Transmit_data('l');
-      00042F 75 82 6C         [24] 1282 	mov	dpl,#0x6c
-      000432 12r03r39         [24] 1283 	lcall	_Transmit_data
-                                   1284 ;	transmitter.c:314: P2=0xA0;
-      000435 75 A0 A0         [24] 1285 	mov	_P2,#0xa0
-                                   1286 ;	transmitter.c:315: delay();
-      000438 12r02rDE         [24] 1287 	lcall	_delay
-                                   1288 ;	transmitter.c:316: delay();
-      00043B 12r02rDE         [24] 1289 	lcall	_delay
-                                   1290 ;	transmitter.c:317: delay();
-      00043E 12r02rDE         [24] 1291 	lcall	_delay
-                                   1292 ;	transmitter.c:318: P2=0x00;
-      000441 75 A0 00         [24] 1293 	mov	_P2,#0x00
-                                   1294 ;	transmitter.c:319: delay();
-      000444 12r02rDE         [24] 1295 	lcall	_delay
-                                   1296 ;	transmitter.c:320: delay();
-      000447 12r02rDE         [24] 1297 	lcall	_delay
-                                   1298 ;	transmitter.c:321: delay();
-                                   1299 ;	transmitter.c:323: }
-      00044A 02r02rDE         [24] 1300 	ljmp	_delay
-      00044D                       1301 00113$:
-      00044D 22               [24] 1302 	ret
-                                   1303 	.area CSEG    (CODE)
-                                   1304 	.area CONST   (CODE)
-                                   1305 	.area XINIT   (CODE)
-                                   1306 	.area CABS    (ABS,CODE)
+                                    980 ;i                         Allocated to registers r6 r7 
+                                    981 ;j                         Allocated to registers r4 r5 
+                                    982 ;------------------------------------------------------------
+                                    983 ;	transmitter.c:205: void delay(void)
+                                    984 ;	-----------------------------------------
+                                    985 ;	 function delay
+                                    986 ;	-----------------------------------------
+      0002E3                        987 _delay:
+                                    988 ;	transmitter.c:208: for(i=0;i<0x33;i++)
+      0002E3 7E 00            [12]  989 	mov	r6,#0x00
+      0002E5 7F 00            [12]  990 	mov	r7,#0x00
+      0002E7                        991 00106$:
+                                    992 ;	transmitter.c:209: for(j=0;j<0xff;j++);
+      0002E7 7C FF            [12]  993 	mov	r4,#0xff
+      0002E9 7D 00            [12]  994 	mov	r5,#0x00
+      0002EB                        995 00105$:
+      0002EB EC               [12]  996 	mov	a,r4
+      0002EC 24 FF            [12]  997 	add	a,#0xff
+      0002EE FA               [12]  998 	mov	r2,a
+      0002EF ED               [12]  999 	mov	a,r5
+      0002F0 34 FF            [12] 1000 	addc	a,#0xff
+      0002F2 FB               [12] 1001 	mov	r3,a
+      0002F3 8A 04            [24] 1002 	mov	ar4,r2
+      0002F5 8B 05            [24] 1003 	mov	ar5,r3
+      0002F7 EA               [12] 1004 	mov	a,r2
+      0002F8 4B               [12] 1005 	orl	a,r3
+      0002F9 70 F0            [24] 1006 	jnz	00105$
+                                   1007 ;	transmitter.c:208: for(i=0;i<0x33;i++)
+      0002FB 0E               [12] 1008 	inc	r6
+      0002FC BE 00 01         [24] 1009 	cjne	r6,#0x00,00124$
+      0002FF 0F               [12] 1010 	inc	r7
+      000300                       1011 00124$:
+      000300 C3               [12] 1012 	clr	c
+      000301 EE               [12] 1013 	mov	a,r6
+      000302 94 33            [12] 1014 	subb	a,#0x33
+      000304 EF               [12] 1015 	mov	a,r7
+      000305 64 80            [12] 1016 	xrl	a,#0x80
+      000307 94 80            [12] 1017 	subb	a,#0x80
+      000309 40 DC            [24] 1018 	jc	00106$
+                                   1019 ;	transmitter.c:210: }
+      00030B 22               [24] 1020 	ret
+                                   1021 ;------------------------------------------------------------
+                                   1022 ;Allocation info for local variables in function 'startup'
+                                   1023 ;------------------------------------------------------------
+                                   1024 ;	transmitter.c:214: void startup(void)
+                                   1025 ;	-----------------------------------------
+                                   1026 ;	 function startup
+                                   1027 ;	-----------------------------------------
+      00030C                       1028 _startup:
+                                   1029 ;	transmitter.c:216: P1 = 0xff;
+      00030C 75 90 FF         [24] 1030 	mov	_P1,#0xff
+                                   1031 ;	transmitter.c:217: P2 = 0x00;
+      00030F 75 A0 00         [24] 1032 	mov	_P2,#0x00
+                                   1033 ;	transmitter.c:218: delay();delay();
+      000312 12r02rE3         [24] 1034 	lcall	_delay
+      000315 12r02rE3         [24] 1035 	lcall	_delay
+                                   1036 ;	transmitter.c:219: P2 = 0xE0;
+      000318 75 A0 E0         [24] 1037 	mov	_P2,#0xe0
+                                   1038 ;	transmitter.c:220: delay();
+      00031B 12r02rE3         [24] 1039 	lcall	_delay
+                                   1040 ;	transmitter.c:221: P2 = 0x80;
+      00031E 75 A0 80         [24] 1041 	mov	_P2,#0x80
+                                   1042 ;	transmitter.c:222: delay();delay();delay();delay();
+      000321 12r02rE3         [24] 1043 	lcall	_delay
+      000324 12r02rE3         [24] 1044 	lcall	_delay
+      000327 12r02rE3         [24] 1045 	lcall	_delay
+      00032A 12r02rE3         [24] 1046 	lcall	_delay
+                                   1047 ;	transmitter.c:223: P2 = 0x40;
+      00032D 75 A0 40         [24] 1048 	mov	_P2,#0x40
+                                   1049 ;	transmitter.c:224: delay();delay();delay();delay();
+      000330 12r02rE3         [24] 1050 	lcall	_delay
+      000333 12r02rE3         [24] 1051 	lcall	_delay
+      000336 12r02rE3         [24] 1052 	lcall	_delay
+      000339 12r02rE3         [24] 1053 	lcall	_delay
+                                   1054 ;	transmitter.c:225: P2 = 0x20;
+      00033C 75 A0 20         [24] 1055 	mov	_P2,#0x20
+                                   1056 ;	transmitter.c:226: delay();delay();delay();delay();
+      00033F 12r02rE3         [24] 1057 	lcall	_delay
+      000342 12r02rE3         [24] 1058 	lcall	_delay
+      000345 12r02rE3         [24] 1059 	lcall	_delay
+      000348 12r02rE3         [24] 1060 	lcall	_delay
+                                   1061 ;	transmitter.c:227: P2 = 0x00;
+      00034B 75 A0 00         [24] 1062 	mov	_P2,#0x00
+                                   1063 ;	transmitter.c:228: }
+      00034E 22               [24] 1064 	ret
+                                   1065 ;------------------------------------------------------------
+                                   1066 ;Allocation info for local variables in function 'UART_Init'
+                                   1067 ;------------------------------------------------------------
+                                   1068 ;	transmitter.c:231: void UART_Init()
+                                   1069 ;	-----------------------------------------
+                                   1070 ;	 function UART_Init
+                                   1071 ;	-----------------------------------------
+      00034F                       1072 _UART_Init:
+                                   1073 ;	transmitter.c:233: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
+      00034F 75 89 20         [24] 1074 	mov	_TMOD,#0x20
+                                   1075 ;	transmitter.c:234: TH1 = 0xFD;		/* Load value for 9600 baud rate */
+      000352 75 8D FD         [24] 1076 	mov	_TH1,#0xfd
+                                   1077 ;	transmitter.c:235: SCON = 0x50;		/* Mode 1, reception enable */
+      000355 75 98 50         [24] 1078 	mov	_SCON,#0x50
+                                   1079 ;	transmitter.c:236: TR1 = 1;		/* Start timer 1 */
+                                   1080 ;	assignBit
+      000358 D2 8E            [12] 1081 	setb	_TR1
+                                   1082 ;	transmitter.c:237: }
+      00035A 22               [24] 1083 	ret
+                                   1084 ;------------------------------------------------------------
+                                   1085 ;Allocation info for local variables in function 'handshake'
+                                   1086 ;------------------------------------------------------------
+                                   1087 ;	transmitter.c:240: void handshake()
+                                   1088 ;	-----------------------------------------
+                                   1089 ;	 function handshake
+                                   1090 ;	-----------------------------------------
+      00035B                       1091 _handshake:
+                                   1092 ;	transmitter.c:242: start:while(!data_r)
+      00035B                       1093 00102$:
+      00035B E5*09            [12] 1094 	mov	a,_data_r
+      00035D 70 13            [24] 1095 	jnz	00104$
+                                   1096 ;	transmitter.c:244: data_r=SBUF;
+      00035F 85 99*09         [24] 1097 	mov	_data_r,_SBUF
+                                   1098 ;	transmitter.c:245: RI=0;
+                                   1099 ;	assignBit
+      000362 C2 98            [12] 1100 	clr	_RI
+                                   1101 ;	transmitter.c:246: P2 = 0xA0; // Turn ON all LED's connected to Port1
+      000364 75 A0 A0         [24] 1102 	mov	_P2,#0xa0
+                                   1103 ;	transmitter.c:247: delay();
+      000367 12r02rE3         [24] 1104 	lcall	_delay
+                                   1105 ;	transmitter.c:248: P2 = 0x00; // Turn OFF all LED's connected to Port1
+      00036A 75 A0 00         [24] 1106 	mov	_P2,#0x00
+                                   1107 ;	transmitter.c:249: delay();
+      00036D 12r02rE3         [24] 1108 	lcall	_delay
+      000370 80 E9            [24] 1109 	sjmp	00102$
+      000372                       1110 00104$:
+                                   1111 ;	transmitter.c:252: if(data_r=='x')
+      000372 74 78            [12] 1112 	mov	a,#0x78
+      000374 B5*09 E4         [24] 1113 	cjne	a,_data_r,00102$
+                                   1114 ;	transmitter.c:254: Transmit_data('y');
+      000377 75 82 79         [24] 1115 	mov	dpl,#0x79
+      00037A 12r03r81         [24] 1116 	lcall	_Transmit_data
+                                   1117 ;	transmitter.c:255: data_r=0;
+      00037D 75*09 00         [24] 1118 	mov	_data_r,#0x00
+                                   1119 ;	transmitter.c:258: else goto start;
+                                   1120 ;	transmitter.c:259: }
+      000380 22               [24] 1121 	ret
+                                   1122 ;------------------------------------------------------------
+                                   1123 ;Allocation info for local variables in function 'Transmit_data'
+                                   1124 ;------------------------------------------------------------
+                                   1125 ;tx_data                   Allocated to registers 
+                                   1126 ;------------------------------------------------------------
+                                   1127 ;	transmitter.c:262: void Transmit_data(char tx_data)
+                                   1128 ;	-----------------------------------------
+                                   1129 ;	 function Transmit_data
+                                   1130 ;	-----------------------------------------
+      000381                       1131 _Transmit_data:
+      000381 85 82 99         [24] 1132 	mov	_SBUF,dpl
+                                   1133 ;	transmitter.c:265: while (TI==0);		/* Wait until stop bit transmit */
+      000384                       1134 00101$:
+                                   1135 ;	transmitter.c:266: TI = 0;			/* Clear TI flag */
+                                   1136 ;	assignBit
+      000384 10 99 02         [24] 1137 	jbc	_TI,00114$
+      000387 80 FB            [24] 1138 	sjmp	00101$
+      000389                       1139 00114$:
+                                   1140 ;	transmitter.c:267: }
+      000389 22               [24] 1141 	ret
+                                   1142 ;------------------------------------------------------------
+                                   1143 ;Allocation info for local variables in function 'check_x'
+                                   1144 ;------------------------------------------------------------
+                                   1145 ;	transmitter.c:271: void check_x()
+                                   1146 ;	-----------------------------------------
+                                   1147 ;	 function check_x
+                                   1148 ;	-----------------------------------------
+      00038A                       1149 _check_x:
+                                   1150 ;	transmitter.c:274: TI=0;
+                                   1151 ;	assignBit
+      00038A C2 99            [12] 1152 	clr	_TI
+                                   1153 ;	transmitter.c:275: data_r = SBUF;		/* Load char in SBUF register */
+      00038C 85 99*09         [24] 1154 	mov	_data_r,_SBUF
+                                   1155 ;	transmitter.c:276: RI = 0;			/* Clear TI flag */
+                                   1156 ;	assignBit
+      00038F C2 98            [12] 1157 	clr	_RI
+                                   1158 ;	transmitter.c:277: if(data_r=='x')
+      000391 74 78            [12] 1159 	mov	a,#0x78
+      000393 B5*09 06         [24] 1160 	cjne	a,_data_r,00108$
+                                   1161 ;	transmitter.c:278: Transmit_data('y');
+      000396 75 82 79         [24] 1162 	mov	dpl,#0x79
+      000399 02r03r81         [24] 1163 	ljmp	_Transmit_data
+      00039C                       1164 00108$:
+                                   1165 ;	transmitter.c:279: else if((data_r=='m')||(data_r=='h'))
+      00039C 74 6D            [12] 1166 	mov	a,#0x6d
+      00039E B5*09 02         [24] 1167 	cjne	a,_data_r,00126$
+      0003A1 80 05            [24] 1168 	sjmp	00103$
+      0003A3                       1169 00126$:
+      0003A3 74 68            [12] 1170 	mov	a,#0x68
+      0003A5 B5*09 04         [24] 1171 	cjne	a,_data_r,00104$
+      0003A8                       1172 00103$:
+                                   1173 ;	transmitter.c:280: received = 0;
+      0003A8 75*0A 00         [24] 1174 	mov	_received,#0x00
+      0003AB 22               [24] 1175 	ret
+      0003AC                       1176 00104$:
+                                   1177 ;	transmitter.c:281: else if(data_r=='l')
+      0003AC 74 6C            [12] 1178 	mov	a,#0x6c
+      0003AE B5*09 03         [24] 1179 	cjne	a,_data_r,00110$
+                                   1180 ;	transmitter.c:282: received = 1;
+      0003B1 75*0A 01         [24] 1181 	mov	_received,#0x01
+      0003B4                       1182 00110$:
+                                   1183 ;	transmitter.c:283: }
+      0003B4 22               [24] 1184 	ret
+                                   1185 ;------------------------------------------------------------
+                                   1186 ;Allocation info for local variables in function 'InitTimer1'
+                                   1187 ;------------------------------------------------------------
+                                   1188 ;	transmitter.c:287: void InitTimer1(void)
+                                   1189 ;	-----------------------------------------
+                                   1190 ;	 function InitTimer1
+                                   1191 ;	-----------------------------------------
+      0003B5                       1192 _InitTimer1:
+                                   1193 ;	transmitter.c:289: TMOD |= 0x01;    // Set timer0 in mode 1
+      0003B5 43 89 01         [24] 1194 	orl	_TMOD,#0x01
+                                   1195 ;	transmitter.c:290: TH0 = 0xee;      // 5 msec reloading time
+      0003B8 75 8C EE         [24] 1196 	mov	_TH0,#0xee
+                                   1197 ;	transmitter.c:291: TL0 = 0x00;      // First time value
+      0003BB 75 8A 00         [24] 1198 	mov	_TL0,#0x00
+                                   1199 ;	transmitter.c:292: TR0 = 1;         // Start Timer 1
+                                   1200 ;	assignBit
+      0003BE D2 8C            [12] 1201 	setb	_TR0
+                                   1202 ;	transmitter.c:293: ET0 = 1;         // Enable Timer1 interrupts	
+                                   1203 ;	assignBit
+      0003C0 D2 A9            [12] 1204 	setb	_ET0
+                                   1205 ;	transmitter.c:294: }
+      0003C2 22               [24] 1206 	ret
+                                   1207 ;------------------------------------------------------------
+                                   1208 ;Allocation info for local variables in function 'default_and_a_g'
+                                   1209 ;------------------------------------------------------------
+                                   1210 ;	transmitter.c:297: void default_and_a_g()
+                                   1211 ;	-----------------------------------------
+                                   1212 ;	 function default_and_a_g
+                                   1213 ;	-----------------------------------------
+      0003C3                       1214 _default_and_a_g:
+                                   1215 ;	transmitter.c:300: if(a_g)
+      0003C3 30*00 61         [24] 1216 	jnb	_a_g,00111$
+                                   1217 ;	transmitter.c:302: if(((state_was==1)||(state_was==8))&&(!pushed))
+      0003C6 74 01            [12] 1218 	mov	a,#0x01
+      0003C8 B5*02 06         [24] 1219 	cjne	a,_state_was,00136$
+      0003CB 14               [12] 1220 	dec	a
+      0003CC B5*03 02         [24] 1221 	cjne	a,(_state_was + 1),00136$
+      0003CF 80 0D            [24] 1222 	sjmp	00109$
+      0003D1                       1223 00136$:
+      0003D1 74 08            [12] 1224 	mov	a,#0x08
+      0003D3 B5*02 06         [24] 1225 	cjne	a,_state_was,00137$
+      0003D6 E4               [12] 1226 	clr	a
+      0003D7 B5*03 02         [24] 1227 	cjne	a,(_state_was + 1),00137$
+      0003DA 80 02            [24] 1228 	sjmp	00138$
+      0003DC                       1229 00137$:
+      0003DC 80 19            [24] 1230 	sjmp	00106$
+      0003DE                       1231 00138$:
+      0003DE                       1232 00109$:
+      0003DE 20*01 16         [24] 1233 	jb	_pushed,00106$
+                                   1234 ;	transmitter.c:303: {state = 8;		Transmit_data('n');		time_delay=10;
+      0003E1 75*00 08         [24] 1235 	mov	_state,#0x08
+      0003E4 75*01 00         [24] 1236 	mov	(_state + 1),#0x00
+      0003E7 75 82 6E         [24] 1237 	mov	dpl,#0x6e
+      0003EA 12r03r81         [24] 1238 	lcall	_Transmit_data
+      0003ED 75*06 0A         [24] 1239 	mov	_time_delay,#0x0a
+      0003F0 75*07 00         [24] 1240 	mov	(_time_delay + 1),#0x00
+                                   1241 ;	transmitter.c:304: button='n';
+      0003F3 75*08 6E         [24] 1242 	mov	_button,#0x6e
+      0003F6 22               [24] 1243 	ret
+      0003F7                       1244 00106$:
+                                   1245 ;	transmitter.c:306: else if(((state_was==6)||(state_was==9))&&(!pushed))
+      0003F7 74 06            [12] 1246 	mov	a,#0x06
+      0003F9 B5*02 06         [24] 1247 	cjne	a,_state_was,00140$
+      0003FC E4               [12] 1248 	clr	a
+      0003FD B5*03 02         [24] 1249 	cjne	a,(_state_was + 1),00140$
+      000400 80 0C            [24] 1250 	sjmp	00104$
+      000402                       1251 00140$:
+      000402 74 09            [12] 1252 	mov	a,#0x09
+      000404 B5*02 06         [24] 1253 	cjne	a,_state_was,00141$
+      000407 E4               [12] 1254 	clr	a
+      000408 B5*03 02         [24] 1255 	cjne	a,(_state_was + 1),00141$
+      00040B 80 01            [24] 1256 	sjmp	00142$
+      00040D                       1257 00141$:
+      00040D 22               [24] 1258 	ret
+      00040E                       1259 00142$:
+      00040E                       1260 00104$:
+      00040E 20*01 38         [24] 1261 	jb	_pushed,00113$
+                                   1262 ;	transmitter.c:307: {state = 9;		Transmit_data('u');		time_delay=10;
+      000411 75*00 09         [24] 1263 	mov	_state,#0x09
+      000414 75*01 00         [24] 1264 	mov	(_state + 1),#0x00
+      000417 75 82 75         [24] 1265 	mov	dpl,#0x75
+      00041A 12r03r81         [24] 1266 	lcall	_Transmit_data
+      00041D 75*06 0A         [24] 1267 	mov	_time_delay,#0x0a
+      000420 75*07 00         [24] 1268 	mov	(_time_delay + 1),#0x00
+                                   1269 ;	transmitter.c:308: button='u';
+      000423 75*08 75         [24] 1270 	mov	_button,#0x75
+      000426 22               [24] 1271 	ret
+      000427                       1272 00111$:
+                                   1273 ;	transmitter.c:313: a_g=0;
+                                   1274 ;	assignBit
+      000427 C2*00            [12] 1275 	clr	_a_g
+                                   1276 ;	transmitter.c:314: state=0;
+      000429 E4               [12] 1277 	clr	a
+      00042A F5*00            [12] 1278 	mov	_state,a
+      00042C F5*01            [12] 1279 	mov	(_state + 1),a
+                                   1280 ;	transmitter.c:315: button = 'l';	
+      00042E 75*08 6C         [24] 1281 	mov	_button,#0x6c
+                                   1282 ;	transmitter.c:317: P2=0xA0;
+      000431 75 A0 A0         [24] 1283 	mov	_P2,#0xa0
+                                   1284 ;	transmitter.c:318: delay();
+      000434 12r02rE3         [24] 1285 	lcall	_delay
+                                   1286 ;	transmitter.c:319: delay();
+      000437 12r02rE3         [24] 1287 	lcall	_delay
+                                   1288 ;	transmitter.c:320: delay();
+      00043A 12r02rE3         [24] 1289 	lcall	_delay
+                                   1290 ;	transmitter.c:321: P2=0x00;
+      00043D 75 A0 00         [24] 1291 	mov	_P2,#0x00
+                                   1292 ;	transmitter.c:322: delay();
+      000440 12r02rE3         [24] 1293 	lcall	_delay
+                                   1294 ;	transmitter.c:323: delay();
+      000443 12r02rE3         [24] 1295 	lcall	_delay
+                                   1296 ;	transmitter.c:324: delay();
+                                   1297 ;	transmitter.c:326: }
+      000446 02r02rE3         [24] 1298 	ljmp	_delay
+      000449                       1299 00113$:
+      000449 22               [24] 1300 	ret
+                                   1301 	.area CSEG    (CODE)
+                                   1302 	.area CONST   (CODE)
+                                   1303 	.area XINIT   (CODE)
+                                   1304 	.area CABS    (ABS,CODE)

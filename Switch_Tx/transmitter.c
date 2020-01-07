@@ -1,4 +1,4 @@
-#include "reg52.h"
+#include "8052.h"
 
 void delay(void);
 void UART_Init(void);
@@ -14,14 +14,14 @@ volatile int state = 0;
 volatile int state_was = 0;
 volatile int timerCount = 0;
 volatile int time_delay = 15;
-volatile bit a_g=0;
-volatile bit pushed=0;
+volatile __bit a_g=0;
+volatile __bit pushed=0;
 volatile char button='l';
 
 char data_r=0;
 char received=1;
 
-void isr_timer0(void) interrupt 1   // It is called after every 5msec
+void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 {
     TH0  = 0Xee;         // ReLoad the timer value for 5ms
     TL0  = 0X00;

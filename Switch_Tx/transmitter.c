@@ -1,4 +1,4 @@
-#include "8052.h"
+#include "reg52.h"
 
 void delay(void);
 void UART_Init(void);
@@ -14,14 +14,14 @@ volatile int state = 0;
 volatile int state_was = 0;
 volatile int timerCount = 0;
 volatile int time_delay = 15;
-volatile __bit a_g=0;
-volatile __bit pushed=0;
+volatile bit a_g=0;
+volatile bit pushed=0;
 volatile char button='l';
 
 char data_r=0;
 char received=1;
 
-void isr_timer0(void) __interrupt 1   // It is called after every 5msec
+void isr_timer0(void) interrupt 1   // It is called after every 5msec
 {
     TH0  = 0Xee;         // ReLoad the timer value for 5ms
     TL0  = 0X00;
@@ -129,45 +129,43 @@ if(timerCount == 40)
 	}
 
 /************blink LEDs***********************************/
+	if(timerCount < (time_delay*10)) // count for LED-ON delay
+		{
+		    switch(state)
+		{
+	//	case 0:	P2 =0xA0;break;	
+		case 1:	P2 =0x80;break;
+		case 2:	P2 =0x80;break;
+		case 3:	P2 =0xc0;break;
+		case 4:	P2 =0x60;break;
+		case 5:	P2 =0x20;break;
+		case 6:	P2 =0x20;break;
+		case 7:	P2 =0x40;break;
+		case 8:	P2 =0x80;break;
+		case 9:	P2 =0x20;break;
+		default:break;}	
+		}
 
-if(timerCount < (time_delay*10)) // count for LED-ON delay
-    {
-        switch(state)
-	{
-//	case 0:	P2 =0xA0;break;	
-	case 1:	P2 =0x80;break;
-	case 2:	P2 =0x80;break;
-	case 3:	P2 =0xc0;break;
-	case 4:	P2 =0x60;break;
-	case 5:	P2 =0x20;break;
-	case 6:	P2 =0x20;break;
-	case 7:	P2 =0x40;break;
-	case 8:	P2 =0x80;break;
-	case 9:	P2 =0x20;break;
-	default:break;}
-    }
 
+	   else if((timerCount > time_delay) &&(timerCount<time_delay*20)) // count for LED-ON delay
+		{
+		    switch(state)
+		{
+		//case 0:	
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 7:
+		case 8:
+		case 9:P2 =0x00;break;
+		case 1:P2 =0x80;break;
+		case 6:P2 =0x20;break;
+		default:break;}
+		}
 
-   else if((timerCount > time_delay) &&(timerCount<time_delay*20)) // count for LED-ON delay
-    {
-        switch(state)
-	{
-	//case 0:	
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-	case 7:
-	case 8:
-	case 9:P2 =0x00;break;
-	case 1:P2 =0x80;break;
-	case 6:P2 =0x20;break;
-	default:break;}
-    }
-
-   else
-	timerCount = 0;
-
+	   else
+		timerCount = 0;
 state_was=state;
 }
 
@@ -179,9 +177,9 @@ void main(void)
 	handshake();
 
 	InitTimer1();
-
+	
 	EA  = 1;         // Global interrupt enable
-
+	
 	while(1)
 		{
 			if(!pushed)
@@ -300,11 +298,11 @@ void default_and_a_g()
 		if(a_g)
 		{
 			if(((state_was==1)||(state_was==8))&&(!pushed))
-				{state = 8;		Transmit_data('n');		time_delay=10;
+				{state = 8;			time_delay=10;
 				button='n';
 				}
 			else if(((state_was==6)||(state_was==9))&&(!pushed))
-				{state = 9;		Transmit_data('u');		time_delay=10;
+				{state = 9;			time_delay=10;
 				button='u';
 				}
 		}
@@ -324,5 +322,3 @@ void default_and_a_g()
 			delay();
 		}
 }
-	
-	

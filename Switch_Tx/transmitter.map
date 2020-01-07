@@ -80,9 +80,9 @@ C:   00000088  s_GSFINAL
 C:   0000008B  s_CSEG                          
 C:   000000DE  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   0000046B  l_CSEG                          
-C:   000004F6  s_CONST                         
-C:   000004F6  s_XINIT                         
+C:   00000471  l_CSEG                          
+C:   000004FC  s_CONST                         
+C:   000004FC  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -376,23 +376,23 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                0000008B    0000046B =        1131. bytes (REL,CON,CODE)
+CSEG                                0000008B    00000471 =        1137. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   0000008B  _isr_timer0                        transmitter
-C:   00000347  _main                              transmitter
-C:   0000036E  _delay                             transmitter
-C:   00000397  _startup                           transmitter
-C:   000003DA  _UART_Init                         transmitter
-C:   000003E6  _handshake                         transmitter
-C:   0000040C  _Transmit_data                     transmitter
-C:   00000415  _check_x                           transmitter
-C:   00000440  _InitTimer1                        transmitter
-C:   0000044E  _default_and_a_g                   transmitter
-C:   000004D5  __mulint                           _mulint
-C:   000004D5  __mulint_dummy                     _mulint
-C:   000004F2  __sdcc_external_startup            _startup
+C:   0000034D  _main                              transmitter
+C:   00000374  _delay                             transmitter
+C:   0000039D  _startup                           transmitter
+C:   000003E0  _UART_Init                         transmitter
+C:   000003EC  _handshake                         transmitter
+C:   00000412  _Transmit_data                     transmitter
+C:   0000041B  _check_x                           transmitter
+C:   00000446  _InitTimer1                        transmitter
+C:   00000454  _default_and_a_g                   transmitter
+C:   000004DB  __mulint                           _mulint
+C:   000004DB  __mulint_dummy                     _mulint
+C:   000004F8  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 

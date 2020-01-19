@@ -27,13 +27,19 @@ void handshake(void);
 void check_data(void);
 void pattern(void);
 void InitTimer0(void);
-void check_ac(void);
+void check_switches(void);
 
 __bit auto_flag;
+__bit dim_flag;
 char start=0;
 char data_r;
 volatile int timerCount = 0;
+volatile int dimCount = 0;
 volatile int time_delay = 15;
+volatile int dim_val = 8;
+volatile int dim_val2 = 0;
+volatile int dim1_val = 8;
+volatile int dim1_val2 = 0;
 int state,off;
 char ac_state;
 
@@ -42,6 +48,7 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
     TH0  = 0Xee;         // ReLoad the timer value for 5ms
     TL0  = 0X00;
     timerCount++;
+    dimCount++;
     rst_out=!rst_out;
     
     if(state!=20)
@@ -50,40 +57,100 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 	{
 		switch(state)
 		{
-		case 0:	P0_1 =!P0_1;P0_0 =0;P2_6=!P2_6;
-				if(auto_flag)	auto_led=1;
+		case 0:	if(dim1_val)
+				{dim1_val--;P0_1 =1;P0_0 =0;P2_6=1;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
+				if(auto_flag)auto_led=1;
 				up_led=0;	down_led=0;
 				break;	
-		case 1:	P0_1 =!P0_1;P0_0 =0;P2_6=0;
+		case 1:	if(dim1_val)
+				{dim1_val--;P0_1 =1;P0_0 =0;P2_6=0;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					up_led=1;
 				break;
-		case 2:	P0_1 =!P0_1;P0_0 =0;P2_6=0;
+		case 2:		if(dim1_val)
+				{dim1_val--;P0_1 =1;P0_0 =0;P2_6=0;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					up_led=1;
 				break;
-		case 3:	P0_1 =!P0_1;P0_0 =!P0_0;P2_6=0;
+		case 3:		if(dim1_val)
+				{dim1_val--;P0_1 =1;P0_0 =1;P2_6=0;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					up_led=1;
 				break;
-		case 4:	P0_1 =0;P0_0 =!P0_0;P2_6=!P2_6;
+		case 4:		if(dim1_val)
+				{dim1_val--;P0_1 =0;P0_0 =1;P2_6=1;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					down_led=1;
 				break;
-		case 5:	P0_1 =0;P0_0 =0;P2_6=!P2_6;
+		case 5:		if(dim1_val)
+				{dim1_val--;P0_1 =0;P0_0 =0;P2_6=1;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					down_led=1;
 				break;
-		case 6:	P0_1 =0;P0_0 =0;P2_6=!P2_6;
+		case 6:		if(dim1_val)
+				{dim1_val--;P0_1 =0;P0_0 =0;P2_6=1;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					down_led=1;
 				break;
-		case 7:	P0_1 =0;P0_0 =!P0_0;P2_6=0;break;
-		case 8:	P0_1 =!P0_1;P0_0 =0;P2_6=0;
+		case 7:		if(dim1_val)
+				{dim1_val--;P0_1 =0;P0_0 =1;P2_6=0;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						break;
+		case 8:		if(dim1_val)
+				{dim1_val--;P0_1 =1;P0_0 =0;P2_6=0;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					up_led=1;
 				break;
-		case 9:	P0_1 =0;P0_0 =0;P2_6=!P2_6;
+		case 9:		if(dim1_val)
+				{dim1_val--;P0_1 =0;P0_0 =0;P2_6=1;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						
 				if(auto_flag)
 					down_led=1;
 				break;
@@ -104,28 +171,28 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 		case 7:
 		case 8:
 		case 9:P0_1 =0;P0_0 =0;P2_6=0;up_led=0;down_led=0;break;
-		case 1:P0_1 =!P0_1;P0_0 =0;P2_6=0;up_led=1;down_led=0;break;
-		case 6:P0_1 =0;P0_0 =0;P2_6=!P2_6;up_led=0;down_led=1;break;
+		case 1:	if(dim1_val)
+				{dim1_val--;P0_1 =1;P0_0 =0;P2_6=0;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						if(auto_flag)up_led=1;down_led=0;break;
+		case 6:	if(dim1_val)
+				{dim1_val--;P0_1 =0;P0_0 =0;P2_6=1;}
+
+				else if(dim1_val2){dim1_val2--;P0_1 =0;P0_0 =0;P2_6=0;}
+				
+				else {dim1_val = dim_val;dim1_val2 = dim_val2;}
+						up_led=0;if(auto_flag)down_led=1;break;
 		default:break;
 		}
 	}
 
-   else
-	timerCount = 0;
-    }
-    
-	if((!pwr_key)&&(start))
-	{
-	off++;
-	if(off>50)
-		{pwr_out=1;
-		pwr_led=0;P0_1 =0;P0_0 =0;P2_6=0;ac_led_up=0;ac_led_down=0;auto_led=0;
-		TR0 = 0;         // Start Timer 1
-		while(!pwr_key);}
-		
-	}
-	else off=0;
-}
+    else
+	{timerCount = 0;}
+    } //led states end
+} //timer end
 
 
 void main()
@@ -140,7 +207,8 @@ UART_Init();
 handshake();
 	while(1)
 	{
-		check_ac();
+		//state=20;
+		check_switches();
 		check_data();
 	}	
 } //main
@@ -211,14 +279,13 @@ void handshake()
 {
 		while(data_r!='y')
 		{
-		Transmit_data('x');
 		state=20;
+		delay();
+		delay();
+		delay();
+		Transmit_data('x');
+		delay();
 		data_r=SBUF;
-		delay();
-		delay();
-		delay();
-		delay();
-		if(timerCount>10000)timerCount=0;
 		}
 		delay();
 		Transmit_data('m');
@@ -231,10 +298,10 @@ void check_data()
 	RI = 0;			/* Clear TI flag */
 	if(data_r=='l')
 	{
-	time_delay=20;
+	time_delay=30;
 	state = 0;
 	auto_led=0;
-}
+	}
 	else if(data_r=='a')
 	{
 	time_delay=20;
@@ -273,24 +340,35 @@ void check_data()
 	}
 	else if(data_r=='g')
 	{
-	time_delay=15;
+	time_delay=20;
 	state = 6;
 	if(auto_flag)	auto_led=1;
 	}
 	else if(data_r=='u')
 	{
-	time_delay=8;
+	time_delay=15;
 	state = 9;
 	if(auto_flag)	auto_led=1;
 	}
 	else if(data_r=='n')
 	{
-	time_delay=8;
+	time_delay=15;
 	state = 8;
 	if(auto_flag)	auto_led=1;
 	}
-	else{
-	if(timerCount>1200)handshake();}
+	else
+	{
+	/*if(timerCount>1500)
+	{
+		Transmit_data('x');
+		state=20;
+		timerCount=0;
+		P0_1 =0;
+		P0_0 =0;
+		P2_6=0;
+		up_led=0;
+		down_led=0;
+	}*/	}
 }
 	
 void InitTimer0(void)
@@ -302,9 +380,12 @@ void InitTimer0(void)
 	ET0 = 1;         // Enable Timer1 interrupts	
 }
 
-void check_ac()
+void check_switches()
 {
 if(!ac_key)
+	{
+	delay();
+	if(!ac_key)
 	{
 	ac_state++;		
 	if(ac_state==3)
@@ -316,16 +397,33 @@ if(!ac_key)
 		case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;delay();break;
 		default:break;
 	}//switch end
-}//if end
-
+	}//if end
+	}
 if(!dim_key)
 	{
-	
+	delay();
+
+	dim_val = dim_val + 2;
+	dim_val2=8-dim_val;
+	if(dim_val>8){dim_val=2;dim_val2=6;}
+
 	}
 
 if(!auto_key)
 	{
 	delay();
 	auto_flag=!auto_flag;
+	}
+	
+if(!pwr_key)
+	{
+	delay();
+		pwr_led=0;P0_1 =0;P0_0 =0;P2_6=0;ac_led_up=0;ac_led_down=0;auto_led=0;
+		TR0 = 0;         // Stop Timer 1
+		ET0 = 0;         // Enable Timer1 interrupts	
+		delay();delay();
+		pwr_out=1;
+		shutdown:
+		goto shutdown;
 	}
 }

@@ -184,6 +184,7 @@ void main(void)
 		{
 			if(!pushed)
 			{
+				check_x();
 				delay();
 				if(!pushed)
 				{
@@ -268,9 +269,8 @@ void Transmit_data(char tx_data)
 
 void check_x()
 {
-	data_r=0;
 	TI=0;
-	data_r = SBUF;		/* Load char in SBUF register */
+	if(RI)data_r = SBUF;		/* Load char in SBUF register */
 	RI = 0;			/* Clear TI flag */
 	if(data_r=='x')
 	Transmit_data('y');
@@ -278,6 +278,7 @@ void check_x()
 	received = 0;
 	else if(data_r=='l')
 	received = 1;
+	data_r=0;
 }
 
 
@@ -309,7 +310,7 @@ void default_and_a_g()
 		else
 		{
 			a_g=0;
-			state=0;
+			state=0;time_delay=15;
 			button = 'l';	
 			//Transmit_data('l');
 			P2=0xA0;

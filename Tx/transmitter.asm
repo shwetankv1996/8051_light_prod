@@ -958,21 +958,23 @@ _main:
 00109$:
 ;	transmitter.c:185: if(!pushed)
 	jb	_pushed,00106$
-;	transmitter.c:187: delay();
+;	transmitter.c:187: check_x();
+	lcall	_check_x
+;	transmitter.c:188: delay();
 	lcall	_delay
-;	transmitter.c:188: if(!pushed)
+;	transmitter.c:189: if(!pushed)
 	jb	_pushed,00109$
-;	transmitter.c:190: default_and_a_g();
+;	transmitter.c:191: default_and_a_g();
 	lcall	_default_and_a_g
 	sjmp	00109$
 00106$:
-;	transmitter.c:193: else if(pushed)
+;	transmitter.c:194: else if(pushed)
 	jnb	_pushed,00109$
-;	transmitter.c:195: delay();
+;	transmitter.c:196: delay();
 	lcall	_delay
-;	transmitter.c:196: check_x();
+;	transmitter.c:197: check_x();
 	lcall	_check_x
-;	transmitter.c:200: }
+;	transmitter.c:201: }
 	sjmp	00109$
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'delay'
@@ -980,16 +982,16 @@ _main:
 ;i                         Allocated to registers r6 r7 
 ;j                         Allocated to registers r4 r5 
 ;------------------------------------------------------------
-;	transmitter.c:203: void delay(void)
+;	transmitter.c:204: void delay(void)
 ;	-----------------------------------------
 ;	 function delay
 ;	-----------------------------------------
 _delay:
-;	transmitter.c:206: for(i=0;i<0x33;i++)
+;	transmitter.c:207: for(i=0;i<0x33;i++)
 	mov	r6,#0x00
 	mov	r7,#0x00
 00106$:
-;	transmitter.c:207: for(j=0;j<0xff;j++);
+;	transmitter.c:208: for(j=0;j<0xff;j++);
 	mov	r4,#0xff
 	mov	r5,#0x00
 00105$:
@@ -1004,7 +1006,7 @@ _delay:
 	mov	a,r2
 	orl	a,r3
 	jnz	00105$
-;	transmitter.c:206: for(i=0;i<0x33;i++)
+;	transmitter.c:207: for(i=0;i<0x33;i++)
 	inc	r6
 	cjne	r6,#0x00,00124$
 	inc	r7
@@ -1016,133 +1018,133 @@ _delay:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jc	00106$
-;	transmitter.c:208: }
+;	transmitter.c:209: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'startup'
 ;------------------------------------------------------------
-;	transmitter.c:212: void startup(void)
+;	transmitter.c:213: void startup(void)
 ;	-----------------------------------------
 ;	 function startup
 ;	-----------------------------------------
 _startup:
-;	transmitter.c:214: P1 = 0xff;
+;	transmitter.c:215: P1 = 0xff;
 	mov	_P1,#0xff
-;	transmitter.c:215: P2 = 0x00;
+;	transmitter.c:216: P2 = 0x00;
 	mov	_P2,#0x00
-;	transmitter.c:216: delay();delay();
+;	transmitter.c:217: delay();delay();
 	lcall	_delay
 	lcall	_delay
-;	transmitter.c:217: P2 = 0xE0;
+;	transmitter.c:218: P2 = 0xE0;
 	mov	_P2,#0xe0
-;	transmitter.c:218: delay();
+;	transmitter.c:219: delay();
 	lcall	_delay
-;	transmitter.c:219: P2 = 0x80;
+;	transmitter.c:220: P2 = 0x80;
 	mov	_P2,#0x80
-;	transmitter.c:220: delay();delay();delay();delay();
+;	transmitter.c:221: delay();delay();delay();delay();
 	lcall	_delay
 	lcall	_delay
 	lcall	_delay
 	lcall	_delay
-;	transmitter.c:221: P2 = 0x40;
+;	transmitter.c:222: P2 = 0x40;
 	mov	_P2,#0x40
-;	transmitter.c:222: delay();delay();delay();delay();
+;	transmitter.c:223: delay();delay();delay();delay();
 	lcall	_delay
 	lcall	_delay
 	lcall	_delay
 	lcall	_delay
-;	transmitter.c:223: P2 = 0x20;
+;	transmitter.c:224: P2 = 0x20;
 	mov	_P2,#0x20
-;	transmitter.c:224: delay();delay();delay();delay();
+;	transmitter.c:225: delay();delay();delay();delay();
 	lcall	_delay
 	lcall	_delay
 	lcall	_delay
 	lcall	_delay
-;	transmitter.c:225: P2 = 0x00;
+;	transmitter.c:226: P2 = 0x00;
 	mov	_P2,#0x00
-;	transmitter.c:226: }
+;	transmitter.c:227: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'UART_Init'
 ;------------------------------------------------------------
-;	transmitter.c:229: void UART_Init()
+;	transmitter.c:230: void UART_Init()
 ;	-----------------------------------------
 ;	 function UART_Init
 ;	-----------------------------------------
 _UART_Init:
-;	transmitter.c:231: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
+;	transmitter.c:232: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
 	mov	_TMOD,#0x20
-;	transmitter.c:232: TH1 = 0xFD;		/* Load value for 9600 baud rate */
+;	transmitter.c:233: TH1 = 0xFD;		/* Load value for 9600 baud rate */
 	mov	_TH1,#0xfd
-;	transmitter.c:233: SCON = 0x50;		/* Mode 1, reception enable */
+;	transmitter.c:234: SCON = 0x50;		/* Mode 1, reception enable */
 	mov	_SCON,#0x50
-;	transmitter.c:234: TR1 = 1;		/* Start timer 1 */
+;	transmitter.c:235: TR1 = 1;		/* Start timer 1 */
 ;	assignBit
 	setb	_TR1
-;	transmitter.c:235: }
+;	transmitter.c:236: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'handshake'
 ;------------------------------------------------------------
-;	transmitter.c:238: void handshake()
+;	transmitter.c:239: void handshake()
 ;	-----------------------------------------
 ;	 function handshake
 ;	-----------------------------------------
 _handshake:
-;	transmitter.c:240: start:while(!data_r)
+;	transmitter.c:241: start:while(!data_r)
 00102$:
 	mov	a,_data_r
 	jnz	00104$
-;	transmitter.c:242: data_r=SBUF;
+;	transmitter.c:243: data_r=SBUF;
 	mov	_data_r,_SBUF
-;	transmitter.c:243: RI=0;
+;	transmitter.c:244: RI=0;
 ;	assignBit
 	clr	_RI
-;	transmitter.c:244: P2 = 0xA0; // Turn ON all LED's connected to Port1
+;	transmitter.c:245: P2 = 0xA0; // Turn ON all LED's connected to Port1
 	mov	_P2,#0xa0
-;	transmitter.c:245: delay();
+;	transmitter.c:246: delay();
 	lcall	_delay
-;	transmitter.c:246: P2 = 0x00; // Turn OFF all LED's connected to Port1
+;	transmitter.c:247: P2 = 0x00; // Turn OFF all LED's connected to Port1
 	mov	_P2,#0x00
-;	transmitter.c:247: delay();
+;	transmitter.c:248: delay();
 	lcall	_delay
 	sjmp	00102$
 00104$:
-;	transmitter.c:250: if(data_r=='x')
+;	transmitter.c:251: if(data_r=='x')
 	mov	a,#0x78
 	cjne	a,_data_r,00102$
-;	transmitter.c:252: Transmit_data('y');
+;	transmitter.c:253: Transmit_data('y');
 	mov	dpl,#0x79
 	lcall	_Transmit_data
-;	transmitter.c:253: data_r=0;
+;	transmitter.c:254: data_r=0;
 	mov	_data_r,#0x00
-;	transmitter.c:256: else goto start;
-;	transmitter.c:257: }
+;	transmitter.c:257: else goto start;
+;	transmitter.c:258: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Transmit_data'
 ;------------------------------------------------------------
 ;tx_data                   Allocated to registers 
 ;------------------------------------------------------------
-;	transmitter.c:260: void Transmit_data(char tx_data)
+;	transmitter.c:261: void Transmit_data(char tx_data)
 ;	-----------------------------------------
 ;	 function Transmit_data
 ;	-----------------------------------------
 _Transmit_data:
 	mov	_SBUF,dpl
-;	transmitter.c:263: while (TI==0);		/* Wait until stop bit transmit */
+;	transmitter.c:264: while (TI==0);		/* Wait until stop bit transmit */
 00101$:
-;	transmitter.c:264: TI = 0;			/* Clear TI flag */
+;	transmitter.c:265: TI = 0;			/* Clear TI flag */
 ;	assignBit
 	jbc	_TI,00114$
 	sjmp	00101$
 00114$:
-;	transmitter.c:265: }
+;	transmitter.c:266: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'check_x'
 ;------------------------------------------------------------
-;	transmitter.c:269: void check_x()
+;	transmitter.c:270: void check_x()
 ;	-----------------------------------------
 ;	 function check_x
 ;	-----------------------------------------
@@ -1150,71 +1152,76 @@ _check_x:
 ;	transmitter.c:272: TI=0;
 ;	assignBit
 	clr	_TI
-;	transmitter.c:273: data_r = SBUF;		/* Load char in SBUF register */
+;	transmitter.c:273: if(RI)data_r = SBUF;		/* Load char in SBUF register */
+	jnb	_RI,00102$
 	mov	_data_r,_SBUF
+00102$:
 ;	transmitter.c:274: RI = 0;			/* Clear TI flag */
 ;	assignBit
 	clr	_RI
 ;	transmitter.c:275: if(data_r=='x')
 	mov	a,#0x78
-	cjne	a,_data_r,00108$
+	cjne	a,_data_r,00110$
 ;	transmitter.c:276: Transmit_data('y');
 	mov	dpl,#0x79
-	ljmp	_Transmit_data
-00108$:
+	lcall	_Transmit_data
+	sjmp	00111$
+00110$:
 ;	transmitter.c:277: else if((data_r=='m')||(data_r=='h'))
 	mov	a,#0x6d
-	cjne	a,_data_r,00126$
-	sjmp	00103$
-00126$:
+	cjne	a,_data_r,00133$
+	sjmp	00105$
+00133$:
 	mov	a,#0x68
-	cjne	a,_data_r,00104$
-00103$:
+	cjne	a,_data_r,00106$
+00105$:
 ;	transmitter.c:278: received = 0;
 	mov	_received,#0x00
-	ret
-00104$:
+	sjmp	00111$
+00106$:
 ;	transmitter.c:279: else if(data_r=='l')
 	mov	a,#0x6c
-	cjne	a,_data_r,00110$
+	cjne	a,_data_r,00111$
 ;	transmitter.c:280: received = 1;
 	mov	_received,#0x01
-00110$:
-;	transmitter.c:281: }
+00111$:
+;	transmitter.c:281: data_r=0;
+	mov	_data_r,#0x00
+;	transmitter.c:282: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'InitTimer1'
 ;------------------------------------------------------------
-;	transmitter.c:285: void InitTimer1(void)
+;	transmitter.c:286: void InitTimer1(void)
 ;	-----------------------------------------
 ;	 function InitTimer1
 ;	-----------------------------------------
 _InitTimer1:
-;	transmitter.c:287: TMOD |= 0x01;    // Set timer0 in mode 1
+;	transmitter.c:288: TMOD |= 0x01;    // Set timer0 in mode 1
 	orl	_TMOD,#0x01
-;	transmitter.c:288: TH0 = 0xee;      // 5 msec reloading time
+;	transmitter.c:289: TH0 = 0xee;      // 5 msec reloading time
 	mov	_TH0,#0xee
-;	transmitter.c:289: TL0 = 0x00;      // First time value
+;	transmitter.c:290: TL0 = 0x00;      // First time value
 	mov	_TL0,#0x00
-;	transmitter.c:290: TR0 = 1;         // Start Timer 1
+;	transmitter.c:291: TR0 = 1;         // Start Timer 1
 ;	assignBit
 	setb	_TR0
-;	transmitter.c:291: ET0 = 1;         // Enable Timer1 interrupts	
+;	transmitter.c:292: ET0 = 1;         // Enable Timer1 interrupts	
 ;	assignBit
 	setb	_ET0
-;	transmitter.c:292: }
+;	transmitter.c:293: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'default_and_a_g'
 ;------------------------------------------------------------
-;	transmitter.c:295: void default_and_a_g()
+;	transmitter.c:296: void default_and_a_g()
 ;	-----------------------------------------
 ;	 function default_and_a_g
 ;	-----------------------------------------
 _default_and_a_g:
-;	transmitter.c:298: if(a_g)
+;	transmitter.c:299: if(a_g)
 	jnb	_a_g,00111$
-;	transmitter.c:300: if(((state_was==1)||(state_was==8))&&(!pushed))
+;	transmitter.c:301: if(((state_was==1)||(state_was==8))&&(!pushed))
 	mov	a,#0x01
 	cjne	a,_state_was,00136$
 	dec	a
@@ -1231,16 +1238,16 @@ _default_and_a_g:
 00138$:
 00109$:
 	jb	_pushed,00106$
-;	transmitter.c:301: {state = 8;			time_delay=10;
+;	transmitter.c:302: {state = 8;			time_delay=10;
 	mov	_state,#0x08
 	mov	(_state + 1),#0x00
 	mov	_time_delay,#0x0a
 	mov	(_time_delay + 1),#0x00
-;	transmitter.c:302: button='n';
+;	transmitter.c:303: button='n';
 	mov	_button,#0x6e
 	ret
 00106$:
-;	transmitter.c:304: else if(((state_was==6)||(state_was==9))&&(!pushed))
+;	transmitter.c:305: else if(((state_was==6)||(state_was==9))&&(!pushed))
 	mov	a,#0x06
 	cjne	a,_state_was,00140$
 	clr	a
@@ -1257,40 +1264,43 @@ _default_and_a_g:
 00142$:
 00104$:
 	jb	_pushed,00113$
-;	transmitter.c:305: {state = 9;			time_delay=10;
+;	transmitter.c:306: {state = 9;			time_delay=10;
 	mov	_state,#0x09
 	mov	(_state + 1),#0x00
 	mov	_time_delay,#0x0a
 	mov	(_time_delay + 1),#0x00
-;	transmitter.c:306: button='u';
+;	transmitter.c:307: button='u';
 	mov	_button,#0x75
 	ret
 00111$:
-;	transmitter.c:311: a_g=0;
+;	transmitter.c:312: a_g=0;
 ;	assignBit
 	clr	_a_g
-;	transmitter.c:312: state=0;
+;	transmitter.c:313: state=0;time_delay=15;
 	clr	a
 	mov	_state,a
 	mov	(_state + 1),a
-;	transmitter.c:313: button = 'l';	
+	mov	_time_delay,#0x0f
+;	1-genFromRTrack replaced	mov	(_time_delay + 1),#0x00
+	mov	(_time_delay + 1),a
+;	transmitter.c:314: button = 'l';	
 	mov	_button,#0x6c
-;	transmitter.c:315: P2=0xA0;
+;	transmitter.c:316: P2=0xA0;
 	mov	_P2,#0xa0
-;	transmitter.c:316: delay();
-	lcall	_delay
 ;	transmitter.c:317: delay();
 	lcall	_delay
 ;	transmitter.c:318: delay();
 	lcall	_delay
-;	transmitter.c:319: P2=0x00;
-	mov	_P2,#0x00
-;	transmitter.c:320: delay();
+;	transmitter.c:319: delay();
 	lcall	_delay
+;	transmitter.c:320: P2=0x00;
+	mov	_P2,#0x00
 ;	transmitter.c:321: delay();
 	lcall	_delay
 ;	transmitter.c:322: delay();
-;	transmitter.c:324: }
+	lcall	_delay
+;	transmitter.c:323: delay();
+;	transmitter.c:325: }
 	ljmp	_delay
 00113$:
 	ret

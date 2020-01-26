@@ -80,9 +80,9 @@ C:   000000B3  s_GSFINAL
 C:   000000B6  s_CSEG                          
 C:   000000DC  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   000008A4  l_CSEG                          
-C:   0000095A  s_CONST                         
-C:   0000095A  s_XINIT                         
+C:   00000861  l_CSEG                          
+C:   00000917  s_CONST                         
+C:   00000917  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -383,27 +383,27 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                000000B6    000008A4 =        2212. bytes (REL,CON,CODE)
+CSEG                                000000B6    00000861 =        2145. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 C:   000000B6  _serial_isr                        Receiver
-C:   000000DA  _isr_timer0                        Receiver
-C:   00000302  _timer1_ISR                        Receiver
-C:   00000560  _main                              Receiver
-C:   00000596  _startup                           Receiver
-C:   000005F3  _delay                             Receiver
-C:   0000061C  _UART_Init                         Receiver
-C:   00000628  _Transmit_data                     Receiver
-C:   0000062F  _handshake                         Receiver
-C:   00000658  _check_data                        Receiver
-C:   000007C6  _InitTimer0                        Receiver
-C:   000007D4  _check_switches                    Receiver
-C:   000008B6  __mulint                           _mulint
-C:   000008B6  __mulint_dummy                     _mulint
-C:   000008D3  __moduint                          _moduint
-C:   00000920  __modsint                          _modsint
-C:   00000956  __sdcc_external_startup            _startup
+C:   000000DF  _isr_timer0                        Receiver
+C:   0000030A  _timer1_ISR                        Receiver
+C:   00000568  _main                              Receiver
+C:   0000059E  _startup                           Receiver
+C:   000005FB  _delay                             Receiver
+C:   00000624  _UART_Init                         Receiver
+C:   00000630  _Transmit_data                     Receiver
+C:   00000637  _handshake                         Receiver
+C:   00000660  _check_data                        Receiver
+C:   0000078B  _InitTimer0                        Receiver
+C:   00000799  _check_switches                    Receiver
+C:   00000873  __mulint                           _mulint
+C:   00000873  __mulint_dummy                     _mulint
+C:   00000890  __moduint                          _moduint
+C:   000008DD  __modsint                          _modsint
+C:   00000913  __sdcc_external_startup            _startup
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 20.
 

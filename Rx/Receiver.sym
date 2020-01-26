@@ -225,7 +225,7 @@ Symbol Table
     _IP                                                         =  0000B8 G
     _IT0                                                        =  000088 G
     _IT1                                                        =  00008A G
- 19 _InitTimer0                                                    000710 GR
+ 19 _InitTimer0                                                    0006D5 GR
     _OV                                                         =  0000D2 G
     _P                                                          =  0000D0 G
     _P0                                                         =  000080 G
@@ -327,8 +327,8 @@ Symbol Table
     _TR1                                                        =  00008E G
     _TR2                                                        =  0000CA G
     _TXD                                                        =  0000B1 G
- 19 _Transmit_data                                                 000572 GR
- 19 _UART_Init                                                     000566 GR
+ 19 _Transmit_data                                                 00057A GR
+ 19 _UART_Init                                                     00056E GR
     _WR                                                         =  0000B6 G
  10 __interrupt_vect                                               000000 R
     __mcs51_genRAMCLEAR                                            ****** GX
@@ -343,17 +343,17 @@ Symbol Table
   8 __start__stack                                                 000000 GR
   6 _ac_state                                                      000016 GR
   B _auto_flag                                                     000000 GR
- 19 _check_data                                                    0005A2 GR
- 19 _check_switches                                                00071E GR
+ 19 _check_data                                                    0005AA GR
+ 19 _check_switches                                                0006E3 GR
   6 _data_r                                                        000001 GR
- 19 _delay                                                         00053D GR
+ 19 _delay                                                         000545 GR
   6 _dim1_val                                                      00000E GR
   6 _dim1_val2                                                     000010 GR
   6 _dim_val                                                       00000A GR
   6 _dim_val2                                                      00000C GR
- 19 _handshake                                                     000579 GR
- 19 _isr_timer0                                                    000024 GR
- 19 _main                                                          0004AA GR
+ 19 _handshake                                                     000581 GR
+ 19 _isr_timer0                                                    000029 GR
+ 19 _main                                                          0004B2 GR
   6 _off                                                           000014 GR
   6 _serialCount                                                   000004 GR
  19 _serial_isr                                                    000000 GR
@@ -363,10 +363,10 @@ Hexadecimal [24-Bits]
 
 Symbol Table
 
- 19 _startup                                                       0004E0 GR
+ 19 _startup                                                       0004E8 GR
   6 _state                                                         000012 GR
   6 _time_delay                                                    000008 GR
- 19 _timer1_ISR                                                    00024C GR
+ 19 _timer1_ISR                                                    000254 GR
   6 _timerCount                                                    000002 GR
   6 _timerCount2                                                   000006 GR
     a                                                           =  0000E0 L
@@ -609,7 +609,7 @@ Area Table
   16 GSINIT5                                    size      0   flags   20
   17 GSINIT                                     size     29   flags   20
   18 GSFINAL                                    size      3   flags   20
-  19 CSEG                                       size    800   flags   20
+  19 CSEG                                       size    7BD   flags   20
   1A CONST                                      size      0   flags   20
   1B XINIT                                      size      0   flags   20
   1C CABS                                       size      0   flags   28

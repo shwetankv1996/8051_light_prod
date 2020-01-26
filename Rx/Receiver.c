@@ -58,6 +58,7 @@ void serial_isr() __interrupt 4
         data_r = SBUF; // Copy the received char
         RI = 0;              // Clear the Receive interrupt flag
         if(data_r!='y')serialCount=0;
+        if(auto_flag)auto_led=1;
     }
     else if(TI == 1)
     {
@@ -78,11 +79,10 @@ void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 		switch(state)
 		{
 		case 0:up_led_main =1;center_led =0;down_led_main=1;									
-				if(auto_flag)auto_led=1;
 				up_led=0;down_led=0;main_out1=1;main_out2=1;
+		        if(auto_flag)auto_led=1;
 				break;	
 		case 1:up_led_main =1;center_led =0;down_led_main=0;
-
 				if(auto_flag)
 				{main_out1=0;up_led=1;}
 				break;
@@ -354,33 +354,33 @@ void check_data()
 	case 'l':time_delay=30;state = 0;auto_led=0;break;
 	
 	case 'a':time_delay=20;state = 1;	
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'b':time_delay=10;state = 2;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'c':time_delay=7 ;state = 3;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'd':time_delay=7 ;state = 7;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'e':time_delay=7 ;state = 4;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'f':time_delay=10;state = 5;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'g':time_delay=20;state = 6;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'n':time_delay=15;state = 8;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
 	case 'u':time_delay=15;state = 9;
-			 if(auto_flag)auto_led=1;break;
+			 break;
 			 
-	default :ES=0;
+	case 'q' :ES=0;
 			serialCount=0;
 			state=20;
 			timerCount=0;
@@ -390,11 +390,7 @@ void check_data()
 			up_led=0;
 			down_led=0;
 
-			Transmit_data('x');
-			__asm nop __endasm;
-			__asm nop __endasm;
-			__asm nop __endasm;
-			__asm nop __endasm;
+			data_r=0;
 			while(data_r!='y')
 			{
 			state=20;
@@ -404,7 +400,9 @@ void check_data()
 			data_r=SBUF;
 			RI = 0;
 			}
-			ES=1;
+			ES=1;break;
+			
+	default:break;
 	}//switch end
 	
 	
@@ -425,21 +423,22 @@ void check_switches()
 {
 if(!ac_key)
 	{
+	delay();
 	if(!ac_key)
 	{
-	delay();
 	ac_state++;		
-	if(ac_state==3)
+	if(ac_state>=3)
 		ac_state=0;
 	switch(ac_state)
 	{
-		case 0:Transmit_data('l');ac_led_up=1;ac_led_down=1;delay();break;
-		case 1:Transmit_data('m');ac_led_up=1;ac_led_down=0;delay();break;
-		case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;delay();break;
+		case 0:Transmit_data('l');ac_led_up=1;ac_led_down=1;break;
+		case 1:Transmit_data('m');ac_led_up=1;ac_led_down=0;break;
+		case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;break;
 		default:break;
 	}//switch end
 	}//if end
 	}
+
 if(!dim_key)
 	{
 	delay();

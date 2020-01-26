@@ -479,7 +479,7 @@ _serial_isr:
 	push	acc
 	push	psw
 ;	Receiver.c:56: if(RI == 1)
-	jnb	_RI,00106$
+	jnb	_RI,00108$
 ;	Receiver.c:58: data_r = SBUF; // Copy the received char
 	mov	_data_r,_SBUF
 ;	Receiver.c:59: RI = 0;              // Clear the Receive interrupt flag
@@ -487,22 +487,27 @@ _serial_isr:
 	clr	_RI
 ;	Receiver.c:60: if(data_r!='y')serialCount=0;
 	mov	a,#0x79
-	cjne	a,_data_r,00123$
-	sjmp	00108$
-00123$:
+	cjne	a,_data_r,00129$
+	sjmp	00102$
+00129$:
 	clr	a
 	mov	_serialCount,a
 	mov	(_serialCount + 1),a
-	sjmp	00108$
-00106$:
-;	Receiver.c:62: else if(TI == 1)
-;	Receiver.c:64: TI = 0;              // Clear the Transmit interrupt flag
+00102$:
+;	Receiver.c:61: if(auto_flag)auto_led=1;
+	jnb	_auto_flag,00110$
 ;	assignBit
-	jbc	_TI,00124$
-	sjmp	00108$
-00124$:
+	setb	_P2_1
+	sjmp	00110$
 00108$:
-;	Receiver.c:66: }
+;	Receiver.c:63: else if(TI == 1)
+;	Receiver.c:65: TI = 0;              // Clear the Transmit interrupt flag
+;	assignBit
+	jbc	_TI,00131$
+	sjmp	00110$
+00131$:
+00110$:
+;	Receiver.c:67: }
 	pop	psw
 	pop	acc
 	reti
@@ -513,7 +518,7 @@ _serial_isr:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'isr_timer0'
 ;------------------------------------------------------------
-;	Receiver.c:68: void isr_timer0(void) __interrupt 1   // It is called after every 5msec
+;	Receiver.c:69: void isr_timer0(void) __interrupt 1   // It is called after every 5msec
 ;	-----------------------------------------
 ;	 function isr_timer0
 ;	-----------------------------------------
@@ -533,11 +538,11 @@ _isr_timer0:
 	push	(0+0)
 	push	psw
 	mov	psw,#0x00
-;	Receiver.c:70: TH0  = 0Xee;         // ReLoad the timer value for 5ms
+;	Receiver.c:71: TH0  = 0Xee;         // ReLoad the timer value for 5ms
 	mov	_TH0,#0xee
-;	Receiver.c:71: TL0  = 0X00;
+;	Receiver.c:72: TL0  = 0X00;
 	mov	_TL0,#0x00
-;	Receiver.c:72: timerCount++;
+;	Receiver.c:73: timerCount++;
 	mov	r6,_timerCount
 	mov	r7,(_timerCount + 1)
 	mov	a,#0x01
@@ -546,14 +551,14 @@ _isr_timer0:
 	clr	a
 	addc	a,r7
 	mov	(_timerCount + 1),a
-;	Receiver.c:74: if(state!=20)
+;	Receiver.c:75: if(state!=20)
 	mov	a,#0x14
 	cjne	a,_state,00240$
 	clr	a
 	cjne	a,(_state + 1),00240$
 	ljmp	00158$
 00240$:
-;	Receiver.c:76: if(timerCount < (time_delay*30)) // count for LED-ON delay
+;	Receiver.c:77: if(timerCount < (time_delay*30)) // count for LED-ON delay
 	mov	__mulint_PARM_2,_time_delay
 	mov	(__mulint_PARM_2 + 1),(_time_delay + 1)
 	mov	dptr,#0x001e
@@ -571,7 +576,7 @@ _isr_timer0:
 	jc	00241$
 	ljmp	00154$
 00241$:
-;	Receiver.c:78: switch(state)
+;	Receiver.c:79: switch(state)
 	mov	a,(_state + 1)
 	jnb	acc.7,00242$
 	ljmp	00158$
@@ -618,7 +623,7 @@ _isr_timer0:
 	.db	00122$>>8
 	.db	00123$>>8
 	.db	00126$>>8
-;	Receiver.c:80: case 0:up_led_main =1;center_led =0;down_led_main=1;									
+;	Receiver.c:81: case 0:up_led_main =1;center_led =0;down_led_main=1;									
 00101$:
 ;	assignBit
 	setb	_P0_1
@@ -626,11 +631,6 @@ _isr_timer0:
 	clr	_P0_0
 ;	assignBit
 	setb	_P2_6
-;	Receiver.c:81: if(auto_flag)auto_led=1;
-	jnb	_auto_flag,00103$
-;	assignBit
-	setb	_P2_1
-00103$:
 ;	Receiver.c:82: up_led=0;down_led=0;main_out1=1;main_out2=1;
 ;	assignBit
 	clr	_P2_7
@@ -640,9 +640,15 @@ _isr_timer0:
 	setb	_P3_6
 ;	assignBit
 	setb	_P3_7
-;	Receiver.c:83: break;	
+;	Receiver.c:83: if(auto_flag)auto_led=1;
+	jb	_auto_flag,00246$
 	ljmp	00158$
-;	Receiver.c:84: case 1:up_led_main =1;center_led =0;down_led_main=0;
+00246$:
+;	assignBit
+	setb	_P2_1
+;	Receiver.c:84: break;	
+	ljmp	00158$
+;	Receiver.c:85: case 1:up_led_main =1;center_led =0;down_led_main=0;
 00104$:
 ;	assignBit
 	setb	_P0_1
@@ -1651,37 +1657,40 @@ _handshake:
 _check_data:
 ;	Receiver.c:352: switch(data_r)
 	mov	r7,_data_r
-	cjne	r7,#0x61,00226$
+	cjne	r7,#0x61,00177$
 	sjmp	00102$
-00226$:
-	cjne	r7,#0x62,00227$
+00177$:
+	cjne	r7,#0x62,00178$
+	sjmp	00103$
+00178$:
+	cjne	r7,#0x63,00179$
+	sjmp	00104$
+00179$:
+	cjne	r7,#0x64,00180$
 	sjmp	00105$
-00227$:
-	cjne	r7,#0x63,00228$
-	sjmp	00108$
-00228$:
-	cjne	r7,#0x64,00229$
-	sjmp	00111$
-00229$:
-	cjne	r7,#0x65,00230$
-	ljmp	00114$
-00230$:
-	cjne	r7,#0x66,00231$
-	ljmp	00117$
-00231$:
-	cjne	r7,#0x67,00232$
-	ljmp	00120$
-00232$:
-	cjne	r7,#0x6c,00233$
+00180$:
+	cjne	r7,#0x65,00181$
+	sjmp	00106$
+00181$:
+	cjne	r7,#0x66,00182$
+	sjmp	00107$
+00182$:
+	cjne	r7,#0x67,00183$
+	ljmp	00108$
+00183$:
+	cjne	r7,#0x6c,00184$
 	sjmp	00101$
-00233$:
-	cjne	r7,#0x6e,00234$
-	ljmp	00123$
-00234$:
-	cjne	r7,#0x75,00235$
-	ljmp	00126$
-00235$:
-	ljmp	00129$
+00184$:
+	cjne	r7,#0x6e,00185$
+	ljmp	00109$
+00185$:
+	cjne	r7,#0x71,00186$
+	ljmp	00111$
+00186$:
+	cjne	r7,#0x75,00187$
+	ljmp	00110$
+00187$:
+	ljmp	00116$
 ;	Receiver.c:354: case 'l':time_delay=30;state = 0;auto_led=0;break;
 00101$:
 	mov	_time_delay,#0x1e
@@ -1691,120 +1700,81 @@ _check_data:
 	mov	(_state + 1),a
 ;	assignBit
 	clr	_P2_1
-	ljmp	00133$
+	ljmp	00116$
 ;	Receiver.c:356: case 'a':time_delay=20;state = 1;	
 00102$:
 	mov	_time_delay,#0x14
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x01
 	mov	(_state + 1),#0x00
-;	Receiver.c:357: if(auto_flag)auto_led=1;break;
-	jb	_auto_flag,00236$
-	ljmp	00133$
-00236$:
-;	assignBit
-	setb	_P2_1
-	ljmp	00133$
+;	Receiver.c:357: break;
+	ljmp	00116$
 ;	Receiver.c:359: case 'b':time_delay=10;state = 2;
-00105$:
+00103$:
 	mov	_time_delay,#0x0a
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x02
 	mov	(_state + 1),#0x00
-;	Receiver.c:360: if(auto_flag)auto_led=1;break;
-	jb	_auto_flag,00237$
-	ljmp	00133$
-00237$:
-;	assignBit
-	setb	_P2_1
-	ljmp	00133$
+;	Receiver.c:360: break;
+	ljmp	00116$
 ;	Receiver.c:362: case 'c':time_delay=7 ;state = 3;
-00108$:
+00104$:
 	mov	_time_delay,#0x07
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x03
 	mov	(_state + 1),#0x00
-;	Receiver.c:363: if(auto_flag)auto_led=1;break;
-	jb	_auto_flag,00238$
-	ljmp	00133$
-00238$:
-;	assignBit
-	setb	_P2_1
-	ljmp	00133$
+;	Receiver.c:363: break;
+	ljmp	00116$
 ;	Receiver.c:365: case 'd':time_delay=7 ;state = 7;
-00111$:
+00105$:
 	mov	_time_delay,#0x07
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x07
 	mov	(_state + 1),#0x00
-;	Receiver.c:366: if(auto_flag)auto_led=1;break;
-	jb	_auto_flag,00239$
-	ljmp	00133$
-00239$:
-;	assignBit
-	setb	_P2_1
-	ljmp	00133$
+;	Receiver.c:366: break;
+	ljmp	00116$
 ;	Receiver.c:368: case 'e':time_delay=7 ;state = 4;
-00114$:
+00106$:
 	mov	_time_delay,#0x07
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x04
 	mov	(_state + 1),#0x00
-;	Receiver.c:369: if(auto_flag)auto_led=1;break;
-	jb	_auto_flag,00240$
-	ljmp	00133$
-00240$:
-;	assignBit
-	setb	_P2_1
-	ljmp	00133$
+;	Receiver.c:369: break;
+	ljmp	00116$
 ;	Receiver.c:371: case 'f':time_delay=10;state = 5;
-00117$:
+00107$:
 	mov	_time_delay,#0x0a
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x05
 	mov	(_state + 1),#0x00
-;	Receiver.c:372: if(auto_flag)auto_led=1;break;
-	jb	_auto_flag,00241$
-	ljmp	00133$
-00241$:
-;	assignBit
-	setb	_P2_1
-	ljmp	00133$
+;	Receiver.c:372: break;
 ;	Receiver.c:374: case 'g':time_delay=20;state = 6;
-00120$:
+	sjmp	00116$
+00108$:
 	mov	_time_delay,#0x14
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x06
 	mov	(_state + 1),#0x00
-;	Receiver.c:375: if(auto_flag)auto_led=1;break;
-	jnb	_auto_flag,00133$
-;	assignBit
-	setb	_P2_1
+;	Receiver.c:375: break;
 ;	Receiver.c:377: case 'n':time_delay=15;state = 8;
-	sjmp	00133$
-00123$:
+	sjmp	00116$
+00109$:
 	mov	_time_delay,#0x0f
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x08
 	mov	(_state + 1),#0x00
-;	Receiver.c:378: if(auto_flag)auto_led=1;break;
-	jnb	_auto_flag,00133$
-;	assignBit
-	setb	_P2_1
+;	Receiver.c:378: break;
 ;	Receiver.c:380: case 'u':time_delay=15;state = 9;
-	sjmp	00133$
-00126$:
+	sjmp	00116$
+00110$:
 	mov	_time_delay,#0x0f
 	mov	(_time_delay + 1),#0x00
 	mov	_state,#0x09
 	mov	(_state + 1),#0x00
-;	Receiver.c:381: if(auto_flag)auto_led=1;break;
-	jnb	_auto_flag,00133$
-;	assignBit
-	setb	_P2_1
-;	Receiver.c:383: default :ES=0;
-	sjmp	00133$
-00129$:
+;	Receiver.c:381: break;
+;	Receiver.c:383: case 'q' :ES=0;
+	sjmp	00116$
+00111$:
 ;	assignBit
 	clr	_ES
 ;	Receiver.c:384: serialCount=0;
@@ -1833,46 +1803,37 @@ _check_data:
 ;	Receiver.c:391: down_led=0;
 ;	assignBit
 	clr	_P2_4
-;	Receiver.c:393: Transmit_data('x');
-	mov	dpl,#0x78
-	lcall	_Transmit_data
-;	Receiver.c:394: __asm nop __endasm;
-	nop	
-;	Receiver.c:395: __asm nop __endasm;
-	nop	
-;	Receiver.c:396: __asm nop __endasm;
-	nop	
-;	Receiver.c:397: __asm nop __endasm;
-	nop	
-;	Receiver.c:398: while(data_r!='y')
-00130$:
+;	Receiver.c:393: data_r=0;
+	mov	_data_r,#0x00
+;	Receiver.c:394: while(data_r!='y')
+00112$:
 	mov	a,#0x79
-	cjne	a,_data_r,00245$
-	sjmp	00132$
-00245$:
-;	Receiver.c:400: state=20;
+	cjne	a,_data_r,00188$
+	sjmp	00114$
+00188$:
+;	Receiver.c:396: state=20;
 	mov	_state,#0x14
 	mov	(_state + 1),#0x00
-;	Receiver.c:401: delay();
+;	Receiver.c:397: delay();
 	lcall	_delay
-;	Receiver.c:402: delay();
+;	Receiver.c:398: delay();
 	lcall	_delay
-;	Receiver.c:403: Transmit_data('x');
+;	Receiver.c:399: Transmit_data('x');
 	mov	dpl,#0x78
 	lcall	_Transmit_data
-;	Receiver.c:404: data_r=SBUF;
+;	Receiver.c:400: data_r=SBUF;
 	mov	_data_r,_SBUF
-;	Receiver.c:405: RI = 0;
+;	Receiver.c:401: RI = 0;
 ;	assignBit
 	clr	_RI
-	sjmp	00130$
-00132$:
-;	Receiver.c:407: ES=1;
+	sjmp	00112$
+00114$:
+;	Receiver.c:403: ES=1;break;
 ;	assignBit
 	setb	_ES
-;	Receiver.c:408: }//switch end
-00133$:
-;	Receiver.c:411: if(serialCount>4000)
+;	Receiver.c:406: }//switch end
+00116$:
+;	Receiver.c:409: if(serialCount>4000)
 	clr	c
 	mov	a,#0xa0
 	subb	a,_serialCount
@@ -1880,70 +1841,71 @@ _check_data:
 	mov	b,(_serialCount + 1)
 	xrl	b,#0x80
 	subb	a,b
-	jnc	00136$
-;	Receiver.c:412: {serialCount=0;data_r='q';}
+	jnc	00119$
+;	Receiver.c:410: {serialCount=0;data_r='q';}
 	clr	a
 	mov	_serialCount,a
 	mov	(_serialCount + 1),a
 	mov	_data_r,#0x71
-00136$:
-;	Receiver.c:413: }
+00119$:
+;	Receiver.c:411: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'InitTimer0'
 ;------------------------------------------------------------
-;	Receiver.c:415: void InitTimer0(void)
+;	Receiver.c:413: void InitTimer0(void)
 ;	-----------------------------------------
 ;	 function InitTimer0
 ;	-----------------------------------------
 _InitTimer0:
-;	Receiver.c:417: TMOD |= 0x01;    // Set timer0 in mode 1
+;	Receiver.c:415: TMOD |= 0x01;    // Set timer0 in mode 1
 	orl	_TMOD,#0x01
-;	Receiver.c:418: TH0 = 0xee;      // 5 msec reloading time
+;	Receiver.c:416: TH0 = 0xee;      // 5 msec reloading time
 	mov	_TH0,#0xee
-;	Receiver.c:419: TL0 = 0x00;      // First time value
+;	Receiver.c:417: TL0 = 0x00;      // First time value
 	mov	_TL0,#0x00
-;	Receiver.c:420: TR0 = 1;         // Start Timer 1
+;	Receiver.c:418: TR0 = 1;         // Start Timer 1
 ;	assignBit
 	setb	_TR0
-;	Receiver.c:421: ET0 = 1;         // Enable Timer1 interrupts	
+;	Receiver.c:419: ET0 = 1;         // Enable Timer1 interrupts	
 ;	assignBit
 	setb	_ET0
-;	Receiver.c:422: }
+;	Receiver.c:420: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'check_switches'
 ;------------------------------------------------------------
-;	Receiver.c:424: void check_switches()
+;	Receiver.c:422: void check_switches()
 ;	-----------------------------------------
 ;	 function check_switches
 ;	-----------------------------------------
 _check_switches:
-;	Receiver.c:426: if(!ac_key)
+;	Receiver.c:424: if(!ac_key)
 	jb	_P1_3,00111$
-;	Receiver.c:428: if(!ac_key)
-	jb	_P1_3,00111$
-;	Receiver.c:430: delay();
+;	Receiver.c:426: delay();
 	lcall	_delay
-;	Receiver.c:431: ac_state++;		
+;	Receiver.c:427: if(!ac_key)
+	jb	_P1_3,00111$
+;	Receiver.c:429: ac_state++;		
 	inc	_ac_state
-;	Receiver.c:432: if(ac_state==3)
-	mov	a,#0x03
-	cjne	a,_ac_state,00102$
-;	Receiver.c:433: ac_state=0;
+;	Receiver.c:430: if(ac_state>=3)
+	mov	a,#0x100 - 0x03
+	add	a,_ac_state
+	jnc	00102$
+;	Receiver.c:431: ac_state=0;
 	mov	_ac_state,#0x00
 00102$:
-;	Receiver.c:434: switch(ac_state)
+;	Receiver.c:432: switch(ac_state)
 	clr	a
-	cjne	a,_ac_state,00191$
+	cjne	a,_ac_state,00190$
 	sjmp	00103$
-00191$:
+00190$:
 	mov	a,#0x01
-	cjne	a,_ac_state,00192$
+	cjne	a,_ac_state,00191$
 	sjmp	00104$
-00192$:
+00191$:
 	mov	a,#0x02
-;	Receiver.c:436: case 0:Transmit_data('l');ac_led_up=1;ac_led_down=1;delay();break;
+;	Receiver.c:434: case 0:Transmit_data('l');ac_led_up=1;ac_led_down=1;break;
 	cjne	a,_ac_state,00111$
 	sjmp	00105$
 00103$:
@@ -1953,8 +1915,7 @@ _check_switches:
 	setb	_P2_2
 ;	assignBit
 	setb	_P2_3
-	lcall	_delay
-;	Receiver.c:437: case 1:Transmit_data('m');ac_led_up=1;ac_led_down=0;delay();break;
+;	Receiver.c:435: case 1:Transmit_data('m');ac_led_up=1;ac_led_down=0;break;
 	sjmp	00111$
 00104$:
 	mov	dpl,#0x6d
@@ -1963,8 +1924,7 @@ _check_switches:
 	setb	_P2_2
 ;	assignBit
 	clr	_P2_3
-	lcall	_delay
-;	Receiver.c:438: case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;delay();break;
+;	Receiver.c:436: case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;break;
 	sjmp	00111$
 00105$:
 	mov	dpl,#0x68
@@ -1973,21 +1933,20 @@ _check_switches:
 	clr	_P2_2
 ;	assignBit
 	setb	_P2_3
-	lcall	_delay
-;	Receiver.c:440: }//switch end
+;	Receiver.c:438: }//switch end
 00111$:
-;	Receiver.c:443: if(!dim_key)
+;	Receiver.c:442: if(!dim_key)
 	jb	_P1_4,00115$
-;	Receiver.c:445: delay();
+;	Receiver.c:444: delay();
 	lcall	_delay
-;	Receiver.c:447: dim_val = dim_val + 10;
+;	Receiver.c:446: dim_val = dim_val + 10;
 	mov	a,#0x0a
 	add	a,_dim_val
 	mov	_dim_val,a
 	clr	a
 	addc	a,(_dim_val + 1)
 	mov	(_dim_val + 1),a
-;	Receiver.c:448: dim_val2=50-dim_val;
+;	Receiver.c:447: dim_val2=50-dim_val;
 	mov	a,#0x32
 	clr	c
 	subb	a,_dim_val
@@ -1995,7 +1954,7 @@ _check_switches:
 	clr	a
 	subb	a,(_dim_val + 1)
 	mov	(_dim_val2 + 1),a
-;	Receiver.c:449: if(dim_val>50){dim_val=1;dim_val2=50;}
+;	Receiver.c:448: if(dim_val>50){dim_val=1;dim_val2=50;}
 	clr	c
 	mov	a,#0x32
 	subb	a,_dim_val
@@ -2009,24 +1968,24 @@ _check_switches:
 	mov	_dim_val2,#0x32
 	mov	(_dim_val2 + 1),#0x00
 00115$:
-;	Receiver.c:452: if(!auto_key)
+;	Receiver.c:451: if(!auto_key)
 	jb	_P1_2,00117$
-;	Receiver.c:454: delay();
+;	Receiver.c:453: delay();
 	lcall	_delay
-;	Receiver.c:455: auto_flag=!auto_flag;
+;	Receiver.c:454: auto_flag=!auto_flag;
 	cpl	_auto_flag
 00117$:
-;	Receiver.c:458: if(!pwr_key)
+;	Receiver.c:457: if(!pwr_key)
 	jb	_P1_7,00122$
+;	Receiver.c:459: delay();
+	lcall	_delay
 ;	Receiver.c:460: delay();
 	lcall	_delay
 ;	Receiver.c:461: delay();
 	lcall	_delay
-;	Receiver.c:462: delay();
-	lcall	_delay
-;	Receiver.c:463: if(!pwr_key)
+;	Receiver.c:462: if(!pwr_key)
 	jb	_P1_7,00122$
-;	Receiver.c:465: pwr_led=0;up_led_main =0;center_led =0;down_led_main=0;ac_led_up=0;ac_led_down=0;auto_led=0;
+;	Receiver.c:464: pwr_led=0;up_led_main =0;center_led =0;down_led_main=0;ac_led_up=0;ac_led_down=0;auto_led=0;
 ;	assignBit
 	clr	_P2_0
 ;	assignBit
@@ -2041,71 +2000,71 @@ _check_switches:
 	clr	_P2_3
 ;	assignBit
 	clr	_P2_1
-;	Receiver.c:466: TR0 = 0;         // Stop Timer 1
+;	Receiver.c:465: TR0 = 0;         // Stop Timer 1
 ;	assignBit
 	clr	_TR0
-;	Receiver.c:467: ET0 = 0;         // Enable Timer1 interrupts	
+;	Receiver.c:466: ET0 = 0;         // Enable Timer1 interrupts	
 ;	assignBit
 	clr	_ET0
-;	Receiver.c:468: delay();delay();
+;	Receiver.c:467: delay();delay();
 	lcall	_delay
 	lcall	_delay
-;	Receiver.c:469: pwr_out=1;
+;	Receiver.c:468: pwr_out=1;
 ;	assignBit
 	setb	_P0_7
-;	Receiver.c:470: shutdown:
+;	Receiver.c:469: shutdown:
 00118$:
-;	Receiver.c:471: goto shutdown;
+;	Receiver.c:470: goto shutdown;
 	sjmp	00118$
 00122$:
-;	Receiver.c:476: if(!manual_up_key)
+;	Receiver.c:475: if(!manual_up_key)
 	jb	_P1_0,00127$
-;	Receiver.c:478: up_led=1;
+;	Receiver.c:477: up_led=1;
 ;	assignBit
 	setb	_P2_7
-;	Receiver.c:479: down_led=0;
+;	Receiver.c:478: down_led=0;
 ;	assignBit
 	clr	_P2_4
-;	Receiver.c:480: up_led_main=1;
+;	Receiver.c:479: up_led_main=1;
 ;	assignBit
 	setb	_P0_1
-;	Receiver.c:481: center_led=0;
+;	Receiver.c:480: center_led=0;
 ;	assignBit
 	clr	_P0_0
-;	Receiver.c:482: down_led_main=0;
+;	Receiver.c:481: down_led_main=0;
 ;	assignBit
 	clr	_P2_6
-;	Receiver.c:483: TR0=0;
+;	Receiver.c:482: TR0=0;
 ;	assignBit
 	clr	_TR0
 	ret
 00127$:
-;	Receiver.c:486: else if(!manual_down_key)
+;	Receiver.c:485: else if(!manual_down_key)
 	jb	_P1_1,00124$
-;	Receiver.c:488: up_led=0;
+;	Receiver.c:487: up_led=0;
 ;	assignBit
 	clr	_P2_7
-;	Receiver.c:489: down_led=1;
+;	Receiver.c:488: down_led=1;
 ;	assignBit
 	setb	_P2_4
-;	Receiver.c:490: up_led_main=0;
+;	Receiver.c:489: up_led_main=0;
 ;	assignBit
 	clr	_P0_1
-;	Receiver.c:491: center_led=0;
+;	Receiver.c:490: center_led=0;
 ;	assignBit
 	clr	_P0_0
-;	Receiver.c:492: down_led_main=1;
+;	Receiver.c:491: down_led_main=1;
 ;	assignBit
 	setb	_P2_6
-;	Receiver.c:493: TR0=0;
+;	Receiver.c:492: TR0=0;
 ;	assignBit
 	clr	_TR0
 	ret
 00124$:
-;	Receiver.c:498: TR0=1;
+;	Receiver.c:497: TR0=1;
 ;	assignBit
 	setb	_TR0
-;	Receiver.c:501: }
+;	Receiver.c:500: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

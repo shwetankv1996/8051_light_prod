@@ -392,7 +392,7 @@
       000000 02 00 31         [24]  392 	ljmp	__sdcc_gsinit_startup
       000003 32               [24]  393 	reti
       000004                        394 	.ds	7
-      00000B 02 00 DA         [24]  395 	ljmp	_isr_timer0
+      00000B 02 00 DF         [24]  395 	ljmp	_isr_timer0
       00000E                        396 	.ds	5
       000013 32               [24]  397 	reti
       000014                        398 	.ds	7
@@ -400,7 +400,7 @@
       00001C                        400 	.ds	7
       000023 02 00 B6         [24]  401 	ljmp	_serial_isr
       000026                        402 	.ds	5
-      00002B 02 03 02         [24]  403 	ljmp	_timer1_ISR
+      00002B 02 03 0A         [24]  403 	ljmp	_timer1_ISR
                                     404 ;--------------------------------------------------------
                                     405 ; global & static initialisations
                                     406 ;--------------------------------------------------------
@@ -454,7 +454,7 @@
                                     454 	.area HOME    (CODE)
                                     455 	.area HOME    (CODE)
       00002E                        456 __sdcc_program_startup:
-      00002E 02 05 60         [24]  457 	ljmp	_main
+      00002E 02 05 68         [24]  457 	ljmp	_main
                                     458 ;	return from main will return to caller
                                     459 ;--------------------------------------------------------
                                     460 ; code
@@ -479,7 +479,7 @@
       0000B6 C0 E0            [24]  479 	push	acc
       0000B8 C0 D0            [24]  480 	push	psw
                                     481 ;	Receiver.c:56: if(RI == 1)
-      0000BA 30 98 13         [24]  482 	jnb	_RI,00106$
+      0000BA 30 98 18         [24]  482 	jnb	_RI,00108$
                                     483 ;	Receiver.c:58: data_r = SBUF; // Copy the received char
       0000BD 85 99 09         [24]  484 	mov	_data_r,_SBUF
                                     485 ;	Receiver.c:59: RI = 0;              // Clear the Receive interrupt flag
@@ -487,150 +487,150 @@
       0000C0 C2 98            [12]  487 	clr	_RI
                                     488 ;	Receiver.c:60: if(data_r!='y')serialCount=0;
       0000C2 74 79            [12]  489 	mov	a,#0x79
-      0000C4 B5 09 02         [24]  490 	cjne	a,_data_r,00123$
-      0000C7 80 0C            [24]  491 	sjmp	00108$
-      0000C9                        492 00123$:
+      0000C4 B5 09 02         [24]  490 	cjne	a,_data_r,00129$
+      0000C7 80 05            [24]  491 	sjmp	00102$
+      0000C9                        492 00129$:
       0000C9 E4               [12]  493 	clr	a
       0000CA F5 0C            [12]  494 	mov	_serialCount,a
       0000CC F5 0D            [12]  495 	mov	(_serialCount + 1),a
-      0000CE 80 05            [24]  496 	sjmp	00108$
-      0000D0                        497 00106$:
-                                    498 ;	Receiver.c:62: else if(TI == 1)
-                                    499 ;	Receiver.c:64: TI = 0;              // Clear the Transmit interrupt flag
-                                    500 ;	assignBit
-      0000D0 10 99 02         [24]  501 	jbc	_TI,00124$
-      0000D3 80 00            [24]  502 	sjmp	00108$
-      0000D5                        503 00124$:
-      0000D5                        504 00108$:
-                                    505 ;	Receiver.c:66: }
-      0000D5 D0 D0            [24]  506 	pop	psw
-      0000D7 D0 E0            [24]  507 	pop	acc
-      0000D9 32               [24]  508 	reti
-                                    509 ;	eliminated unneeded mov psw,# (no regs used in bank)
-                                    510 ;	eliminated unneeded push/pop dpl
-                                    511 ;	eliminated unneeded push/pop dph
-                                    512 ;	eliminated unneeded push/pop b
-                                    513 ;------------------------------------------------------------
-                                    514 ;Allocation info for local variables in function 'isr_timer0'
-                                    515 ;------------------------------------------------------------
-                                    516 ;	Receiver.c:68: void isr_timer0(void) __interrupt 1   // It is called after every 5msec
-                                    517 ;	-----------------------------------------
-                                    518 ;	 function isr_timer0
-                                    519 ;	-----------------------------------------
-      0000DA                        520 _isr_timer0:
-      0000DA C0 21            [24]  521 	push	bits
-      0000DC C0 E0            [24]  522 	push	acc
-      0000DE C0 F0            [24]  523 	push	b
-      0000E0 C0 82            [24]  524 	push	dpl
-      0000E2 C0 83            [24]  525 	push	dph
-      0000E4 C0 07            [24]  526 	push	(0+7)
-      0000E6 C0 06            [24]  527 	push	(0+6)
-      0000E8 C0 05            [24]  528 	push	(0+5)
-      0000EA C0 04            [24]  529 	push	(0+4)
-      0000EC C0 03            [24]  530 	push	(0+3)
-      0000EE C0 02            [24]  531 	push	(0+2)
-      0000F0 C0 01            [24]  532 	push	(0+1)
-      0000F2 C0 00            [24]  533 	push	(0+0)
-      0000F4 C0 D0            [24]  534 	push	psw
-      0000F6 75 D0 00         [24]  535 	mov	psw,#0x00
-                                    536 ;	Receiver.c:70: TH0  = 0Xee;         // ReLoad the timer value for 5ms
-      0000F9 75 8C EE         [24]  537 	mov	_TH0,#0xee
-                                    538 ;	Receiver.c:71: TL0  = 0X00;
-      0000FC 75 8A 00         [24]  539 	mov	_TL0,#0x00
-                                    540 ;	Receiver.c:72: timerCount++;
-      0000FF AE 0A            [24]  541 	mov	r6,_timerCount
-      000101 AF 0B            [24]  542 	mov	r7,(_timerCount + 1)
-      000103 74 01            [12]  543 	mov	a,#0x01
-      000105 2E               [12]  544 	add	a,r6
-      000106 F5 0A            [12]  545 	mov	_timerCount,a
-      000108 E4               [12]  546 	clr	a
-      000109 3F               [12]  547 	addc	a,r7
-      00010A F5 0B            [12]  548 	mov	(_timerCount + 1),a
-                                    549 ;	Receiver.c:74: if(state!=20)
-      00010C 74 14            [12]  550 	mov	a,#0x14
-      00010E B5 1A 07         [24]  551 	cjne	a,_state,00240$
-      000111 E4               [12]  552 	clr	a
-      000112 B5 1B 03         [24]  553 	cjne	a,(_state + 1),00240$
-      000115 02 02 E5         [24]  554 	ljmp	00158$
-      000118                        555 00240$:
-                                    556 ;	Receiver.c:76: if(timerCount < (time_delay*30)) // count for LED-ON delay
-      000118 85 10 22         [24]  557 	mov	__mulint_PARM_2,_time_delay
-      00011B 85 11 23         [24]  558 	mov	(__mulint_PARM_2 + 1),(_time_delay + 1)
-      00011E 90 00 1E         [24]  559 	mov	dptr,#0x001e
-      000121 12 08 B6         [24]  560 	lcall	__mulint
-      000124 AE 82            [24]  561 	mov	r6,dpl
-      000126 AF 83            [24]  562 	mov	r7,dph
-      000128 C3               [12]  563 	clr	c
-      000129 E5 0A            [12]  564 	mov	a,_timerCount
-      00012B 9E               [12]  565 	subb	a,r6
-      00012C E5 0B            [12]  566 	mov	a,(_timerCount + 1)
-      00012E 64 80            [12]  567 	xrl	a,#0x80
-      000130 8F F0            [24]  568 	mov	b,r7
-      000132 63 F0 80         [24]  569 	xrl	b,#0x80
-      000135 95 F0            [12]  570 	subb	a,b
-      000137 40 03            [24]  571 	jc	00241$
-      000139 02 02 2F         [24]  572 	ljmp	00154$
-      00013C                        573 00241$:
-                                    574 ;	Receiver.c:78: switch(state)
-      00013C E5 1B            [12]  575 	mov	a,(_state + 1)
-      00013E 30 E7 03         [24]  576 	jnb	acc.7,00242$
-      000141 02 02 E5         [24]  577 	ljmp	00158$
-      000144                        578 00242$:
-      000144 C3               [12]  579 	clr	c
-      000145 74 09            [12]  580 	mov	a,#0x09
-      000147 95 1A            [12]  581 	subb	a,_state
-      000149 74 80            [12]  582 	mov	a,#(0x00 ^ 0x80)
-      00014B 85 1B F0         [24]  583 	mov	b,(_state + 1)
-      00014E 63 F0 80         [24]  584 	xrl	b,#0x80
-      000151 95 F0            [12]  585 	subb	a,b
-      000153 50 03            [24]  586 	jnc	00243$
-      000155 02 02 E5         [24]  587 	ljmp	00158$
-      000158                        588 00243$:
-      000158 E5 1A            [12]  589 	mov	a,_state
-      00015A 24 0B            [12]  590 	add	a,#(00244$-3-.)
-      00015C 83               [24]  591 	movc	a,@a+pc
-      00015D F5 82            [12]  592 	mov	dpl,a
-      00015F E5 1A            [12]  593 	mov	a,_state
-      000161 24 0E            [12]  594 	add	a,#(00245$-3-.)
-      000163 83               [24]  595 	movc	a,@a+pc
-      000164 F5 83            [12]  596 	mov	dph,a
-      000166 E4               [12]  597 	clr	a
-      000167 73               [24]  598 	jmp	@a+dptr
-      000168                        599 00244$:
-      000168 7C                     600 	.db	00101$
-      000169 92                     601 	.db	00104$
-      00016A A5                     602 	.db	00107$
-      00016B B6                     603 	.db	00110$
-      00016C C7                     604 	.db	00113$
-      00016D D8                     605 	.db	00116$
-      00016E E9                     606 	.db	00119$
-      00016F FC                     607 	.db	00122$
-      000170 05                     608 	.db	00123$
-      000171 1A                     609 	.db	00126$
-      000172                        610 00245$:
-      000172 01                     611 	.db	00101$>>8
-      000173 01                     612 	.db	00104$>>8
-      000174 01                     613 	.db	00107$>>8
-      000175 01                     614 	.db	00110$>>8
-      000176 01                     615 	.db	00113$>>8
-      000177 01                     616 	.db	00116$>>8
-      000178 01                     617 	.db	00119$>>8
-      000179 01                     618 	.db	00122$>>8
-      00017A 02                     619 	.db	00123$>>8
-      00017B 02                     620 	.db	00126$>>8
-                                    621 ;	Receiver.c:80: case 0:up_led_main =1;center_led =0;down_led_main=1;									
-      00017C                        622 00101$:
-                                    623 ;	assignBit
-      00017C D2 81            [12]  624 	setb	_P0_1
-                                    625 ;	assignBit
-      00017E C2 80            [12]  626 	clr	_P0_0
-                                    627 ;	assignBit
-      000180 D2 A6            [12]  628 	setb	_P2_6
-                                    629 ;	Receiver.c:81: if(auto_flag)auto_led=1;
-      000182 30 00 02         [24]  630 	jnb	_auto_flag,00103$
-                                    631 ;	assignBit
-      000185 D2 A1            [12]  632 	setb	_P2_1
-      000187                        633 00103$:
+      0000CE                        496 00102$:
+                                    497 ;	Receiver.c:61: if(auto_flag)auto_led=1;
+      0000CE 30 00 09         [24]  498 	jnb	_auto_flag,00110$
+                                    499 ;	assignBit
+      0000D1 D2 A1            [12]  500 	setb	_P2_1
+      0000D3 80 05            [24]  501 	sjmp	00110$
+      0000D5                        502 00108$:
+                                    503 ;	Receiver.c:63: else if(TI == 1)
+                                    504 ;	Receiver.c:65: TI = 0;              // Clear the Transmit interrupt flag
+                                    505 ;	assignBit
+      0000D5 10 99 02         [24]  506 	jbc	_TI,00131$
+      0000D8 80 00            [24]  507 	sjmp	00110$
+      0000DA                        508 00131$:
+      0000DA                        509 00110$:
+                                    510 ;	Receiver.c:67: }
+      0000DA D0 D0            [24]  511 	pop	psw
+      0000DC D0 E0            [24]  512 	pop	acc
+      0000DE 32               [24]  513 	reti
+                                    514 ;	eliminated unneeded mov psw,# (no regs used in bank)
+                                    515 ;	eliminated unneeded push/pop dpl
+                                    516 ;	eliminated unneeded push/pop dph
+                                    517 ;	eliminated unneeded push/pop b
+                                    518 ;------------------------------------------------------------
+                                    519 ;Allocation info for local variables in function 'isr_timer0'
+                                    520 ;------------------------------------------------------------
+                                    521 ;	Receiver.c:69: void isr_timer0(void) __interrupt 1   // It is called after every 5msec
+                                    522 ;	-----------------------------------------
+                                    523 ;	 function isr_timer0
+                                    524 ;	-----------------------------------------
+      0000DF                        525 _isr_timer0:
+      0000DF C0 21            [24]  526 	push	bits
+      0000E1 C0 E0            [24]  527 	push	acc
+      0000E3 C0 F0            [24]  528 	push	b
+      0000E5 C0 82            [24]  529 	push	dpl
+      0000E7 C0 83            [24]  530 	push	dph
+      0000E9 C0 07            [24]  531 	push	(0+7)
+      0000EB C0 06            [24]  532 	push	(0+6)
+      0000ED C0 05            [24]  533 	push	(0+5)
+      0000EF C0 04            [24]  534 	push	(0+4)
+      0000F1 C0 03            [24]  535 	push	(0+3)
+      0000F3 C0 02            [24]  536 	push	(0+2)
+      0000F5 C0 01            [24]  537 	push	(0+1)
+      0000F7 C0 00            [24]  538 	push	(0+0)
+      0000F9 C0 D0            [24]  539 	push	psw
+      0000FB 75 D0 00         [24]  540 	mov	psw,#0x00
+                                    541 ;	Receiver.c:71: TH0  = 0Xee;         // ReLoad the timer value for 5ms
+      0000FE 75 8C EE         [24]  542 	mov	_TH0,#0xee
+                                    543 ;	Receiver.c:72: TL0  = 0X00;
+      000101 75 8A 00         [24]  544 	mov	_TL0,#0x00
+                                    545 ;	Receiver.c:73: timerCount++;
+      000104 AE 0A            [24]  546 	mov	r6,_timerCount
+      000106 AF 0B            [24]  547 	mov	r7,(_timerCount + 1)
+      000108 74 01            [12]  548 	mov	a,#0x01
+      00010A 2E               [12]  549 	add	a,r6
+      00010B F5 0A            [12]  550 	mov	_timerCount,a
+      00010D E4               [12]  551 	clr	a
+      00010E 3F               [12]  552 	addc	a,r7
+      00010F F5 0B            [12]  553 	mov	(_timerCount + 1),a
+                                    554 ;	Receiver.c:75: if(state!=20)
+      000111 74 14            [12]  555 	mov	a,#0x14
+      000113 B5 1A 07         [24]  556 	cjne	a,_state,00240$
+      000116 E4               [12]  557 	clr	a
+      000117 B5 1B 03         [24]  558 	cjne	a,(_state + 1),00240$
+      00011A 02 02 ED         [24]  559 	ljmp	00158$
+      00011D                        560 00240$:
+                                    561 ;	Receiver.c:77: if(timerCount < (time_delay*30)) // count for LED-ON delay
+      00011D 85 10 22         [24]  562 	mov	__mulint_PARM_2,_time_delay
+      000120 85 11 23         [24]  563 	mov	(__mulint_PARM_2 + 1),(_time_delay + 1)
+      000123 90 00 1E         [24]  564 	mov	dptr,#0x001e
+      000126 12 08 73         [24]  565 	lcall	__mulint
+      000129 AE 82            [24]  566 	mov	r6,dpl
+      00012B AF 83            [24]  567 	mov	r7,dph
+      00012D C3               [12]  568 	clr	c
+      00012E E5 0A            [12]  569 	mov	a,_timerCount
+      000130 9E               [12]  570 	subb	a,r6
+      000131 E5 0B            [12]  571 	mov	a,(_timerCount + 1)
+      000133 64 80            [12]  572 	xrl	a,#0x80
+      000135 8F F0            [24]  573 	mov	b,r7
+      000137 63 F0 80         [24]  574 	xrl	b,#0x80
+      00013A 95 F0            [12]  575 	subb	a,b
+      00013C 40 03            [24]  576 	jc	00241$
+      00013E 02 02 37         [24]  577 	ljmp	00154$
+      000141                        578 00241$:
+                                    579 ;	Receiver.c:79: switch(state)
+      000141 E5 1B            [12]  580 	mov	a,(_state + 1)
+      000143 30 E7 03         [24]  581 	jnb	acc.7,00242$
+      000146 02 02 ED         [24]  582 	ljmp	00158$
+      000149                        583 00242$:
+      000149 C3               [12]  584 	clr	c
+      00014A 74 09            [12]  585 	mov	a,#0x09
+      00014C 95 1A            [12]  586 	subb	a,_state
+      00014E 74 80            [12]  587 	mov	a,#(0x00 ^ 0x80)
+      000150 85 1B F0         [24]  588 	mov	b,(_state + 1)
+      000153 63 F0 80         [24]  589 	xrl	b,#0x80
+      000156 95 F0            [12]  590 	subb	a,b
+      000158 50 03            [24]  591 	jnc	00243$
+      00015A 02 02 ED         [24]  592 	ljmp	00158$
+      00015D                        593 00243$:
+      00015D E5 1A            [12]  594 	mov	a,_state
+      00015F 24 0B            [12]  595 	add	a,#(00244$-3-.)
+      000161 83               [24]  596 	movc	a,@a+pc
+      000162 F5 82            [12]  597 	mov	dpl,a
+      000164 E5 1A            [12]  598 	mov	a,_state
+      000166 24 0E            [12]  599 	add	a,#(00245$-3-.)
+      000168 83               [24]  600 	movc	a,@a+pc
+      000169 F5 83            [12]  601 	mov	dph,a
+      00016B E4               [12]  602 	clr	a
+      00016C 73               [24]  603 	jmp	@a+dptr
+      00016D                        604 00244$:
+      00016D 81                     605 	.db	00101$
+      00016E 9A                     606 	.db	00104$
+      00016F AD                     607 	.db	00107$
+      000170 BE                     608 	.db	00110$
+      000171 CF                     609 	.db	00113$
+      000172 E0                     610 	.db	00116$
+      000173 F1                     611 	.db	00119$
+      000174 04                     612 	.db	00122$
+      000175 0D                     613 	.db	00123$
+      000176 22                     614 	.db	00126$
+      000177                        615 00245$:
+      000177 01                     616 	.db	00101$>>8
+      000178 01                     617 	.db	00104$>>8
+      000179 01                     618 	.db	00107$>>8
+      00017A 01                     619 	.db	00110$>>8
+      00017B 01                     620 	.db	00113$>>8
+      00017C 01                     621 	.db	00116$>>8
+      00017D 01                     622 	.db	00119$>>8
+      00017E 02                     623 	.db	00122$>>8
+      00017F 02                     624 	.db	00123$>>8
+      000180 02                     625 	.db	00126$>>8
+                                    626 ;	Receiver.c:81: case 0:up_led_main =1;center_led =0;down_led_main=1;									
+      000181                        627 00101$:
+                                    628 ;	assignBit
+      000181 D2 81            [12]  629 	setb	_P0_1
+                                    630 ;	assignBit
+      000183 C2 80            [12]  631 	clr	_P0_0
+                                    632 ;	assignBit
+      000185 D2 A6            [12]  633 	setb	_P2_6
                                     634 ;	Receiver.c:82: up_led=0;down_led=0;main_out1=1;main_out2=1;
                                     635 ;	assignBit
       000187 C2 A7            [12]  636 	clr	_P2_7
@@ -640,1474 +640,1433 @@
       00018B D2 B6            [12]  640 	setb	_P3_6
                                     641 ;	assignBit
       00018D D2 B7            [12]  642 	setb	_P3_7
-                                    643 ;	Receiver.c:83: break;	
-      00018F 02 02 E5         [24]  644 	ljmp	00158$
-                                    645 ;	Receiver.c:84: case 1:up_led_main =1;center_led =0;down_led_main=0;
-      000192                        646 00104$:
+                                    643 ;	Receiver.c:83: if(auto_flag)auto_led=1;
+      00018F 20 00 03         [24]  644 	jb	_auto_flag,00246$
+      000192 02 02 ED         [24]  645 	ljmp	00158$
+      000195                        646 00246$:
                                     647 ;	assignBit
-      000192 D2 81            [12]  648 	setb	_P0_1
-                                    649 ;	assignBit
-      000194 C2 80            [12]  650 	clr	_P0_0
-                                    651 ;	assignBit
-      000196 C2 A6            [12]  652 	clr	_P2_6
-                                    653 ;	Receiver.c:86: if(auto_flag)
-      000198 20 00 03         [24]  654 	jb	_auto_flag,00247$
-      00019B 02 02 E5         [24]  655 	ljmp	00158$
-      00019E                        656 00247$:
-                                    657 ;	Receiver.c:87: {main_out1=0;up_led=1;}
-                                    658 ;	assignBit
-      00019E C2 B6            [12]  659 	clr	_P3_6
-                                    660 ;	assignBit
-      0001A0 D2 A7            [12]  661 	setb	_P2_7
-                                    662 ;	Receiver.c:88: break;
-      0001A2 02 02 E5         [24]  663 	ljmp	00158$
-                                    664 ;	Receiver.c:89: case 2:up_led_main =1;center_led =0;down_led_main=0;
-      0001A5                        665 00107$:
+      000195 D2 A1            [12]  648 	setb	_P2_1
+                                    649 ;	Receiver.c:84: break;	
+      000197 02 02 ED         [24]  650 	ljmp	00158$
+                                    651 ;	Receiver.c:85: case 1:up_led_main =1;center_led =0;down_led_main=0;
+      00019A                        652 00104$:
+                                    653 ;	assignBit
+      00019A D2 81            [12]  654 	setb	_P0_1
+                                    655 ;	assignBit
+      00019C C2 80            [12]  656 	clr	_P0_0
+                                    657 ;	assignBit
+      00019E C2 A6            [12]  658 	clr	_P2_6
+                                    659 ;	Receiver.c:86: if(auto_flag)
+      0001A0 20 00 03         [24]  660 	jb	_auto_flag,00247$
+      0001A3 02 02 ED         [24]  661 	ljmp	00158$
+      0001A6                        662 00247$:
+                                    663 ;	Receiver.c:87: {main_out1=0;up_led=1;}
+                                    664 ;	assignBit
+      0001A6 C2 B6            [12]  665 	clr	_P3_6
                                     666 ;	assignBit
-      0001A5 D2 81            [12]  667 	setb	_P0_1
-                                    668 ;	assignBit
-      0001A7 C2 80            [12]  669 	clr	_P0_0
-                                    670 ;	assignBit
-      0001A9 C2 A6            [12]  671 	clr	_P2_6
-                                    672 ;	Receiver.c:91: if(auto_flag)
-      0001AB 20 00 03         [24]  673 	jb	_auto_flag,00248$
-      0001AE 02 02 E5         [24]  674 	ljmp	00158$
-      0001B1                        675 00248$:
-                                    676 ;	Receiver.c:93: up_led=1;}
-                                    677 ;	assignBit
-      0001B1 D2 A7            [12]  678 	setb	_P2_7
-                                    679 ;	Receiver.c:94: break;
-      0001B3 02 02 E5         [24]  680 	ljmp	00158$
-                                    681 ;	Receiver.c:95: case 3:up_led_main =1;center_led =1;down_led_main=0;
-      0001B6                        682 00110$:
+      0001A8 D2 A7            [12]  667 	setb	_P2_7
+                                    668 ;	Receiver.c:88: break;
+      0001AA 02 02 ED         [24]  669 	ljmp	00158$
+                                    670 ;	Receiver.c:89: case 2:up_led_main =1;center_led =0;down_led_main=0;
+      0001AD                        671 00107$:
+                                    672 ;	assignBit
+      0001AD D2 81            [12]  673 	setb	_P0_1
+                                    674 ;	assignBit
+      0001AF C2 80            [12]  675 	clr	_P0_0
+                                    676 ;	assignBit
+      0001B1 C2 A6            [12]  677 	clr	_P2_6
+                                    678 ;	Receiver.c:91: if(auto_flag)
+      0001B3 20 00 03         [24]  679 	jb	_auto_flag,00248$
+      0001B6 02 02 ED         [24]  680 	ljmp	00158$
+      0001B9                        681 00248$:
+                                    682 ;	Receiver.c:93: up_led=1;}
                                     683 ;	assignBit
-      0001B6 D2 81            [12]  684 	setb	_P0_1
-                                    685 ;	assignBit
-      0001B8 D2 80            [12]  686 	setb	_P0_0
-                                    687 ;	assignBit
-      0001BA C2 A6            [12]  688 	clr	_P2_6
-                                    689 ;	Receiver.c:97: if(auto_flag)
-      0001BC 20 00 03         [24]  690 	jb	_auto_flag,00249$
-      0001BF 02 02 E5         [24]  691 	ljmp	00158$
-      0001C2                        692 00249$:
-                                    693 ;	Receiver.c:99: up_led=1;}
-                                    694 ;	assignBit
-      0001C2 D2 A7            [12]  695 	setb	_P2_7
-                                    696 ;	Receiver.c:100: break;
-      0001C4 02 02 E5         [24]  697 	ljmp	00158$
-                                    698 ;	Receiver.c:101: case 4:	up_led_main =0;center_led =1;down_led_main=1;
-      0001C7                        699 00113$:
+      0001B9 D2 A7            [12]  684 	setb	_P2_7
+                                    685 ;	Receiver.c:94: break;
+      0001BB 02 02 ED         [24]  686 	ljmp	00158$
+                                    687 ;	Receiver.c:95: case 3:up_led_main =1;center_led =1;down_led_main=0;
+      0001BE                        688 00110$:
+                                    689 ;	assignBit
+      0001BE D2 81            [12]  690 	setb	_P0_1
+                                    691 ;	assignBit
+      0001C0 D2 80            [12]  692 	setb	_P0_0
+                                    693 ;	assignBit
+      0001C2 C2 A6            [12]  694 	clr	_P2_6
+                                    695 ;	Receiver.c:97: if(auto_flag)
+      0001C4 20 00 03         [24]  696 	jb	_auto_flag,00249$
+      0001C7 02 02 ED         [24]  697 	ljmp	00158$
+      0001CA                        698 00249$:
+                                    699 ;	Receiver.c:99: up_led=1;}
                                     700 ;	assignBit
-      0001C7 C2 81            [12]  701 	clr	_P0_1
-                                    702 ;	assignBit
-      0001C9 D2 80            [12]  703 	setb	_P0_0
-                                    704 ;	assignBit
-      0001CB D2 A6            [12]  705 	setb	_P2_6
-                                    706 ;	Receiver.c:102: if(auto_flag)
-      0001CD 20 00 03         [24]  707 	jb	_auto_flag,00250$
-      0001D0 02 02 E5         [24]  708 	ljmp	00158$
-      0001D3                        709 00250$:
-                                    710 ;	Receiver.c:104: down_led=1;}
-                                    711 ;	assignBit
-      0001D3 D2 A4            [12]  712 	setb	_P2_4
-                                    713 ;	Receiver.c:105: break;
-      0001D5 02 02 E5         [24]  714 	ljmp	00158$
-                                    715 ;	Receiver.c:106: case 5:up_led_main =0;center_led =0;down_led_main=1;
-      0001D8                        716 00116$:
+      0001CA D2 A7            [12]  701 	setb	_P2_7
+                                    702 ;	Receiver.c:100: break;
+      0001CC 02 02 ED         [24]  703 	ljmp	00158$
+                                    704 ;	Receiver.c:101: case 4:	up_led_main =0;center_led =1;down_led_main=1;
+      0001CF                        705 00113$:
+                                    706 ;	assignBit
+      0001CF C2 81            [12]  707 	clr	_P0_1
+                                    708 ;	assignBit
+      0001D1 D2 80            [12]  709 	setb	_P0_0
+                                    710 ;	assignBit
+      0001D3 D2 A6            [12]  711 	setb	_P2_6
+                                    712 ;	Receiver.c:102: if(auto_flag)
+      0001D5 20 00 03         [24]  713 	jb	_auto_flag,00250$
+      0001D8 02 02 ED         [24]  714 	ljmp	00158$
+      0001DB                        715 00250$:
+                                    716 ;	Receiver.c:104: down_led=1;}
                                     717 ;	assignBit
-      0001D8 C2 81            [12]  718 	clr	_P0_1
-                                    719 ;	assignBit
-      0001DA C2 80            [12]  720 	clr	_P0_0
-                                    721 ;	assignBit
-      0001DC D2 A6            [12]  722 	setb	_P2_6
-                                    723 ;	Receiver.c:108: if(auto_flag)
-      0001DE 20 00 03         [24]  724 	jb	_auto_flag,00251$
-      0001E1 02 02 E5         [24]  725 	ljmp	00158$
-      0001E4                        726 00251$:
-                                    727 ;	Receiver.c:110: down_led=1;}
-                                    728 ;	assignBit
-      0001E4 D2 A4            [12]  729 	setb	_P2_4
-                                    730 ;	Receiver.c:111: break;
-      0001E6 02 02 E5         [24]  731 	ljmp	00158$
-                                    732 ;	Receiver.c:112: case 6:	up_led_main =0;center_led =0;down_led_main=1;		
-      0001E9                        733 00119$:
+      0001DB D2 A4            [12]  718 	setb	_P2_4
+                                    719 ;	Receiver.c:105: break;
+      0001DD 02 02 ED         [24]  720 	ljmp	00158$
+                                    721 ;	Receiver.c:106: case 5:up_led_main =0;center_led =0;down_led_main=1;
+      0001E0                        722 00116$:
+                                    723 ;	assignBit
+      0001E0 C2 81            [12]  724 	clr	_P0_1
+                                    725 ;	assignBit
+      0001E2 C2 80            [12]  726 	clr	_P0_0
+                                    727 ;	assignBit
+      0001E4 D2 A6            [12]  728 	setb	_P2_6
+                                    729 ;	Receiver.c:108: if(auto_flag)
+      0001E6 20 00 03         [24]  730 	jb	_auto_flag,00251$
+      0001E9 02 02 ED         [24]  731 	ljmp	00158$
+      0001EC                        732 00251$:
+                                    733 ;	Receiver.c:110: down_led=1;}
                                     734 ;	assignBit
-      0001E9 C2 81            [12]  735 	clr	_P0_1
-                                    736 ;	assignBit
-      0001EB C2 80            [12]  737 	clr	_P0_0
-                                    738 ;	assignBit
-      0001ED D2 A6            [12]  739 	setb	_P2_6
-                                    740 ;	Receiver.c:113: if(auto_flag)
-      0001EF 20 00 03         [24]  741 	jb	_auto_flag,00252$
-      0001F2 02 02 E5         [24]  742 	ljmp	00158$
-      0001F5                        743 00252$:
-                                    744 ;	Receiver.c:114: {main_out2=0;down_led=1;}
-                                    745 ;	assignBit
-      0001F5 C2 B7            [12]  746 	clr	_P3_7
-                                    747 ;	assignBit
-      0001F7 D2 A4            [12]  748 	setb	_P2_4
-                                    749 ;	Receiver.c:115: break;
-      0001F9 02 02 E5         [24]  750 	ljmp	00158$
-                                    751 ;	Receiver.c:116: case 7:up_led_main =0;center_led =1;down_led_main=1;
-      0001FC                        752 00122$:
+      0001EC D2 A4            [12]  735 	setb	_P2_4
+                                    736 ;	Receiver.c:111: break;
+      0001EE 02 02 ED         [24]  737 	ljmp	00158$
+                                    738 ;	Receiver.c:112: case 6:	up_led_main =0;center_led =0;down_led_main=1;		
+      0001F1                        739 00119$:
+                                    740 ;	assignBit
+      0001F1 C2 81            [12]  741 	clr	_P0_1
+                                    742 ;	assignBit
+      0001F3 C2 80            [12]  743 	clr	_P0_0
+                                    744 ;	assignBit
+      0001F5 D2 A6            [12]  745 	setb	_P2_6
+                                    746 ;	Receiver.c:113: if(auto_flag)
+      0001F7 20 00 03         [24]  747 	jb	_auto_flag,00252$
+      0001FA 02 02 ED         [24]  748 	ljmp	00158$
+      0001FD                        749 00252$:
+                                    750 ;	Receiver.c:114: {main_out2=0;down_led=1;}
+                                    751 ;	assignBit
+      0001FD C2 B7            [12]  752 	clr	_P3_7
                                     753 ;	assignBit
-      0001FC C2 81            [12]  754 	clr	_P0_1
-                                    755 ;	assignBit
-      0001FE D2 80            [12]  756 	setb	_P0_0
-                                    757 ;	assignBit
-      000200 D2 A6            [12]  758 	setb	_P2_6
-                                    759 ;	Receiver.c:117: break;
-      000202 02 02 E5         [24]  760 	ljmp	00158$
-                                    761 ;	Receiver.c:119: case 8:up_led_main =1;center_led =0;down_led_main=0;
-      000205                        762 00123$:
+      0001FF D2 A4            [12]  754 	setb	_P2_4
+                                    755 ;	Receiver.c:115: break;
+      000201 02 02 ED         [24]  756 	ljmp	00158$
+                                    757 ;	Receiver.c:116: case 7:up_led_main =0;center_led =1;down_led_main=1;
+      000204                        758 00122$:
+                                    759 ;	assignBit
+      000204 C2 81            [12]  760 	clr	_P0_1
+                                    761 ;	assignBit
+      000206 D2 80            [12]  762 	setb	_P0_0
                                     763 ;	assignBit
-      000205 D2 81            [12]  764 	setb	_P0_1
-                                    765 ;	assignBit
-      000207 C2 80            [12]  766 	clr	_P0_0
-                                    767 ;	assignBit
-      000209 C2 A6            [12]  768 	clr	_P2_6
-                                    769 ;	Receiver.c:120: main_out1=1;main_out2=1;
-                                    770 ;	assignBit
-      00020B D2 B6            [12]  771 	setb	_P3_6
-                                    772 ;	assignBit
-      00020D D2 B7            [12]  773 	setb	_P3_7
-                                    774 ;	Receiver.c:121: if(auto_flag)
-      00020F 20 00 03         [24]  775 	jb	_auto_flag,00253$
-      000212 02 02 E5         [24]  776 	ljmp	00158$
-      000215                        777 00253$:
-                                    778 ;	Receiver.c:122: up_led=1;
-                                    779 ;	assignBit
-      000215 D2 A7            [12]  780 	setb	_P2_7
-                                    781 ;	Receiver.c:123: break;
-      000217 02 02 E5         [24]  782 	ljmp	00158$
-                                    783 ;	Receiver.c:125: case 9:	up_led_main =0;center_led =0;down_led_main=1;
-      00021A                        784 00126$:
+      000208 D2 A6            [12]  764 	setb	_P2_6
+                                    765 ;	Receiver.c:117: break;
+      00020A 02 02 ED         [24]  766 	ljmp	00158$
+                                    767 ;	Receiver.c:119: case 8:up_led_main =1;center_led =0;down_led_main=0;
+      00020D                        768 00123$:
+                                    769 ;	assignBit
+      00020D D2 81            [12]  770 	setb	_P0_1
+                                    771 ;	assignBit
+      00020F C2 80            [12]  772 	clr	_P0_0
+                                    773 ;	assignBit
+      000211 C2 A6            [12]  774 	clr	_P2_6
+                                    775 ;	Receiver.c:120: main_out1=1;main_out2=1;
+                                    776 ;	assignBit
+      000213 D2 B6            [12]  777 	setb	_P3_6
+                                    778 ;	assignBit
+      000215 D2 B7            [12]  779 	setb	_P3_7
+                                    780 ;	Receiver.c:121: if(auto_flag)
+      000217 20 00 03         [24]  781 	jb	_auto_flag,00253$
+      00021A 02 02 ED         [24]  782 	ljmp	00158$
+      00021D                        783 00253$:
+                                    784 ;	Receiver.c:122: up_led=1;
                                     785 ;	assignBit
-      00021A C2 81            [12]  786 	clr	_P0_1
-                                    787 ;	assignBit
-      00021C C2 80            [12]  788 	clr	_P0_0
-                                    789 ;	assignBit
-      00021E D2 A6            [12]  790 	setb	_P2_6
-                                    791 ;	Receiver.c:126: main_out1=1;main_out2=1;
-                                    792 ;	assignBit
-      000220 D2 B6            [12]  793 	setb	_P3_6
-                                    794 ;	assignBit
-      000222 D2 B7            [12]  795 	setb	_P3_7
-                                    796 ;	Receiver.c:127: if(auto_flag)
-      000224 20 00 03         [24]  797 	jb	_auto_flag,00254$
-      000227 02 02 E5         [24]  798 	ljmp	00158$
-      00022A                        799 00254$:
-                                    800 ;	Receiver.c:128: down_led=1;
-                                    801 ;	assignBit
-      00022A D2 A4            [12]  802 	setb	_P2_4
-                                    803 ;	Receiver.c:129: break;
-      00022C 02 02 E5         [24]  804 	ljmp	00158$
-                                    805 ;	Receiver.c:131: }	
-      00022F                        806 00154$:
-                                    807 ;	Receiver.c:135: else if((timerCount > time_delay) &&(timerCount<time_delay*60)) // count for LED-ON delay
-      00022F C3               [12]  808 	clr	c
-      000230 E5 10            [12]  809 	mov	a,_time_delay
-      000232 95 0A            [12]  810 	subb	a,_timerCount
-      000234 E5 11            [12]  811 	mov	a,(_time_delay + 1)
-      000236 64 80            [12]  812 	xrl	a,#0x80
-      000238 85 0B F0         [24]  813 	mov	b,(_timerCount + 1)
-      00023B 63 F0 80         [24]  814 	xrl	b,#0x80
-      00023E 95 F0            [12]  815 	subb	a,b
-      000240 40 03            [24]  816 	jc	00255$
-      000242 02 02 E0         [24]  817 	ljmp	00150$
-      000245                        818 00255$:
-      000245 85 10 22         [24]  819 	mov	__mulint_PARM_2,_time_delay
-      000248 85 11 23         [24]  820 	mov	(__mulint_PARM_2 + 1),(_time_delay + 1)
-      00024B 90 00 3C         [24]  821 	mov	dptr,#0x003c
-      00024E 12 08 B6         [24]  822 	lcall	__mulint
-      000251 AE 82            [24]  823 	mov	r6,dpl
-      000253 AF 83            [24]  824 	mov	r7,dph
-      000255 C3               [12]  825 	clr	c
-      000256 E5 0A            [12]  826 	mov	a,_timerCount
-      000258 9E               [12]  827 	subb	a,r6
-      000259 E5 0B            [12]  828 	mov	a,(_timerCount + 1)
-      00025B 64 80            [12]  829 	xrl	a,#0x80
-      00025D 8F F0            [24]  830 	mov	b,r7
-      00025F 63 F0 80         [24]  831 	xrl	b,#0x80
-      000262 95 F0            [12]  832 	subb	a,b
-      000264 40 03            [24]  833 	jc	00256$
-      000266 02 02 E0         [24]  834 	ljmp	00150$
-      000269                        835 00256$:
-                                    836 ;	Receiver.c:137: switch(state)
-      000269 E5 1B            [12]  837 	mov	a,(_state + 1)
-      00026B 30 E7 03         [24]  838 	jnb	acc.7,00257$
-      00026E 02 02 E5         [24]  839 	ljmp	00158$
-      000271                        840 00257$:
-      000271 C3               [12]  841 	clr	c
-      000272 74 09            [12]  842 	mov	a,#0x09
-      000274 95 1A            [12]  843 	subb	a,_state
-      000276 74 80            [12]  844 	mov	a,#(0x00 ^ 0x80)
-      000278 85 1B F0         [24]  845 	mov	b,(_state + 1)
-      00027B 63 F0 80         [24]  846 	xrl	b,#0x80
-      00027E 95 F0            [12]  847 	subb	a,b
-      000280 50 03            [24]  848 	jnc	00258$
-      000282 02 02 E5         [24]  849 	ljmp	00158$
-      000285                        850 00258$:
-      000285 E5 1A            [12]  851 	mov	a,_state
-      000287 24 0B            [12]  852 	add	a,#(00259$-3-.)
-      000289 83               [24]  853 	movc	a,@a+pc
-      00028A F5 82            [12]  854 	mov	dpl,a
-      00028C E5 1A            [12]  855 	mov	a,_state
-      00028E 24 0E            [12]  856 	add	a,#(00260$-3-.)
-      000290 83               [24]  857 	movc	a,@a+pc
-      000291 F5 83            [12]  858 	mov	dph,a
-      000293 E4               [12]  859 	clr	a
-      000294 73               [24]  860 	jmp	@a+dptr
-      000295                        861 00259$:
-      000295 A9                     862 	.db	00131$
-      000296 BE                     863 	.db	00141$
-      000297 B2                     864 	.db	00140$
-      000298 B2                     865 	.db	00140$
-      000299 B2                     866 	.db	00140$
-      00029A B2                     867 	.db	00140$
-      00029B CF                     868 	.db	00144$
-      00029C B2                     869 	.db	00140$
-      00029D B2                     870 	.db	00140$
-      00029E B2                     871 	.db	00140$
-      00029F                        872 00260$:
-      00029F 02                     873 	.db	00131$>>8
-      0002A0 02                     874 	.db	00141$>>8
-      0002A1 02                     875 	.db	00140$>>8
-      0002A2 02                     876 	.db	00140$>>8
-      0002A3 02                     877 	.db	00140$>>8
-      0002A4 02                     878 	.db	00140$>>8
-      0002A5 02                     879 	.db	00144$>>8
-      0002A6 02                     880 	.db	00140$>>8
-      0002A7 02                     881 	.db	00140$>>8
-      0002A8 02                     882 	.db	00140$>>8
-                                    883 ;	Receiver.c:139: case 0:	if(auto_flag)	{auto_led=0;main_out1=1;main_out2=1;}
-      0002A9                        884 00131$:
-      0002A9 30 00 06         [24]  885 	jnb	_auto_flag,00140$
-                                    886 ;	assignBit
-      0002AC C2 A1            [12]  887 	clr	_P2_1
-                                    888 ;	assignBit
-      0002AE D2 B6            [12]  889 	setb	_P3_6
-                                    890 ;	assignBit
-      0002B0 D2 B7            [12]  891 	setb	_P3_7
-                                    892 ;	Receiver.c:146: case 9:up_led_main =0;center_led =0;down_led_main=0;up_led=0;down_led=0;break;
-      0002B2                        893 00140$:
+      00021D D2 A7            [12]  786 	setb	_P2_7
+                                    787 ;	Receiver.c:123: break;
+      00021F 02 02 ED         [24]  788 	ljmp	00158$
+                                    789 ;	Receiver.c:125: case 9:	up_led_main =0;center_led =0;down_led_main=1;
+      000222                        790 00126$:
+                                    791 ;	assignBit
+      000222 C2 81            [12]  792 	clr	_P0_1
+                                    793 ;	assignBit
+      000224 C2 80            [12]  794 	clr	_P0_0
+                                    795 ;	assignBit
+      000226 D2 A6            [12]  796 	setb	_P2_6
+                                    797 ;	Receiver.c:126: main_out1=1;main_out2=1;
+                                    798 ;	assignBit
+      000228 D2 B6            [12]  799 	setb	_P3_6
+                                    800 ;	assignBit
+      00022A D2 B7            [12]  801 	setb	_P3_7
+                                    802 ;	Receiver.c:127: if(auto_flag)
+      00022C 20 00 03         [24]  803 	jb	_auto_flag,00254$
+      00022F 02 02 ED         [24]  804 	ljmp	00158$
+      000232                        805 00254$:
+                                    806 ;	Receiver.c:128: down_led=1;
+                                    807 ;	assignBit
+      000232 D2 A4            [12]  808 	setb	_P2_4
+                                    809 ;	Receiver.c:129: break;
+      000234 02 02 ED         [24]  810 	ljmp	00158$
+                                    811 ;	Receiver.c:131: }	
+      000237                        812 00154$:
+                                    813 ;	Receiver.c:135: else if((timerCount > time_delay) &&(timerCount<time_delay*60)) // count for LED-ON delay
+      000237 C3               [12]  814 	clr	c
+      000238 E5 10            [12]  815 	mov	a,_time_delay
+      00023A 95 0A            [12]  816 	subb	a,_timerCount
+      00023C E5 11            [12]  817 	mov	a,(_time_delay + 1)
+      00023E 64 80            [12]  818 	xrl	a,#0x80
+      000240 85 0B F0         [24]  819 	mov	b,(_timerCount + 1)
+      000243 63 F0 80         [24]  820 	xrl	b,#0x80
+      000246 95 F0            [12]  821 	subb	a,b
+      000248 40 03            [24]  822 	jc	00255$
+      00024A 02 02 E8         [24]  823 	ljmp	00150$
+      00024D                        824 00255$:
+      00024D 85 10 22         [24]  825 	mov	__mulint_PARM_2,_time_delay
+      000250 85 11 23         [24]  826 	mov	(__mulint_PARM_2 + 1),(_time_delay + 1)
+      000253 90 00 3C         [24]  827 	mov	dptr,#0x003c
+      000256 12 08 73         [24]  828 	lcall	__mulint
+      000259 AE 82            [24]  829 	mov	r6,dpl
+      00025B AF 83            [24]  830 	mov	r7,dph
+      00025D C3               [12]  831 	clr	c
+      00025E E5 0A            [12]  832 	mov	a,_timerCount
+      000260 9E               [12]  833 	subb	a,r6
+      000261 E5 0B            [12]  834 	mov	a,(_timerCount + 1)
+      000263 64 80            [12]  835 	xrl	a,#0x80
+      000265 8F F0            [24]  836 	mov	b,r7
+      000267 63 F0 80         [24]  837 	xrl	b,#0x80
+      00026A 95 F0            [12]  838 	subb	a,b
+      00026C 40 03            [24]  839 	jc	00256$
+      00026E 02 02 E8         [24]  840 	ljmp	00150$
+      000271                        841 00256$:
+                                    842 ;	Receiver.c:137: switch(state)
+      000271 E5 1B            [12]  843 	mov	a,(_state + 1)
+      000273 30 E7 03         [24]  844 	jnb	acc.7,00257$
+      000276 02 02 ED         [24]  845 	ljmp	00158$
+      000279                        846 00257$:
+      000279 C3               [12]  847 	clr	c
+      00027A 74 09            [12]  848 	mov	a,#0x09
+      00027C 95 1A            [12]  849 	subb	a,_state
+      00027E 74 80            [12]  850 	mov	a,#(0x00 ^ 0x80)
+      000280 85 1B F0         [24]  851 	mov	b,(_state + 1)
+      000283 63 F0 80         [24]  852 	xrl	b,#0x80
+      000286 95 F0            [12]  853 	subb	a,b
+      000288 50 03            [24]  854 	jnc	00258$
+      00028A 02 02 ED         [24]  855 	ljmp	00158$
+      00028D                        856 00258$:
+      00028D E5 1A            [12]  857 	mov	a,_state
+      00028F 24 0B            [12]  858 	add	a,#(00259$-3-.)
+      000291 83               [24]  859 	movc	a,@a+pc
+      000292 F5 82            [12]  860 	mov	dpl,a
+      000294 E5 1A            [12]  861 	mov	a,_state
+      000296 24 0E            [12]  862 	add	a,#(00260$-3-.)
+      000298 83               [24]  863 	movc	a,@a+pc
+      000299 F5 83            [12]  864 	mov	dph,a
+      00029B E4               [12]  865 	clr	a
+      00029C 73               [24]  866 	jmp	@a+dptr
+      00029D                        867 00259$:
+      00029D B1                     868 	.db	00131$
+      00029E C6                     869 	.db	00141$
+      00029F BA                     870 	.db	00140$
+      0002A0 BA                     871 	.db	00140$
+      0002A1 BA                     872 	.db	00140$
+      0002A2 BA                     873 	.db	00140$
+      0002A3 D7                     874 	.db	00144$
+      0002A4 BA                     875 	.db	00140$
+      0002A5 BA                     876 	.db	00140$
+      0002A6 BA                     877 	.db	00140$
+      0002A7                        878 00260$:
+      0002A7 02                     879 	.db	00131$>>8
+      0002A8 02                     880 	.db	00141$>>8
+      0002A9 02                     881 	.db	00140$>>8
+      0002AA 02                     882 	.db	00140$>>8
+      0002AB 02                     883 	.db	00140$>>8
+      0002AC 02                     884 	.db	00140$>>8
+      0002AD 02                     885 	.db	00144$>>8
+      0002AE 02                     886 	.db	00140$>>8
+      0002AF 02                     887 	.db	00140$>>8
+      0002B0 02                     888 	.db	00140$>>8
+                                    889 ;	Receiver.c:139: case 0:	if(auto_flag)	{auto_led=0;main_out1=1;main_out2=1;}
+      0002B1                        890 00131$:
+      0002B1 30 00 06         [24]  891 	jnb	_auto_flag,00140$
+                                    892 ;	assignBit
+      0002B4 C2 A1            [12]  893 	clr	_P2_1
                                     894 ;	assignBit
-      0002B2 C2 81            [12]  895 	clr	_P0_1
+      0002B6 D2 B6            [12]  895 	setb	_P3_6
                                     896 ;	assignBit
-      0002B4 C2 80            [12]  897 	clr	_P0_0
-                                    898 ;	assignBit
-      0002B6 C2 A6            [12]  899 	clr	_P2_6
+      0002B8 D2 B7            [12]  897 	setb	_P3_7
+                                    898 ;	Receiver.c:146: case 9:up_led_main =0;center_led =0;down_led_main=0;up_led=0;down_led=0;break;
+      0002BA                        899 00140$:
                                     900 ;	assignBit
-      0002B8 C2 A7            [12]  901 	clr	_P2_7
+      0002BA C2 81            [12]  901 	clr	_P0_1
                                     902 ;	assignBit
-      0002BA C2 A4            [12]  903 	clr	_P2_4
-                                    904 ;	Receiver.c:147: case 1:up_led_main =1;center_led =0;down_led_main=0;
-      0002BC 80 27            [24]  905 	sjmp	00158$
-      0002BE                        906 00141$:
-                                    907 ;	assignBit
-      0002BE D2 81            [12]  908 	setb	_P0_1
-                                    909 ;	assignBit
-      0002C0 C2 80            [12]  910 	clr	_P0_0
-                                    911 ;	assignBit
-      0002C2 C2 A6            [12]  912 	clr	_P2_6
-                                    913 ;	Receiver.c:148: if(auto_flag)	{main_out1=0;up_led=1;down_led=0;}break;
-      0002C4 30 00 1E         [24]  914 	jnb	_auto_flag,00158$
+      0002BC C2 80            [12]  903 	clr	_P0_0
+                                    904 ;	assignBit
+      0002BE C2 A6            [12]  905 	clr	_P2_6
+                                    906 ;	assignBit
+      0002C0 C2 A7            [12]  907 	clr	_P2_7
+                                    908 ;	assignBit
+      0002C2 C2 A4            [12]  909 	clr	_P2_4
+                                    910 ;	Receiver.c:147: case 1:up_led_main =1;center_led =0;down_led_main=0;
+      0002C4 80 27            [24]  911 	sjmp	00158$
+      0002C6                        912 00141$:
+                                    913 ;	assignBit
+      0002C6 D2 81            [12]  914 	setb	_P0_1
                                     915 ;	assignBit
-      0002C7 C2 B6            [12]  916 	clr	_P3_6
+      0002C8 C2 80            [12]  916 	clr	_P0_0
                                     917 ;	assignBit
-      0002C9 D2 A7            [12]  918 	setb	_P2_7
-                                    919 ;	assignBit
-      0002CB C2 A4            [12]  920 	clr	_P2_4
-                                    921 ;	Receiver.c:150: case 6:	up_led_main =0;center_led =0;down_led_main=1;
-      0002CD 80 16            [24]  922 	sjmp	00158$
-      0002CF                        923 00144$:
-                                    924 ;	assignBit
-      0002CF C2 81            [12]  925 	clr	_P0_1
-                                    926 ;	assignBit
-      0002D1 C2 80            [12]  927 	clr	_P0_0
-                                    928 ;	assignBit
-      0002D3 D2 A6            [12]  929 	setb	_P2_6
-                                    930 ;	Receiver.c:151: up_led=0;if(auto_flag){main_out2=0;down_led=1;}break;
-                                    931 ;	assignBit
-      0002D5 C2 A7            [12]  932 	clr	_P2_7
-      0002D7 30 00 0B         [24]  933 	jnb	_auto_flag,00158$
+      0002CA C2 A6            [12]  918 	clr	_P2_6
+                                    919 ;	Receiver.c:148: if(auto_flag)	{main_out1=0;up_led=1;down_led=0;}break;
+      0002CC 30 00 1E         [24]  920 	jnb	_auto_flag,00158$
+                                    921 ;	assignBit
+      0002CF C2 B6            [12]  922 	clr	_P3_6
+                                    923 ;	assignBit
+      0002D1 D2 A7            [12]  924 	setb	_P2_7
+                                    925 ;	assignBit
+      0002D3 C2 A4            [12]  926 	clr	_P2_4
+                                    927 ;	Receiver.c:150: case 6:	up_led_main =0;center_led =0;down_led_main=1;
+      0002D5 80 16            [24]  928 	sjmp	00158$
+      0002D7                        929 00144$:
+                                    930 ;	assignBit
+      0002D7 C2 81            [12]  931 	clr	_P0_1
+                                    932 ;	assignBit
+      0002D9 C2 80            [12]  933 	clr	_P0_0
                                     934 ;	assignBit
-      0002DA C2 B7            [12]  935 	clr	_P3_7
-                                    936 ;	assignBit
-      0002DC D2 A4            [12]  937 	setb	_P2_4
-                                    938 ;	Receiver.c:154: }
-      0002DE 80 05            [24]  939 	sjmp	00158$
-      0002E0                        940 00150$:
-                                    941 ;	Receiver.c:158: {timerCount = 0;}
-      0002E0 E4               [12]  942 	clr	a
-      0002E1 F5 0A            [12]  943 	mov	_timerCount,a
-      0002E3 F5 0B            [12]  944 	mov	(_timerCount + 1),a
-      0002E5                        945 00158$:
-                                    946 ;	Receiver.c:160: } //timer end
-      0002E5 D0 D0            [24]  947 	pop	psw
-      0002E7 D0 00            [24]  948 	pop	(0+0)
-      0002E9 D0 01            [24]  949 	pop	(0+1)
-      0002EB D0 02            [24]  950 	pop	(0+2)
-      0002ED D0 03            [24]  951 	pop	(0+3)
-      0002EF D0 04            [24]  952 	pop	(0+4)
-      0002F1 D0 05            [24]  953 	pop	(0+5)
-      0002F3 D0 06            [24]  954 	pop	(0+6)
-      0002F5 D0 07            [24]  955 	pop	(0+7)
-      0002F7 D0 83            [24]  956 	pop	dph
-      0002F9 D0 82            [24]  957 	pop	dpl
-      0002FB D0 F0            [24]  958 	pop	b
-      0002FD D0 E0            [24]  959 	pop	acc
-      0002FF D0 21            [24]  960 	pop	bits
-      000301 32               [24]  961 	reti
-                                    962 ;------------------------------------------------------------
-                                    963 ;Allocation info for local variables in function 'timer1_ISR'
-                                    964 ;------------------------------------------------------------
-                                    965 ;	Receiver.c:163: void timer1_ISR (void) __interrupt 5
-                                    966 ;	-----------------------------------------
-                                    967 ;	 function timer1_ISR
-                                    968 ;	-----------------------------------------
-      000302                        969 _timer1_ISR:
-      000302 C0 21            [24]  970 	push	bits
-      000304 C0 E0            [24]  971 	push	acc
-      000306 C0 F0            [24]  972 	push	b
-      000308 C0 82            [24]  973 	push	dpl
-      00030A C0 83            [24]  974 	push	dph
-      00030C C0 07            [24]  975 	push	(0+7)
-      00030E C0 06            [24]  976 	push	(0+6)
-      000310 C0 05            [24]  977 	push	(0+5)
-      000312 C0 04            [24]  978 	push	(0+4)
-      000314 C0 03            [24]  979 	push	(0+3)
-      000316 C0 02            [24]  980 	push	(0+2)
-      000318 C0 01            [24]  981 	push	(0+1)
-      00031A C0 00            [24]  982 	push	(0+0)
-      00031C C0 D0            [24]  983 	push	psw
-      00031E 75 D0 00         [24]  984 	mov	psw,#0x00
-                                    985 ;	Receiver.c:165: TF2 = 0;            /* Clear the interrupt request */
-                                    986 ;	assignBit
-      000321 C2 CF            [12]  987 	clr	_TF2
-                                    988 ;	Receiver.c:166: timerCount2++;
-      000323 AE 0E            [24]  989 	mov	r6,_timerCount2
-      000325 AF 0F            [24]  990 	mov	r7,(_timerCount2 + 1)
-      000327 74 01            [12]  991 	mov	a,#0x01
-      000329 2E               [12]  992 	add	a,r6
-      00032A F5 0E            [12]  993 	mov	_timerCount2,a
-      00032C E4               [12]  994 	clr	a
-      00032D 3F               [12]  995 	addc	a,r7
-      00032E F5 0F            [12]  996 	mov	(_timerCount2 + 1),a
-                                    997 ;	Receiver.c:167: serialCount++;
-      000330 AE 0C            [24]  998 	mov	r6,_serialCount
-      000332 AF 0D            [24]  999 	mov	r7,(_serialCount + 1)
-      000334 74 01            [12] 1000 	mov	a,#0x01
-      000336 2E               [12] 1001 	add	a,r6
-      000337 F5 0C            [12] 1002 	mov	_serialCount,a
-      000339 E4               [12] 1003 	clr	a
-      00033A 3F               [12] 1004 	addc	a,r7
-      00033B F5 0D            [12] 1005 	mov	(_serialCount + 1),a
-                                   1006 ;	Receiver.c:168: rst_out=!rst_out;
-      00033D B2 96            [12] 1007 	cpl	_P1_6
-                                   1008 ;	Receiver.c:169: if(dim1_val)
-      00033F E5 16            [12] 1009 	mov	a,_dim1_val
-      000341 45 17            [12] 1010 	orl	a,(_dim1_val + 1)
-      000343 60 12            [24] 1011 	jz	00105$
-                                   1012 ;	Receiver.c:170: {dim1_val--;dim_out=1;}
-      000345 AE 16            [24] 1013 	mov	r6,_dim1_val
-      000347 AF 17            [24] 1014 	mov	r7,(_dim1_val + 1)
-      000349 EE               [12] 1015 	mov	a,r6
-      00034A 24 FF            [12] 1016 	add	a,#0xff
-      00034C F5 16            [12] 1017 	mov	_dim1_val,a
-      00034E EF               [12] 1018 	mov	a,r7
-      00034F 34 FF            [12] 1019 	addc	a,#0xff
-      000351 F5 17            [12] 1020 	mov	(_dim1_val + 1),a
-                                   1021 ;	assignBit
-      000353 D2 82            [12] 1022 	setb	_P0_2
-      000355 80 24            [24] 1023 	sjmp	00106$
-      000357                       1024 00105$:
-                                   1025 ;	Receiver.c:172: else if(dim1_val2){dim1_val2--;dim_out=0;}
-      000357 E5 18            [12] 1026 	mov	a,_dim1_val2
-      000359 45 19            [12] 1027 	orl	a,(_dim1_val2 + 1)
-      00035B 60 12            [24] 1028 	jz	00102$
-      00035D AE 18            [24] 1029 	mov	r6,_dim1_val2
-      00035F AF 19            [24] 1030 	mov	r7,(_dim1_val2 + 1)
-      000361 EE               [12] 1031 	mov	a,r6
-      000362 24 FF            [12] 1032 	add	a,#0xff
-      000364 F5 18            [12] 1033 	mov	_dim1_val2,a
-      000366 EF               [12] 1034 	mov	a,r7
-      000367 34 FF            [12] 1035 	addc	a,#0xff
-      000369 F5 19            [12] 1036 	mov	(_dim1_val2 + 1),a
-                                   1037 ;	assignBit
-      00036B C2 82            [12] 1038 	clr	_P0_2
-      00036D 80 0C            [24] 1039 	sjmp	00106$
-      00036F                       1040 00102$:
-                                   1041 ;	Receiver.c:174: else {dim1_val = dim_val;dim1_val2 = dim_val2;}    
-      00036F 85 12 16         [24] 1042 	mov	_dim1_val,_dim_val
-      000372 85 13 17         [24] 1043 	mov	(_dim1_val + 1),(_dim_val + 1)
-      000375 85 14 18         [24] 1044 	mov	_dim1_val2,_dim_val2
-      000378 85 15 19         [24] 1045 	mov	(_dim1_val2 + 1),(_dim_val2 + 1)
-      00037B                       1046 00106$:
-                                   1047 ;	Receiver.c:176: if(auto_flag)
-      00037B 20 00 03         [24] 1048 	jb	_auto_flag,00245$
-      00037E 02 05 2D         [24] 1049 	ljmp	00150$
-      000381                       1050 00245$:
-                                   1051 ;	Receiver.c:178: if(timerCount2<1000)
-      000381 C3               [12] 1052 	clr	c
-      000382 E5 0E            [12] 1053 	mov	a,_timerCount2
-      000384 94 E8            [12] 1054 	subb	a,#0xe8
-      000386 E5 0F            [12] 1055 	mov	a,(_timerCount2 + 1)
-      000388 64 80            [12] 1056 	xrl	a,#0x80
-      00038A 94 83            [12] 1057 	subb	a,#0x83
-      00038C 40 03            [24] 1058 	jc	00246$
-      00038E 02 04 58         [24] 1059 	ljmp	00147$
-      000391                       1060 00246$:
-                                   1061 ;	Receiver.c:180: switch(state)
-      000391 74 02            [12] 1062 	mov	a,#0x02
-      000393 B5 1A 06         [24] 1063 	cjne	a,_state,00247$
-      000396 E4               [12] 1064 	clr	a
-      000397 B5 1B 02         [24] 1065 	cjne	a,(_state + 1),00247$
-      00039A 80 24            [24] 1066 	sjmp	00107$
-      00039C                       1067 00247$:
-      00039C 74 03            [12] 1068 	mov	a,#0x03
-      00039E B5 1A 06         [24] 1069 	cjne	a,_state,00248$
-      0003A1 E4               [12] 1070 	clr	a
-      0003A2 B5 1B 02         [24] 1071 	cjne	a,(_state + 1),00248$
-      0003A5 80 3F            [24] 1072 	sjmp	00111$
-      0003A7                       1073 00248$:
-      0003A7 74 04            [12] 1074 	mov	a,#0x04
-      0003A9 B5 1A 06         [24] 1075 	cjne	a,_state,00249$
-      0003AC E4               [12] 1076 	clr	a
-      0003AD B5 1B 02         [24] 1077 	cjne	a,(_state + 1),00249$
-      0003B0 80 5A            [24] 1078 	sjmp	00115$
-      0003B2                       1079 00249$:
-      0003B2 74 05            [12] 1080 	mov	a,#0x05
-      0003B4 B5 1A 06         [24] 1081 	cjne	a,_state,00250$
-      0003B7 E4               [12] 1082 	clr	a
-      0003B8 B5 1B 02         [24] 1083 	cjne	a,(_state + 1),00250$
-      0003BB 80 75            [24] 1084 	sjmp	00119$
-      0003BD                       1085 00250$:
-      0003BD 02 05 2D         [24] 1086 	ljmp	00150$
-                                   1087 ;	Receiver.c:182: case 2:	if(timerCount2%4){main_out1=1;main_out2=1;}
-      0003C0                       1088 00107$:
-      0003C0 75 22 04         [24] 1089 	mov	__modsint_PARM_2,#0x04
-      0003C3 75 23 00         [24] 1090 	mov	(__modsint_PARM_2 + 1),#0x00
-      0003C6 85 0E 82         [24] 1091 	mov	dpl,_timerCount2
-      0003C9 85 0F 83         [24] 1092 	mov	dph,(_timerCount2 + 1)
-      0003CC 12 09 20         [24] 1093 	lcall	__modsint
-      0003CF E5 82            [12] 1094 	mov	a,dpl
-      0003D1 85 83 F0         [24] 1095 	mov	b,dph
-      0003D4 45 F0            [12] 1096 	orl	a,b
-      0003D6 60 07            [24] 1097 	jz	00109$
-                                   1098 ;	assignBit
-      0003D8 D2 B6            [12] 1099 	setb	_P3_6
-                                   1100 ;	assignBit
-      0003DA D2 B7            [12] 1101 	setb	_P3_7
-      0003DC 02 05 2D         [24] 1102 	ljmp	00150$
-      0003DF                       1103 00109$:
-                                   1104 ;	Receiver.c:183: else {main_out1=0;main_out2=1;}
-                                   1105 ;	assignBit
-      0003DF C2 B6            [12] 1106 	clr	_P3_6
-                                   1107 ;	assignBit
-      0003E1 D2 B7            [12] 1108 	setb	_P3_7
-                                   1109 ;	Receiver.c:184: break;
-      0003E3 02 05 2D         [24] 1110 	ljmp	00150$
-                                   1111 ;	Receiver.c:186: case 3:	if(timerCount2%4){main_out1=1;main_out2=1;}
-      0003E6                       1112 00111$:
-      0003E6 75 22 04         [24] 1113 	mov	__modsint_PARM_2,#0x04
-      0003E9 75 23 00         [24] 1114 	mov	(__modsint_PARM_2 + 1),#0x00
-      0003EC 85 0E 82         [24] 1115 	mov	dpl,_timerCount2
-      0003EF 85 0F 83         [24] 1116 	mov	dph,(_timerCount2 + 1)
-      0003F2 12 09 20         [24] 1117 	lcall	__modsint
-      0003F5 E5 82            [12] 1118 	mov	a,dpl
-      0003F7 85 83 F0         [24] 1119 	mov	b,dph
-      0003FA 45 F0            [12] 1120 	orl	a,b
-      0003FC 60 07            [24] 1121 	jz	00113$
-                                   1122 ;	assignBit
-      0003FE D2 B6            [12] 1123 	setb	_P3_6
-                                   1124 ;	assignBit
-      000400 D2 B7            [12] 1125 	setb	_P3_7
-      000402 02 05 2D         [24] 1126 	ljmp	00150$
-      000405                       1127 00113$:
-                                   1128 ;	Receiver.c:187: else {main_out1=0;main_out2=1;}
-                                   1129 ;	assignBit
-      000405 C2 B6            [12] 1130 	clr	_P3_6
-                                   1131 ;	assignBit
-      000407 D2 B7            [12] 1132 	setb	_P3_7
-                                   1133 ;	Receiver.c:188: break;
-      000409 02 05 2D         [24] 1134 	ljmp	00150$
-                                   1135 ;	Receiver.c:190: case 4:	if(timerCount2%4){main_out1=1;main_out2=1;}
-      00040C                       1136 00115$:
-      00040C 75 22 04         [24] 1137 	mov	__modsint_PARM_2,#0x04
-      00040F 75 23 00         [24] 1138 	mov	(__modsint_PARM_2 + 1),#0x00
-      000412 85 0E 82         [24] 1139 	mov	dpl,_timerCount2
-      000415 85 0F 83         [24] 1140 	mov	dph,(_timerCount2 + 1)
-      000418 12 09 20         [24] 1141 	lcall	__modsint
-      00041B E5 82            [12] 1142 	mov	a,dpl
-      00041D 85 83 F0         [24] 1143 	mov	b,dph
-      000420 45 F0            [12] 1144 	orl	a,b
-      000422 60 07            [24] 1145 	jz	00117$
-                                   1146 ;	assignBit
-      000424 D2 B6            [12] 1147 	setb	_P3_6
-                                   1148 ;	assignBit
-      000426 D2 B7            [12] 1149 	setb	_P3_7
-      000428 02 05 2D         [24] 1150 	ljmp	00150$
-      00042B                       1151 00117$:
-                                   1152 ;	Receiver.c:191: else {main_out1=1;main_out2=0;}
-                                   1153 ;	assignBit
-      00042B D2 B6            [12] 1154 	setb	_P3_6
-                                   1155 ;	assignBit
-      00042D C2 B7            [12] 1156 	clr	_P3_7
-                                   1157 ;	Receiver.c:192: break;
-      00042F 02 05 2D         [24] 1158 	ljmp	00150$
-                                   1159 ;	Receiver.c:194: case 5:	if(timerCount2%4){main_out1=1;main_out2=1;}
-      000432                       1160 00119$:
-      000432 75 22 04         [24] 1161 	mov	__modsint_PARM_2,#0x04
-      000435 75 23 00         [24] 1162 	mov	(__modsint_PARM_2 + 1),#0x00
-      000438 85 0E 82         [24] 1163 	mov	dpl,_timerCount2
-      00043B 85 0F 83         [24] 1164 	mov	dph,(_timerCount2 + 1)
-      00043E 12 09 20         [24] 1165 	lcall	__modsint
-      000441 E5 82            [12] 1166 	mov	a,dpl
-      000443 85 83 F0         [24] 1167 	mov	b,dph
-      000446 45 F0            [12] 1168 	orl	a,b
-      000448 60 07            [24] 1169 	jz	00121$
-                                   1170 ;	assignBit
-      00044A D2 B6            [12] 1171 	setb	_P3_6
-                                   1172 ;	assignBit
-      00044C D2 B7            [12] 1173 	setb	_P3_7
-      00044E 02 05 2D         [24] 1174 	ljmp	00150$
-      000451                       1175 00121$:
-                                   1176 ;	Receiver.c:195: else {main_out1=1;main_out2=0;}
-                                   1177 ;	assignBit
-      000451 D2 B6            [12] 1178 	setb	_P3_6
-                                   1179 ;	assignBit
-      000453 C2 B7            [12] 1180 	clr	_P3_7
-                                   1181 ;	Receiver.c:196: break;
-      000455 02 05 2D         [24] 1182 	ljmp	00150$
-                                   1183 ;	Receiver.c:199: }}
-      000458                       1184 00147$:
-                                   1185 ;	Receiver.c:201: else if(timerCount2<2000)
-      000458 C3               [12] 1186 	clr	c
-      000459 E5 0E            [12] 1187 	mov	a,_timerCount2
-      00045B 94 D0            [12] 1188 	subb	a,#0xd0
-      00045D E5 0F            [12] 1189 	mov	a,(_timerCount2 + 1)
-      00045F 64 80            [12] 1190 	xrl	a,#0x80
-      000461 94 87            [12] 1191 	subb	a,#0x87
-      000463 40 03            [24] 1192 	jc	00255$
-      000465 02 05 28         [24] 1193 	ljmp	00144$
-      000468                       1194 00255$:
-                                   1195 ;	Receiver.c:203: switch(state)
-      000468 74 02            [12] 1196 	mov	a,#0x02
-      00046A B5 1A 06         [24] 1197 	cjne	a,_state,00256$
-      00046D E4               [12] 1198 	clr	a
-      00046E B5 1B 02         [24] 1199 	cjne	a,(_state + 1),00256$
-      000471 80 24            [24] 1200 	sjmp	00125$
-      000473                       1201 00256$:
-      000473 74 03            [12] 1202 	mov	a,#0x03
-      000475 B5 1A 06         [24] 1203 	cjne	a,_state,00257$
-      000478 E4               [12] 1204 	clr	a
-      000479 B5 1B 02         [24] 1205 	cjne	a,(_state + 1),00257$
-      00047C 80 3E            [24] 1206 	sjmp	00129$
-      00047E                       1207 00257$:
-      00047E 74 04            [12] 1208 	mov	a,#0x04
-      000480 B5 1A 06         [24] 1209 	cjne	a,_state,00258$
-      000483 E4               [12] 1210 	clr	a
-      000484 B5 1B 02         [24] 1211 	cjne	a,(_state + 1),00258$
-      000487 80 57            [24] 1212 	sjmp	00133$
-      000489                       1213 00258$:
-      000489 74 05            [12] 1214 	mov	a,#0x05
-      00048B B5 1A 06         [24] 1215 	cjne	a,_state,00259$
-      00048E E4               [12] 1216 	clr	a
-      00048F B5 1B 02         [24] 1217 	cjne	a,(_state + 1),00259$
-      000492 80 70            [24] 1218 	sjmp	00137$
-      000494                       1219 00259$:
-      000494 02 05 2D         [24] 1220 	ljmp	00150$
-                                   1221 ;	Receiver.c:205: case 2:	if(timerCount2%10){main_out1=1;main_out2=1;}
-      000497                       1222 00125$:
-      000497 75 22 0A         [24] 1223 	mov	__modsint_PARM_2,#0x0a
-      00049A 75 23 00         [24] 1224 	mov	(__modsint_PARM_2 + 1),#0x00
-      00049D 85 0E 82         [24] 1225 	mov	dpl,_timerCount2
-      0004A0 85 0F 83         [24] 1226 	mov	dph,(_timerCount2 + 1)
-      0004A3 12 09 20         [24] 1227 	lcall	__modsint
-      0004A6 E5 82            [12] 1228 	mov	a,dpl
-      0004A8 85 83 F0         [24] 1229 	mov	b,dph
-      0004AB 45 F0            [12] 1230 	orl	a,b
-      0004AD 60 07            [24] 1231 	jz	00127$
-                                   1232 ;	assignBit
-      0004AF D2 B6            [12] 1233 	setb	_P3_6
-                                   1234 ;	assignBit
-      0004B1 D2 B7            [12] 1235 	setb	_P3_7
-      0004B3 02 05 2D         [24] 1236 	ljmp	00150$
-      0004B6                       1237 00127$:
-                                   1238 ;	Receiver.c:206: else {main_out1=0;main_out2=1;}
-                                   1239 ;	assignBit
-      0004B6 C2 B6            [12] 1240 	clr	_P3_6
-                                   1241 ;	assignBit
-      0004B8 D2 B7            [12] 1242 	setb	_P3_7
-                                   1243 ;	Receiver.c:207: break;
-                                   1244 ;	Receiver.c:209: case 3:	if(timerCount2%10){main_out1=1;main_out2=1;}
-      0004BA 80 71            [24] 1245 	sjmp	00150$
-      0004BC                       1246 00129$:
-      0004BC 75 22 0A         [24] 1247 	mov	__modsint_PARM_2,#0x0a
-      0004BF 75 23 00         [24] 1248 	mov	(__modsint_PARM_2 + 1),#0x00
-      0004C2 85 0E 82         [24] 1249 	mov	dpl,_timerCount2
-      0004C5 85 0F 83         [24] 1250 	mov	dph,(_timerCount2 + 1)
-      0004C8 12 09 20         [24] 1251 	lcall	__modsint
-      0004CB E5 82            [12] 1252 	mov	a,dpl
-      0004CD 85 83 F0         [24] 1253 	mov	b,dph
-      0004D0 45 F0            [12] 1254 	orl	a,b
-      0004D2 60 06            [24] 1255 	jz	00131$
-                                   1256 ;	assignBit
-      0004D4 D2 B6            [12] 1257 	setb	_P3_6
-                                   1258 ;	assignBit
-      0004D6 D2 B7            [12] 1259 	setb	_P3_7
-      0004D8 80 53            [24] 1260 	sjmp	00150$
-      0004DA                       1261 00131$:
-                                   1262 ;	Receiver.c:210: else {main_out1=0;main_out2=1;}
-                                   1263 ;	assignBit
-      0004DA C2 B6            [12] 1264 	clr	_P3_6
-                                   1265 ;	assignBit
-      0004DC D2 B7            [12] 1266 	setb	_P3_7
-                                   1267 ;	Receiver.c:211: break;
-                                   1268 ;	Receiver.c:213: case 4:	if(timerCount2%10){main_out1=1;main_out2=1;}
-      0004DE 80 4D            [24] 1269 	sjmp	00150$
-      0004E0                       1270 00133$:
-      0004E0 75 22 0A         [24] 1271 	mov	__modsint_PARM_2,#0x0a
-      0004E3 75 23 00         [24] 1272 	mov	(__modsint_PARM_2 + 1),#0x00
-      0004E6 85 0E 82         [24] 1273 	mov	dpl,_timerCount2
-      0004E9 85 0F 83         [24] 1274 	mov	dph,(_timerCount2 + 1)
-      0004EC 12 09 20         [24] 1275 	lcall	__modsint
-      0004EF E5 82            [12] 1276 	mov	a,dpl
-      0004F1 85 83 F0         [24] 1277 	mov	b,dph
-      0004F4 45 F0            [12] 1278 	orl	a,b
-      0004F6 60 06            [24] 1279 	jz	00135$
-                                   1280 ;	assignBit
-      0004F8 D2 B6            [12] 1281 	setb	_P3_6
-                                   1282 ;	assignBit
-      0004FA D2 B7            [12] 1283 	setb	_P3_7
-      0004FC 80 2F            [24] 1284 	sjmp	00150$
-      0004FE                       1285 00135$:
-                                   1286 ;	Receiver.c:214: else {main_out1=1;main_out2=0;}
-                                   1287 ;	assignBit
-      0004FE D2 B6            [12] 1288 	setb	_P3_6
-                                   1289 ;	assignBit
-      000500 C2 B7            [12] 1290 	clr	_P3_7
-                                   1291 ;	Receiver.c:215: break;
-                                   1292 ;	Receiver.c:217: case 5:	if(timerCount2%10){main_out1=1;main_out2=1;}
-      000502 80 29            [24] 1293 	sjmp	00150$
-      000504                       1294 00137$:
-      000504 75 22 0A         [24] 1295 	mov	__modsint_PARM_2,#0x0a
-      000507 75 23 00         [24] 1296 	mov	(__modsint_PARM_2 + 1),#0x00
-      00050A 85 0E 82         [24] 1297 	mov	dpl,_timerCount2
-      00050D 85 0F 83         [24] 1298 	mov	dph,(_timerCount2 + 1)
-      000510 12 09 20         [24] 1299 	lcall	__modsint
-      000513 E5 82            [12] 1300 	mov	a,dpl
-      000515 85 83 F0         [24] 1301 	mov	b,dph
-      000518 45 F0            [12] 1302 	orl	a,b
-      00051A 60 06            [24] 1303 	jz	00139$
-                                   1304 ;	assignBit
-      00051C D2 B6            [12] 1305 	setb	_P3_6
-                                   1306 ;	assignBit
-      00051E D2 B7            [12] 1307 	setb	_P3_7
-      000520 80 0B            [24] 1308 	sjmp	00150$
-      000522                       1309 00139$:
-                                   1310 ;	Receiver.c:218: else {main_out1=1;main_out2=0;}
-                                   1311 ;	assignBit
-      000522 D2 B6            [12] 1312 	setb	_P3_6
-                                   1313 ;	assignBit
-      000524 C2 B7            [12] 1314 	clr	_P3_7
-                                   1315 ;	Receiver.c:219: break;
-                                   1316 ;	Receiver.c:222: }}
-      000526 80 05            [24] 1317 	sjmp	00150$
-      000528                       1318 00144$:
-                                   1319 ;	Receiver.c:224: else timerCount2=0;	
-      000528 E4               [12] 1320 	clr	a
-      000529 F5 0E            [12] 1321 	mov	_timerCount2,a
-      00052B F5 0F            [12] 1322 	mov	(_timerCount2 + 1),a
-      00052D                       1323 00150$:
-                                   1324 ;	Receiver.c:228: if(timerCount2>4000)timerCount2=0;
-      00052D C3               [12] 1325 	clr	c
-      00052E 74 A0            [12] 1326 	mov	a,#0xa0
-      000530 95 0E            [12] 1327 	subb	a,_timerCount2
-      000532 74 8F            [12] 1328 	mov	a,#(0x0f ^ 0x80)
-      000534 85 0F F0         [24] 1329 	mov	b,(_timerCount2 + 1)
-      000537 63 F0 80         [24] 1330 	xrl	b,#0x80
-      00053A 95 F0            [12] 1331 	subb	a,b
-      00053C 50 05            [24] 1332 	jnc	00153$
-      00053E E4               [12] 1333 	clr	a
-      00053F F5 0E            [12] 1334 	mov	_timerCount2,a
-      000541 F5 0F            [12] 1335 	mov	(_timerCount2 + 1),a
-      000543                       1336 00153$:
-                                   1337 ;	Receiver.c:230: }//end timer2
-      000543 D0 D0            [24] 1338 	pop	psw
-      000545 D0 00            [24] 1339 	pop	(0+0)
-      000547 D0 01            [24] 1340 	pop	(0+1)
-      000549 D0 02            [24] 1341 	pop	(0+2)
-      00054B D0 03            [24] 1342 	pop	(0+3)
-      00054D D0 04            [24] 1343 	pop	(0+4)
-      00054F D0 05            [24] 1344 	pop	(0+5)
-      000551 D0 06            [24] 1345 	pop	(0+6)
-      000553 D0 07            [24] 1346 	pop	(0+7)
-      000555 D0 83            [24] 1347 	pop	dph
-      000557 D0 82            [24] 1348 	pop	dpl
-      000559 D0 F0            [24] 1349 	pop	b
-      00055B D0 E0            [24] 1350 	pop	acc
-      00055D D0 21            [24] 1351 	pop	bits
-      00055F 32               [24] 1352 	reti
-                                   1353 ;------------------------------------------------------------
-                                   1354 ;Allocation info for local variables in function 'main'
-                                   1355 ;------------------------------------------------------------
-                                   1356 ;	Receiver.c:234: void main()
-                                   1357 ;	-----------------------------------------
-                                   1358 ;	 function main
-                                   1359 ;	-----------------------------------------
-      000560                       1360 _main:
-                                   1361 ;	Receiver.c:236: state=20;
-      000560 75 1A 14         [24] 1362 	mov	_state,#0x14
-      000563 75 1B 00         [24] 1363 	mov	(_state + 1),#0x00
-                                   1364 ;	Receiver.c:237: pwr_out=0;
-                                   1365 ;	assignBit
-      000566 C2 87            [12] 1366 	clr	_P0_7
-                                   1367 ;	Receiver.c:241: T2CON = 0x80;                /* 10000000 */
-      000568 75 C8 80         [24] 1368 	mov	_T2CON,#0x80
-                                   1369 ;	Receiver.c:246: RCAP2L = 0x18;
-      00056B 75 CA 18         [24] 1370 	mov	_RCAP2L,#0x18
-                                   1371 ;	Receiver.c:247: RCAP2H = 0xFE;
-      00056E 75 CB FE         [24] 1372 	mov	_RCAP2H,#0xfe
-                                   1373 ;	Receiver.c:249: TL2 = RCAP2L;
-      000571 85 CA CC         [24] 1374 	mov	_TL2,_RCAP2L
-                                   1375 ;	Receiver.c:250: TH2 = RCAP2H;
-      000574 85 CB CD         [24] 1376 	mov	_TH2,_RCAP2H
-                                   1377 ;	Receiver.c:254: ET2 = 1;                      /* Enable Timer 2 Interrupts */
-                                   1378 ;	assignBit
-      000577 D2 AD            [12] 1379 	setb	_ET2
-                                   1380 ;	Receiver.c:255: TR2 = 1;                      /* Start Timer 2 Running */
-                                   1381 ;	assignBit
-      000579 D2 CA            [12] 1382 	setb	_TR2
-                                   1383 ;	Receiver.c:258: InitTimer0();
-      00057B 12 07 C6         [24] 1384 	lcall	_InitTimer0
-                                   1385 ;	Receiver.c:259: EA=1;
-                                   1386 ;	assignBit
-      00057E D2 AF            [12] 1387 	setb	_EA
-                                   1388 ;	Receiver.c:260: startup();
-      000580 12 05 96         [24] 1389 	lcall	_startup
-                                   1390 ;	Receiver.c:261: start=1;
-      000583 75 08 01         [24] 1391 	mov	_start,#0x01
-                                   1392 ;	Receiver.c:262: UART_Init();
-      000586 12 06 1C         [24] 1393 	lcall	_UART_Init
-                                   1394 ;	Receiver.c:263: handshake();
-      000589 12 06 2F         [24] 1395 	lcall	_handshake
-                                   1396 ;	Receiver.c:264: ES  = 1;      // Enable Serial INterrupt
-                                   1397 ;	assignBit
-      00058C D2 AC            [12] 1398 	setb	_ES
-                                   1399 ;	Receiver.c:266: while(1)
-      00058E                       1400 00102$:
-                                   1401 ;	Receiver.c:268: check_switches();
-      00058E 12 07 D4         [24] 1402 	lcall	_check_switches
-                                   1403 ;	Receiver.c:269: check_data();
-      000591 12 06 58         [24] 1404 	lcall	_check_data
-                                   1405 ;	Receiver.c:271: } //main
-      000594 80 F8            [24] 1406 	sjmp	00102$
-                                   1407 ;------------------------------------------------------------
-                                   1408 ;Allocation info for local variables in function 'startup'
-                                   1409 ;------------------------------------------------------------
-                                   1410 ;	Receiver.c:274: void startup()
-                                   1411 ;	-----------------------------------------
-                                   1412 ;	 function startup
-                                   1413 ;	-----------------------------------------
-      000596                       1414 _startup:
-                                   1415 ;	Receiver.c:276: pwr_key=1;
-                                   1416 ;	assignBit
-      000596 D2 97            [12] 1417 	setb	_P1_7
-                                   1418 ;	Receiver.c:277: dim_key=1;
-                                   1419 ;	assignBit
-      000598 D2 94            [12] 1420 	setb	_P1_4
-                                   1421 ;	Receiver.c:278: ac_key=1;
+      0002DB D2 A6            [12]  935 	setb	_P2_6
+                                    936 ;	Receiver.c:151: up_led=0;if(auto_flag){main_out2=0;down_led=1;}break;
+                                    937 ;	assignBit
+      0002DD C2 A7            [12]  938 	clr	_P2_7
+      0002DF 30 00 0B         [24]  939 	jnb	_auto_flag,00158$
+                                    940 ;	assignBit
+      0002E2 C2 B7            [12]  941 	clr	_P3_7
+                                    942 ;	assignBit
+      0002E4 D2 A4            [12]  943 	setb	_P2_4
+                                    944 ;	Receiver.c:154: }
+      0002E6 80 05            [24]  945 	sjmp	00158$
+      0002E8                        946 00150$:
+                                    947 ;	Receiver.c:158: {timerCount = 0;}
+      0002E8 E4               [12]  948 	clr	a
+      0002E9 F5 0A            [12]  949 	mov	_timerCount,a
+      0002EB F5 0B            [12]  950 	mov	(_timerCount + 1),a
+      0002ED                        951 00158$:
+                                    952 ;	Receiver.c:160: } //timer end
+      0002ED D0 D0            [24]  953 	pop	psw
+      0002EF D0 00            [24]  954 	pop	(0+0)
+      0002F1 D0 01            [24]  955 	pop	(0+1)
+      0002F3 D0 02            [24]  956 	pop	(0+2)
+      0002F5 D0 03            [24]  957 	pop	(0+3)
+      0002F7 D0 04            [24]  958 	pop	(0+4)
+      0002F9 D0 05            [24]  959 	pop	(0+5)
+      0002FB D0 06            [24]  960 	pop	(0+6)
+      0002FD D0 07            [24]  961 	pop	(0+7)
+      0002FF D0 83            [24]  962 	pop	dph
+      000301 D0 82            [24]  963 	pop	dpl
+      000303 D0 F0            [24]  964 	pop	b
+      000305 D0 E0            [24]  965 	pop	acc
+      000307 D0 21            [24]  966 	pop	bits
+      000309 32               [24]  967 	reti
+                                    968 ;------------------------------------------------------------
+                                    969 ;Allocation info for local variables in function 'timer1_ISR'
+                                    970 ;------------------------------------------------------------
+                                    971 ;	Receiver.c:163: void timer1_ISR (void) __interrupt 5
+                                    972 ;	-----------------------------------------
+                                    973 ;	 function timer1_ISR
+                                    974 ;	-----------------------------------------
+      00030A                        975 _timer1_ISR:
+      00030A C0 21            [24]  976 	push	bits
+      00030C C0 E0            [24]  977 	push	acc
+      00030E C0 F0            [24]  978 	push	b
+      000310 C0 82            [24]  979 	push	dpl
+      000312 C0 83            [24]  980 	push	dph
+      000314 C0 07            [24]  981 	push	(0+7)
+      000316 C0 06            [24]  982 	push	(0+6)
+      000318 C0 05            [24]  983 	push	(0+5)
+      00031A C0 04            [24]  984 	push	(0+4)
+      00031C C0 03            [24]  985 	push	(0+3)
+      00031E C0 02            [24]  986 	push	(0+2)
+      000320 C0 01            [24]  987 	push	(0+1)
+      000322 C0 00            [24]  988 	push	(0+0)
+      000324 C0 D0            [24]  989 	push	psw
+      000326 75 D0 00         [24]  990 	mov	psw,#0x00
+                                    991 ;	Receiver.c:165: TF2 = 0;            /* Clear the interrupt request */
+                                    992 ;	assignBit
+      000329 C2 CF            [12]  993 	clr	_TF2
+                                    994 ;	Receiver.c:166: timerCount2++;
+      00032B AE 0E            [24]  995 	mov	r6,_timerCount2
+      00032D AF 0F            [24]  996 	mov	r7,(_timerCount2 + 1)
+      00032F 74 01            [12]  997 	mov	a,#0x01
+      000331 2E               [12]  998 	add	a,r6
+      000332 F5 0E            [12]  999 	mov	_timerCount2,a
+      000334 E4               [12] 1000 	clr	a
+      000335 3F               [12] 1001 	addc	a,r7
+      000336 F5 0F            [12] 1002 	mov	(_timerCount2 + 1),a
+                                   1003 ;	Receiver.c:167: serialCount++;
+      000338 AE 0C            [24] 1004 	mov	r6,_serialCount
+      00033A AF 0D            [24] 1005 	mov	r7,(_serialCount + 1)
+      00033C 74 01            [12] 1006 	mov	a,#0x01
+      00033E 2E               [12] 1007 	add	a,r6
+      00033F F5 0C            [12] 1008 	mov	_serialCount,a
+      000341 E4               [12] 1009 	clr	a
+      000342 3F               [12] 1010 	addc	a,r7
+      000343 F5 0D            [12] 1011 	mov	(_serialCount + 1),a
+                                   1012 ;	Receiver.c:168: rst_out=!rst_out;
+      000345 B2 96            [12] 1013 	cpl	_P1_6
+                                   1014 ;	Receiver.c:169: if(dim1_val)
+      000347 E5 16            [12] 1015 	mov	a,_dim1_val
+      000349 45 17            [12] 1016 	orl	a,(_dim1_val + 1)
+      00034B 60 12            [24] 1017 	jz	00105$
+                                   1018 ;	Receiver.c:170: {dim1_val--;dim_out=1;}
+      00034D AE 16            [24] 1019 	mov	r6,_dim1_val
+      00034F AF 17            [24] 1020 	mov	r7,(_dim1_val + 1)
+      000351 EE               [12] 1021 	mov	a,r6
+      000352 24 FF            [12] 1022 	add	a,#0xff
+      000354 F5 16            [12] 1023 	mov	_dim1_val,a
+      000356 EF               [12] 1024 	mov	a,r7
+      000357 34 FF            [12] 1025 	addc	a,#0xff
+      000359 F5 17            [12] 1026 	mov	(_dim1_val + 1),a
+                                   1027 ;	assignBit
+      00035B D2 82            [12] 1028 	setb	_P0_2
+      00035D 80 24            [24] 1029 	sjmp	00106$
+      00035F                       1030 00105$:
+                                   1031 ;	Receiver.c:172: else if(dim1_val2){dim1_val2--;dim_out=0;}
+      00035F E5 18            [12] 1032 	mov	a,_dim1_val2
+      000361 45 19            [12] 1033 	orl	a,(_dim1_val2 + 1)
+      000363 60 12            [24] 1034 	jz	00102$
+      000365 AE 18            [24] 1035 	mov	r6,_dim1_val2
+      000367 AF 19            [24] 1036 	mov	r7,(_dim1_val2 + 1)
+      000369 EE               [12] 1037 	mov	a,r6
+      00036A 24 FF            [12] 1038 	add	a,#0xff
+      00036C F5 18            [12] 1039 	mov	_dim1_val2,a
+      00036E EF               [12] 1040 	mov	a,r7
+      00036F 34 FF            [12] 1041 	addc	a,#0xff
+      000371 F5 19            [12] 1042 	mov	(_dim1_val2 + 1),a
+                                   1043 ;	assignBit
+      000373 C2 82            [12] 1044 	clr	_P0_2
+      000375 80 0C            [24] 1045 	sjmp	00106$
+      000377                       1046 00102$:
+                                   1047 ;	Receiver.c:174: else {dim1_val = dim_val;dim1_val2 = dim_val2;}    
+      000377 85 12 16         [24] 1048 	mov	_dim1_val,_dim_val
+      00037A 85 13 17         [24] 1049 	mov	(_dim1_val + 1),(_dim_val + 1)
+      00037D 85 14 18         [24] 1050 	mov	_dim1_val2,_dim_val2
+      000380 85 15 19         [24] 1051 	mov	(_dim1_val2 + 1),(_dim_val2 + 1)
+      000383                       1052 00106$:
+                                   1053 ;	Receiver.c:176: if(auto_flag)
+      000383 20 00 03         [24] 1054 	jb	_auto_flag,00245$
+      000386 02 05 35         [24] 1055 	ljmp	00150$
+      000389                       1056 00245$:
+                                   1057 ;	Receiver.c:178: if(timerCount2<1000)
+      000389 C3               [12] 1058 	clr	c
+      00038A E5 0E            [12] 1059 	mov	a,_timerCount2
+      00038C 94 E8            [12] 1060 	subb	a,#0xe8
+      00038E E5 0F            [12] 1061 	mov	a,(_timerCount2 + 1)
+      000390 64 80            [12] 1062 	xrl	a,#0x80
+      000392 94 83            [12] 1063 	subb	a,#0x83
+      000394 40 03            [24] 1064 	jc	00246$
+      000396 02 04 60         [24] 1065 	ljmp	00147$
+      000399                       1066 00246$:
+                                   1067 ;	Receiver.c:180: switch(state)
+      000399 74 02            [12] 1068 	mov	a,#0x02
+      00039B B5 1A 06         [24] 1069 	cjne	a,_state,00247$
+      00039E E4               [12] 1070 	clr	a
+      00039F B5 1B 02         [24] 1071 	cjne	a,(_state + 1),00247$
+      0003A2 80 24            [24] 1072 	sjmp	00107$
+      0003A4                       1073 00247$:
+      0003A4 74 03            [12] 1074 	mov	a,#0x03
+      0003A6 B5 1A 06         [24] 1075 	cjne	a,_state,00248$
+      0003A9 E4               [12] 1076 	clr	a
+      0003AA B5 1B 02         [24] 1077 	cjne	a,(_state + 1),00248$
+      0003AD 80 3F            [24] 1078 	sjmp	00111$
+      0003AF                       1079 00248$:
+      0003AF 74 04            [12] 1080 	mov	a,#0x04
+      0003B1 B5 1A 06         [24] 1081 	cjne	a,_state,00249$
+      0003B4 E4               [12] 1082 	clr	a
+      0003B5 B5 1B 02         [24] 1083 	cjne	a,(_state + 1),00249$
+      0003B8 80 5A            [24] 1084 	sjmp	00115$
+      0003BA                       1085 00249$:
+      0003BA 74 05            [12] 1086 	mov	a,#0x05
+      0003BC B5 1A 06         [24] 1087 	cjne	a,_state,00250$
+      0003BF E4               [12] 1088 	clr	a
+      0003C0 B5 1B 02         [24] 1089 	cjne	a,(_state + 1),00250$
+      0003C3 80 75            [24] 1090 	sjmp	00119$
+      0003C5                       1091 00250$:
+      0003C5 02 05 35         [24] 1092 	ljmp	00150$
+                                   1093 ;	Receiver.c:182: case 2:	if(timerCount2%4){main_out1=1;main_out2=1;}
+      0003C8                       1094 00107$:
+      0003C8 75 22 04         [24] 1095 	mov	__modsint_PARM_2,#0x04
+      0003CB 75 23 00         [24] 1096 	mov	(__modsint_PARM_2 + 1),#0x00
+      0003CE 85 0E 82         [24] 1097 	mov	dpl,_timerCount2
+      0003D1 85 0F 83         [24] 1098 	mov	dph,(_timerCount2 + 1)
+      0003D4 12 08 DD         [24] 1099 	lcall	__modsint
+      0003D7 E5 82            [12] 1100 	mov	a,dpl
+      0003D9 85 83 F0         [24] 1101 	mov	b,dph
+      0003DC 45 F0            [12] 1102 	orl	a,b
+      0003DE 60 07            [24] 1103 	jz	00109$
+                                   1104 ;	assignBit
+      0003E0 D2 B6            [12] 1105 	setb	_P3_6
+                                   1106 ;	assignBit
+      0003E2 D2 B7            [12] 1107 	setb	_P3_7
+      0003E4 02 05 35         [24] 1108 	ljmp	00150$
+      0003E7                       1109 00109$:
+                                   1110 ;	Receiver.c:183: else {main_out1=0;main_out2=1;}
+                                   1111 ;	assignBit
+      0003E7 C2 B6            [12] 1112 	clr	_P3_6
+                                   1113 ;	assignBit
+      0003E9 D2 B7            [12] 1114 	setb	_P3_7
+                                   1115 ;	Receiver.c:184: break;
+      0003EB 02 05 35         [24] 1116 	ljmp	00150$
+                                   1117 ;	Receiver.c:186: case 3:	if(timerCount2%4){main_out1=1;main_out2=1;}
+      0003EE                       1118 00111$:
+      0003EE 75 22 04         [24] 1119 	mov	__modsint_PARM_2,#0x04
+      0003F1 75 23 00         [24] 1120 	mov	(__modsint_PARM_2 + 1),#0x00
+      0003F4 85 0E 82         [24] 1121 	mov	dpl,_timerCount2
+      0003F7 85 0F 83         [24] 1122 	mov	dph,(_timerCount2 + 1)
+      0003FA 12 08 DD         [24] 1123 	lcall	__modsint
+      0003FD E5 82            [12] 1124 	mov	a,dpl
+      0003FF 85 83 F0         [24] 1125 	mov	b,dph
+      000402 45 F0            [12] 1126 	orl	a,b
+      000404 60 07            [24] 1127 	jz	00113$
+                                   1128 ;	assignBit
+      000406 D2 B6            [12] 1129 	setb	_P3_6
+                                   1130 ;	assignBit
+      000408 D2 B7            [12] 1131 	setb	_P3_7
+      00040A 02 05 35         [24] 1132 	ljmp	00150$
+      00040D                       1133 00113$:
+                                   1134 ;	Receiver.c:187: else {main_out1=0;main_out2=1;}
+                                   1135 ;	assignBit
+      00040D C2 B6            [12] 1136 	clr	_P3_6
+                                   1137 ;	assignBit
+      00040F D2 B7            [12] 1138 	setb	_P3_7
+                                   1139 ;	Receiver.c:188: break;
+      000411 02 05 35         [24] 1140 	ljmp	00150$
+                                   1141 ;	Receiver.c:190: case 4:	if(timerCount2%4){main_out1=1;main_out2=1;}
+      000414                       1142 00115$:
+      000414 75 22 04         [24] 1143 	mov	__modsint_PARM_2,#0x04
+      000417 75 23 00         [24] 1144 	mov	(__modsint_PARM_2 + 1),#0x00
+      00041A 85 0E 82         [24] 1145 	mov	dpl,_timerCount2
+      00041D 85 0F 83         [24] 1146 	mov	dph,(_timerCount2 + 1)
+      000420 12 08 DD         [24] 1147 	lcall	__modsint
+      000423 E5 82            [12] 1148 	mov	a,dpl
+      000425 85 83 F0         [24] 1149 	mov	b,dph
+      000428 45 F0            [12] 1150 	orl	a,b
+      00042A 60 07            [24] 1151 	jz	00117$
+                                   1152 ;	assignBit
+      00042C D2 B6            [12] 1153 	setb	_P3_6
+                                   1154 ;	assignBit
+      00042E D2 B7            [12] 1155 	setb	_P3_7
+      000430 02 05 35         [24] 1156 	ljmp	00150$
+      000433                       1157 00117$:
+                                   1158 ;	Receiver.c:191: else {main_out1=1;main_out2=0;}
+                                   1159 ;	assignBit
+      000433 D2 B6            [12] 1160 	setb	_P3_6
+                                   1161 ;	assignBit
+      000435 C2 B7            [12] 1162 	clr	_P3_7
+                                   1163 ;	Receiver.c:192: break;
+      000437 02 05 35         [24] 1164 	ljmp	00150$
+                                   1165 ;	Receiver.c:194: case 5:	if(timerCount2%4){main_out1=1;main_out2=1;}
+      00043A                       1166 00119$:
+      00043A 75 22 04         [24] 1167 	mov	__modsint_PARM_2,#0x04
+      00043D 75 23 00         [24] 1168 	mov	(__modsint_PARM_2 + 1),#0x00
+      000440 85 0E 82         [24] 1169 	mov	dpl,_timerCount2
+      000443 85 0F 83         [24] 1170 	mov	dph,(_timerCount2 + 1)
+      000446 12 08 DD         [24] 1171 	lcall	__modsint
+      000449 E5 82            [12] 1172 	mov	a,dpl
+      00044B 85 83 F0         [24] 1173 	mov	b,dph
+      00044E 45 F0            [12] 1174 	orl	a,b
+      000450 60 07            [24] 1175 	jz	00121$
+                                   1176 ;	assignBit
+      000452 D2 B6            [12] 1177 	setb	_P3_6
+                                   1178 ;	assignBit
+      000454 D2 B7            [12] 1179 	setb	_P3_7
+      000456 02 05 35         [24] 1180 	ljmp	00150$
+      000459                       1181 00121$:
+                                   1182 ;	Receiver.c:195: else {main_out1=1;main_out2=0;}
+                                   1183 ;	assignBit
+      000459 D2 B6            [12] 1184 	setb	_P3_6
+                                   1185 ;	assignBit
+      00045B C2 B7            [12] 1186 	clr	_P3_7
+                                   1187 ;	Receiver.c:196: break;
+      00045D 02 05 35         [24] 1188 	ljmp	00150$
+                                   1189 ;	Receiver.c:199: }}
+      000460                       1190 00147$:
+                                   1191 ;	Receiver.c:201: else if(timerCount2<2000)
+      000460 C3               [12] 1192 	clr	c
+      000461 E5 0E            [12] 1193 	mov	a,_timerCount2
+      000463 94 D0            [12] 1194 	subb	a,#0xd0
+      000465 E5 0F            [12] 1195 	mov	a,(_timerCount2 + 1)
+      000467 64 80            [12] 1196 	xrl	a,#0x80
+      000469 94 87            [12] 1197 	subb	a,#0x87
+      00046B 40 03            [24] 1198 	jc	00255$
+      00046D 02 05 30         [24] 1199 	ljmp	00144$
+      000470                       1200 00255$:
+                                   1201 ;	Receiver.c:203: switch(state)
+      000470 74 02            [12] 1202 	mov	a,#0x02
+      000472 B5 1A 06         [24] 1203 	cjne	a,_state,00256$
+      000475 E4               [12] 1204 	clr	a
+      000476 B5 1B 02         [24] 1205 	cjne	a,(_state + 1),00256$
+      000479 80 24            [24] 1206 	sjmp	00125$
+      00047B                       1207 00256$:
+      00047B 74 03            [12] 1208 	mov	a,#0x03
+      00047D B5 1A 06         [24] 1209 	cjne	a,_state,00257$
+      000480 E4               [12] 1210 	clr	a
+      000481 B5 1B 02         [24] 1211 	cjne	a,(_state + 1),00257$
+      000484 80 3E            [24] 1212 	sjmp	00129$
+      000486                       1213 00257$:
+      000486 74 04            [12] 1214 	mov	a,#0x04
+      000488 B5 1A 06         [24] 1215 	cjne	a,_state,00258$
+      00048B E4               [12] 1216 	clr	a
+      00048C B5 1B 02         [24] 1217 	cjne	a,(_state + 1),00258$
+      00048F 80 57            [24] 1218 	sjmp	00133$
+      000491                       1219 00258$:
+      000491 74 05            [12] 1220 	mov	a,#0x05
+      000493 B5 1A 06         [24] 1221 	cjne	a,_state,00259$
+      000496 E4               [12] 1222 	clr	a
+      000497 B5 1B 02         [24] 1223 	cjne	a,(_state + 1),00259$
+      00049A 80 70            [24] 1224 	sjmp	00137$
+      00049C                       1225 00259$:
+      00049C 02 05 35         [24] 1226 	ljmp	00150$
+                                   1227 ;	Receiver.c:205: case 2:	if(timerCount2%10){main_out1=1;main_out2=1;}
+      00049F                       1228 00125$:
+      00049F 75 22 0A         [24] 1229 	mov	__modsint_PARM_2,#0x0a
+      0004A2 75 23 00         [24] 1230 	mov	(__modsint_PARM_2 + 1),#0x00
+      0004A5 85 0E 82         [24] 1231 	mov	dpl,_timerCount2
+      0004A8 85 0F 83         [24] 1232 	mov	dph,(_timerCount2 + 1)
+      0004AB 12 08 DD         [24] 1233 	lcall	__modsint
+      0004AE E5 82            [12] 1234 	mov	a,dpl
+      0004B0 85 83 F0         [24] 1235 	mov	b,dph
+      0004B3 45 F0            [12] 1236 	orl	a,b
+      0004B5 60 07            [24] 1237 	jz	00127$
+                                   1238 ;	assignBit
+      0004B7 D2 B6            [12] 1239 	setb	_P3_6
+                                   1240 ;	assignBit
+      0004B9 D2 B7            [12] 1241 	setb	_P3_7
+      0004BB 02 05 35         [24] 1242 	ljmp	00150$
+      0004BE                       1243 00127$:
+                                   1244 ;	Receiver.c:206: else {main_out1=0;main_out2=1;}
+                                   1245 ;	assignBit
+      0004BE C2 B6            [12] 1246 	clr	_P3_6
+                                   1247 ;	assignBit
+      0004C0 D2 B7            [12] 1248 	setb	_P3_7
+                                   1249 ;	Receiver.c:207: break;
+                                   1250 ;	Receiver.c:209: case 3:	if(timerCount2%10){main_out1=1;main_out2=1;}
+      0004C2 80 71            [24] 1251 	sjmp	00150$
+      0004C4                       1252 00129$:
+      0004C4 75 22 0A         [24] 1253 	mov	__modsint_PARM_2,#0x0a
+      0004C7 75 23 00         [24] 1254 	mov	(__modsint_PARM_2 + 1),#0x00
+      0004CA 85 0E 82         [24] 1255 	mov	dpl,_timerCount2
+      0004CD 85 0F 83         [24] 1256 	mov	dph,(_timerCount2 + 1)
+      0004D0 12 08 DD         [24] 1257 	lcall	__modsint
+      0004D3 E5 82            [12] 1258 	mov	a,dpl
+      0004D5 85 83 F0         [24] 1259 	mov	b,dph
+      0004D8 45 F0            [12] 1260 	orl	a,b
+      0004DA 60 06            [24] 1261 	jz	00131$
+                                   1262 ;	assignBit
+      0004DC D2 B6            [12] 1263 	setb	_P3_6
+                                   1264 ;	assignBit
+      0004DE D2 B7            [12] 1265 	setb	_P3_7
+      0004E0 80 53            [24] 1266 	sjmp	00150$
+      0004E2                       1267 00131$:
+                                   1268 ;	Receiver.c:210: else {main_out1=0;main_out2=1;}
+                                   1269 ;	assignBit
+      0004E2 C2 B6            [12] 1270 	clr	_P3_6
+                                   1271 ;	assignBit
+      0004E4 D2 B7            [12] 1272 	setb	_P3_7
+                                   1273 ;	Receiver.c:211: break;
+                                   1274 ;	Receiver.c:213: case 4:	if(timerCount2%10){main_out1=1;main_out2=1;}
+      0004E6 80 4D            [24] 1275 	sjmp	00150$
+      0004E8                       1276 00133$:
+      0004E8 75 22 0A         [24] 1277 	mov	__modsint_PARM_2,#0x0a
+      0004EB 75 23 00         [24] 1278 	mov	(__modsint_PARM_2 + 1),#0x00
+      0004EE 85 0E 82         [24] 1279 	mov	dpl,_timerCount2
+      0004F1 85 0F 83         [24] 1280 	mov	dph,(_timerCount2 + 1)
+      0004F4 12 08 DD         [24] 1281 	lcall	__modsint
+      0004F7 E5 82            [12] 1282 	mov	a,dpl
+      0004F9 85 83 F0         [24] 1283 	mov	b,dph
+      0004FC 45 F0            [12] 1284 	orl	a,b
+      0004FE 60 06            [24] 1285 	jz	00135$
+                                   1286 ;	assignBit
+      000500 D2 B6            [12] 1287 	setb	_P3_6
+                                   1288 ;	assignBit
+      000502 D2 B7            [12] 1289 	setb	_P3_7
+      000504 80 2F            [24] 1290 	sjmp	00150$
+      000506                       1291 00135$:
+                                   1292 ;	Receiver.c:214: else {main_out1=1;main_out2=0;}
+                                   1293 ;	assignBit
+      000506 D2 B6            [12] 1294 	setb	_P3_6
+                                   1295 ;	assignBit
+      000508 C2 B7            [12] 1296 	clr	_P3_7
+                                   1297 ;	Receiver.c:215: break;
+                                   1298 ;	Receiver.c:217: case 5:	if(timerCount2%10){main_out1=1;main_out2=1;}
+      00050A 80 29            [24] 1299 	sjmp	00150$
+      00050C                       1300 00137$:
+      00050C 75 22 0A         [24] 1301 	mov	__modsint_PARM_2,#0x0a
+      00050F 75 23 00         [24] 1302 	mov	(__modsint_PARM_2 + 1),#0x00
+      000512 85 0E 82         [24] 1303 	mov	dpl,_timerCount2
+      000515 85 0F 83         [24] 1304 	mov	dph,(_timerCount2 + 1)
+      000518 12 08 DD         [24] 1305 	lcall	__modsint
+      00051B E5 82            [12] 1306 	mov	a,dpl
+      00051D 85 83 F0         [24] 1307 	mov	b,dph
+      000520 45 F0            [12] 1308 	orl	a,b
+      000522 60 06            [24] 1309 	jz	00139$
+                                   1310 ;	assignBit
+      000524 D2 B6            [12] 1311 	setb	_P3_6
+                                   1312 ;	assignBit
+      000526 D2 B7            [12] 1313 	setb	_P3_7
+      000528 80 0B            [24] 1314 	sjmp	00150$
+      00052A                       1315 00139$:
+                                   1316 ;	Receiver.c:218: else {main_out1=1;main_out2=0;}
+                                   1317 ;	assignBit
+      00052A D2 B6            [12] 1318 	setb	_P3_6
+                                   1319 ;	assignBit
+      00052C C2 B7            [12] 1320 	clr	_P3_7
+                                   1321 ;	Receiver.c:219: break;
+                                   1322 ;	Receiver.c:222: }}
+      00052E 80 05            [24] 1323 	sjmp	00150$
+      000530                       1324 00144$:
+                                   1325 ;	Receiver.c:224: else timerCount2=0;	
+      000530 E4               [12] 1326 	clr	a
+      000531 F5 0E            [12] 1327 	mov	_timerCount2,a
+      000533 F5 0F            [12] 1328 	mov	(_timerCount2 + 1),a
+      000535                       1329 00150$:
+                                   1330 ;	Receiver.c:228: if(timerCount2>4000)timerCount2=0;
+      000535 C3               [12] 1331 	clr	c
+      000536 74 A0            [12] 1332 	mov	a,#0xa0
+      000538 95 0E            [12] 1333 	subb	a,_timerCount2
+      00053A 74 8F            [12] 1334 	mov	a,#(0x0f ^ 0x80)
+      00053C 85 0F F0         [24] 1335 	mov	b,(_timerCount2 + 1)
+      00053F 63 F0 80         [24] 1336 	xrl	b,#0x80
+      000542 95 F0            [12] 1337 	subb	a,b
+      000544 50 05            [24] 1338 	jnc	00153$
+      000546 E4               [12] 1339 	clr	a
+      000547 F5 0E            [12] 1340 	mov	_timerCount2,a
+      000549 F5 0F            [12] 1341 	mov	(_timerCount2 + 1),a
+      00054B                       1342 00153$:
+                                   1343 ;	Receiver.c:230: }//end timer2
+      00054B D0 D0            [24] 1344 	pop	psw
+      00054D D0 00            [24] 1345 	pop	(0+0)
+      00054F D0 01            [24] 1346 	pop	(0+1)
+      000551 D0 02            [24] 1347 	pop	(0+2)
+      000553 D0 03            [24] 1348 	pop	(0+3)
+      000555 D0 04            [24] 1349 	pop	(0+4)
+      000557 D0 05            [24] 1350 	pop	(0+5)
+      000559 D0 06            [24] 1351 	pop	(0+6)
+      00055B D0 07            [24] 1352 	pop	(0+7)
+      00055D D0 83            [24] 1353 	pop	dph
+      00055F D0 82            [24] 1354 	pop	dpl
+      000561 D0 F0            [24] 1355 	pop	b
+      000563 D0 E0            [24] 1356 	pop	acc
+      000565 D0 21            [24] 1357 	pop	bits
+      000567 32               [24] 1358 	reti
+                                   1359 ;------------------------------------------------------------
+                                   1360 ;Allocation info for local variables in function 'main'
+                                   1361 ;------------------------------------------------------------
+                                   1362 ;	Receiver.c:234: void main()
+                                   1363 ;	-----------------------------------------
+                                   1364 ;	 function main
+                                   1365 ;	-----------------------------------------
+      000568                       1366 _main:
+                                   1367 ;	Receiver.c:236: state=20;
+      000568 75 1A 14         [24] 1368 	mov	_state,#0x14
+      00056B 75 1B 00         [24] 1369 	mov	(_state + 1),#0x00
+                                   1370 ;	Receiver.c:237: pwr_out=0;
+                                   1371 ;	assignBit
+      00056E C2 87            [12] 1372 	clr	_P0_7
+                                   1373 ;	Receiver.c:241: T2CON = 0x80;                /* 10000000 */
+      000570 75 C8 80         [24] 1374 	mov	_T2CON,#0x80
+                                   1375 ;	Receiver.c:246: RCAP2L = 0x18;
+      000573 75 CA 18         [24] 1376 	mov	_RCAP2L,#0x18
+                                   1377 ;	Receiver.c:247: RCAP2H = 0xFE;
+      000576 75 CB FE         [24] 1378 	mov	_RCAP2H,#0xfe
+                                   1379 ;	Receiver.c:249: TL2 = RCAP2L;
+      000579 85 CA CC         [24] 1380 	mov	_TL2,_RCAP2L
+                                   1381 ;	Receiver.c:250: TH2 = RCAP2H;
+      00057C 85 CB CD         [24] 1382 	mov	_TH2,_RCAP2H
+                                   1383 ;	Receiver.c:254: ET2 = 1;                      /* Enable Timer 2 Interrupts */
+                                   1384 ;	assignBit
+      00057F D2 AD            [12] 1385 	setb	_ET2
+                                   1386 ;	Receiver.c:255: TR2 = 1;                      /* Start Timer 2 Running */
+                                   1387 ;	assignBit
+      000581 D2 CA            [12] 1388 	setb	_TR2
+                                   1389 ;	Receiver.c:258: InitTimer0();
+      000583 12 07 8B         [24] 1390 	lcall	_InitTimer0
+                                   1391 ;	Receiver.c:259: EA=1;
+                                   1392 ;	assignBit
+      000586 D2 AF            [12] 1393 	setb	_EA
+                                   1394 ;	Receiver.c:260: startup();
+      000588 12 05 9E         [24] 1395 	lcall	_startup
+                                   1396 ;	Receiver.c:261: start=1;
+      00058B 75 08 01         [24] 1397 	mov	_start,#0x01
+                                   1398 ;	Receiver.c:262: UART_Init();
+      00058E 12 06 24         [24] 1399 	lcall	_UART_Init
+                                   1400 ;	Receiver.c:263: handshake();
+      000591 12 06 37         [24] 1401 	lcall	_handshake
+                                   1402 ;	Receiver.c:264: ES  = 1;      // Enable Serial INterrupt
+                                   1403 ;	assignBit
+      000594 D2 AC            [12] 1404 	setb	_ES
+                                   1405 ;	Receiver.c:266: while(1)
+      000596                       1406 00102$:
+                                   1407 ;	Receiver.c:268: check_switches();
+      000596 12 07 99         [24] 1408 	lcall	_check_switches
+                                   1409 ;	Receiver.c:269: check_data();
+      000599 12 06 60         [24] 1410 	lcall	_check_data
+                                   1411 ;	Receiver.c:271: } //main
+      00059C 80 F8            [24] 1412 	sjmp	00102$
+                                   1413 ;------------------------------------------------------------
+                                   1414 ;Allocation info for local variables in function 'startup'
+                                   1415 ;------------------------------------------------------------
+                                   1416 ;	Receiver.c:274: void startup()
+                                   1417 ;	-----------------------------------------
+                                   1418 ;	 function startup
+                                   1419 ;	-----------------------------------------
+      00059E                       1420 _startup:
+                                   1421 ;	Receiver.c:276: pwr_key=1;
                                    1422 ;	assignBit
-      00059A D2 93            [12] 1423 	setb	_P1_3
-                                   1424 ;	Receiver.c:279: auto_key=1;
+      00059E D2 97            [12] 1423 	setb	_P1_7
+                                   1424 ;	Receiver.c:277: dim_key=1;
                                    1425 ;	assignBit
-      00059C D2 92            [12] 1426 	setb	_P1_2
-                                   1427 ;	Receiver.c:280: manual_up_key=1;
+      0005A0 D2 94            [12] 1426 	setb	_P1_4
+                                   1427 ;	Receiver.c:278: ac_key=1;
                                    1428 ;	assignBit
-      00059E D2 90            [12] 1429 	setb	_P1_0
-                                   1430 ;	Receiver.c:281: manual_down_key=1;
+      0005A2 D2 93            [12] 1429 	setb	_P1_3
+                                   1430 ;	Receiver.c:279: auto_key=1;
                                    1431 ;	assignBit
-      0005A0 D2 91            [12] 1432 	setb	_P1_1
-                                   1433 ;	Receiver.c:283: main_out1=0;
+      0005A4 D2 92            [12] 1432 	setb	_P1_2
+                                   1433 ;	Receiver.c:280: manual_up_key=1;
                                    1434 ;	assignBit
-      0005A2 C2 B6            [12] 1435 	clr	_P3_6
-                                   1436 ;	Receiver.c:284: main_out2=0;
+      0005A6 D2 90            [12] 1435 	setb	_P1_0
+                                   1436 ;	Receiver.c:281: manual_down_key=1;
                                    1437 ;	assignBit
-      0005A4 C2 B7            [12] 1438 	clr	_P3_7
-                                   1439 ;	Receiver.c:285: pwr_out=0;
+      0005A8 D2 91            [12] 1438 	setb	_P1_1
+                                   1439 ;	Receiver.c:283: main_out1=0;
                                    1440 ;	assignBit
-      0005A6 C2 87            [12] 1441 	clr	_P0_7
-                                   1442 ;	Receiver.c:286: rst_out=0;
+      0005AA C2 B6            [12] 1441 	clr	_P3_6
+                                   1442 ;	Receiver.c:284: main_out2=0;
                                    1443 ;	assignBit
-      0005A8 C2 96            [12] 1444 	clr	_P1_6
-                                   1445 ;	Receiver.c:287: dim_out=0;
+      0005AC C2 B7            [12] 1444 	clr	_P3_7
+                                   1445 ;	Receiver.c:285: pwr_out=0;
                                    1446 ;	assignBit
-      0005AA C2 82            [12] 1447 	clr	_P0_2
-                                   1448 ;	Receiver.c:288: pwr_led=0;
+      0005AE C2 87            [12] 1447 	clr	_P0_7
+                                   1448 ;	Receiver.c:286: rst_out=0;
                                    1449 ;	assignBit
-      0005AC C2 A0            [12] 1450 	clr	_P2_0
-                                   1451 ;	Receiver.c:289: auto_led=0;
+      0005B0 C2 96            [12] 1450 	clr	_P1_6
+                                   1451 ;	Receiver.c:287: dim_out=0;
                                    1452 ;	assignBit
-      0005AE C2 A1            [12] 1453 	clr	_P2_1
-                                   1454 ;	Receiver.c:290: ac_led_up=0;
+      0005B2 C2 82            [12] 1453 	clr	_P0_2
+                                   1454 ;	Receiver.c:288: pwr_led=0;
                                    1455 ;	assignBit
-      0005B0 C2 A2            [12] 1456 	clr	_P2_2
-                                   1457 ;	Receiver.c:291: ac_led_down=0;
+      0005B4 C2 A0            [12] 1456 	clr	_P2_0
+                                   1457 ;	Receiver.c:289: auto_led=0;
                                    1458 ;	assignBit
-      0005B2 C2 A3            [12] 1459 	clr	_P2_3
-                                   1460 ;	Receiver.c:292: up_led=0;
+      0005B6 C2 A1            [12] 1459 	clr	_P2_1
+                                   1460 ;	Receiver.c:290: ac_led_up=0;
                                    1461 ;	assignBit
-      0005B4 C2 A7            [12] 1462 	clr	_P2_7
-                                   1463 ;	Receiver.c:293: down_led=0;
+      0005B8 C2 A2            [12] 1462 	clr	_P2_2
+                                   1463 ;	Receiver.c:291: ac_led_down=0;
                                    1464 ;	assignBit
-      0005B6 C2 A4            [12] 1465 	clr	_P2_4
-                                   1466 ;	Receiver.c:295: main_out1=1;
+      0005BA C2 A3            [12] 1465 	clr	_P2_3
+                                   1466 ;	Receiver.c:292: up_led=0;
                                    1467 ;	assignBit
-      0005B8 D2 B6            [12] 1468 	setb	_P3_6
-                                   1469 ;	Receiver.c:296: main_out2=1;
+      0005BC C2 A7            [12] 1468 	clr	_P2_7
+                                   1469 ;	Receiver.c:293: down_led=0;
                                    1470 ;	assignBit
-      0005BA D2 B7            [12] 1471 	setb	_P3_7
-                                   1472 ;	Receiver.c:297: pwr_led=1;
+      0005BE C2 A4            [12] 1471 	clr	_P2_4
+                                   1472 ;	Receiver.c:295: main_out1=1;
                                    1473 ;	assignBit
-      0005BC D2 A0            [12] 1474 	setb	_P2_0
-                                   1475 ;	Receiver.c:298: auto_led=0;
+      0005C0 D2 B6            [12] 1474 	setb	_P3_6
+                                   1475 ;	Receiver.c:296: main_out2=1;
                                    1476 ;	assignBit
-      0005BE C2 A1            [12] 1477 	clr	_P2_1
-                                   1478 ;	Receiver.c:299: ac_led_up=1;ac_led_down=0;
+      0005C2 D2 B7            [12] 1477 	setb	_P3_7
+                                   1478 ;	Receiver.c:297: pwr_led=1;
                                    1479 ;	assignBit
-      0005C0 D2 A2            [12] 1480 	setb	_P2_2
-                                   1481 ;	assignBit
-      0005C2 C2 A3            [12] 1482 	clr	_P2_3
-                                   1483 ;	Receiver.c:300: auto_flag = 0;
-                                   1484 ;	assignBit
-      0005C4 C2 00            [12] 1485 	clr	_auto_flag
-                                   1486 ;	Receiver.c:301: dim_out=1;
+      0005C4 D2 A0            [12] 1480 	setb	_P2_0
+                                   1481 ;	Receiver.c:298: auto_led=0;
+                                   1482 ;	assignBit
+      0005C6 C2 A1            [12] 1483 	clr	_P2_1
+                                   1484 ;	Receiver.c:299: ac_led_up=1;ac_led_down=0;
+                                   1485 ;	assignBit
+      0005C8 D2 A2            [12] 1486 	setb	_P2_2
                                    1487 ;	assignBit
-      0005C6 D2 82            [12] 1488 	setb	_P0_2
-                                   1489 ;	Receiver.c:302: up_led_main =0;center_led =0;down_led_main=1;
+      0005CA C2 A3            [12] 1488 	clr	_P2_3
+                                   1489 ;	Receiver.c:300: auto_flag = 0;
                                    1490 ;	assignBit
-      0005C8 C2 81            [12] 1491 	clr	_P0_1
-                                   1492 ;	assignBit
-      0005CA C2 80            [12] 1493 	clr	_P0_0
-                                   1494 ;	assignBit
-      0005CC D2 A6            [12] 1495 	setb	_P2_6
-                                   1496 ;	Receiver.c:303: delay();delay();
-      0005CE 12 05 F3         [24] 1497 	lcall	_delay
-      0005D1 12 05 F3         [24] 1498 	lcall	_delay
-                                   1499 ;	Receiver.c:304: up_led_main =0;center_led =1;down_led_main=0;
+      0005CC C2 00            [12] 1491 	clr	_auto_flag
+                                   1492 ;	Receiver.c:301: dim_out=1;
+                                   1493 ;	assignBit
+      0005CE D2 82            [12] 1494 	setb	_P0_2
+                                   1495 ;	Receiver.c:302: up_led_main =0;center_led =0;down_led_main=1;
+                                   1496 ;	assignBit
+      0005D0 C2 81            [12] 1497 	clr	_P0_1
+                                   1498 ;	assignBit
+      0005D2 C2 80            [12] 1499 	clr	_P0_0
                                    1500 ;	assignBit
-      0005D4 C2 81            [12] 1501 	clr	_P0_1
-                                   1502 ;	assignBit
-      0005D6 D2 80            [12] 1503 	setb	_P0_0
-                                   1504 ;	assignBit
-      0005D8 C2 A6            [12] 1505 	clr	_P2_6
-                                   1506 ;	Receiver.c:305: delay();delay();
-      0005DA 12 05 F3         [24] 1507 	lcall	_delay
-      0005DD 12 05 F3         [24] 1508 	lcall	_delay
-                                   1509 ;	Receiver.c:306: up_led_main =1;center_led =0;down_led_main=0;
+      0005D4 D2 A6            [12] 1501 	setb	_P2_6
+                                   1502 ;	Receiver.c:303: delay();delay();
+      0005D6 12 05 FB         [24] 1503 	lcall	_delay
+      0005D9 12 05 FB         [24] 1504 	lcall	_delay
+                                   1505 ;	Receiver.c:304: up_led_main =0;center_led =1;down_led_main=0;
+                                   1506 ;	assignBit
+      0005DC C2 81            [12] 1507 	clr	_P0_1
+                                   1508 ;	assignBit
+      0005DE D2 80            [12] 1509 	setb	_P0_0
                                    1510 ;	assignBit
-      0005E0 D2 81            [12] 1511 	setb	_P0_1
-                                   1512 ;	assignBit
-      0005E2 C2 80            [12] 1513 	clr	_P0_0
-                                   1514 ;	assignBit
-      0005E4 C2 A6            [12] 1515 	clr	_P2_6
-                                   1516 ;	Receiver.c:307: delay();delay();
-      0005E6 12 05 F3         [24] 1517 	lcall	_delay
-      0005E9 12 05 F3         [24] 1518 	lcall	_delay
-                                   1519 ;	Receiver.c:308: up_led_main =0;center_led =0;down_led_main=0;
+      0005E0 C2 A6            [12] 1511 	clr	_P2_6
+                                   1512 ;	Receiver.c:305: delay();delay();
+      0005E2 12 05 FB         [24] 1513 	lcall	_delay
+      0005E5 12 05 FB         [24] 1514 	lcall	_delay
+                                   1515 ;	Receiver.c:306: up_led_main =1;center_led =0;down_led_main=0;
+                                   1516 ;	assignBit
+      0005E8 D2 81            [12] 1517 	setb	_P0_1
+                                   1518 ;	assignBit
+      0005EA C2 80            [12] 1519 	clr	_P0_0
                                    1520 ;	assignBit
-      0005EC C2 81            [12] 1521 	clr	_P0_1
-                                   1522 ;	assignBit
-      0005EE C2 80            [12] 1523 	clr	_P0_0
-                                   1524 ;	assignBit
-      0005F0 C2 A6            [12] 1525 	clr	_P2_6
-                                   1526 ;	Receiver.c:309: }
-      0005F2 22               [24] 1527 	ret
-                                   1528 ;------------------------------------------------------------
-                                   1529 ;Allocation info for local variables in function 'delay'
-                                   1530 ;------------------------------------------------------------
-                                   1531 ;i                         Allocated to registers r6 r7 
-                                   1532 ;j                         Allocated to registers r4 r5 
-                                   1533 ;------------------------------------------------------------
-                                   1534 ;	Receiver.c:311: void delay()
-                                   1535 ;	-----------------------------------------
-                                   1536 ;	 function delay
-                                   1537 ;	-----------------------------------------
-      0005F3                       1538 _delay:
-                                   1539 ;	Receiver.c:314: for(i=0;i<0x33;i++)
-      0005F3 7E 00            [12] 1540 	mov	r6,#0x00
-      0005F5 7F 00            [12] 1541 	mov	r7,#0x00
-      0005F7                       1542 00106$:
-                                   1543 ;	Receiver.c:315: for(j=0;j<0xff;j++);
-      0005F7 7C FF            [12] 1544 	mov	r4,#0xff
-      0005F9 7D 00            [12] 1545 	mov	r5,#0x00
-      0005FB                       1546 00105$:
-      0005FB EC               [12] 1547 	mov	a,r4
-      0005FC 24 FF            [12] 1548 	add	a,#0xff
-      0005FE FA               [12] 1549 	mov	r2,a
-      0005FF ED               [12] 1550 	mov	a,r5
-      000600 34 FF            [12] 1551 	addc	a,#0xff
-      000602 FB               [12] 1552 	mov	r3,a
-      000603 8A 04            [24] 1553 	mov	ar4,r2
-      000605 8B 05            [24] 1554 	mov	ar5,r3
-      000607 EA               [12] 1555 	mov	a,r2
-      000608 4B               [12] 1556 	orl	a,r3
-      000609 70 F0            [24] 1557 	jnz	00105$
-                                   1558 ;	Receiver.c:314: for(i=0;i<0x33;i++)
-      00060B 0E               [12] 1559 	inc	r6
-      00060C BE 00 01         [24] 1560 	cjne	r6,#0x00,00124$
-      00060F 0F               [12] 1561 	inc	r7
-      000610                       1562 00124$:
-      000610 C3               [12] 1563 	clr	c
-      000611 EE               [12] 1564 	mov	a,r6
-      000612 94 33            [12] 1565 	subb	a,#0x33
-      000614 EF               [12] 1566 	mov	a,r7
-      000615 64 80            [12] 1567 	xrl	a,#0x80
-      000617 94 80            [12] 1568 	subb	a,#0x80
-      000619 40 DC            [24] 1569 	jc	00106$
-                                   1570 ;	Receiver.c:316: }
-      00061B 22               [24] 1571 	ret
-                                   1572 ;------------------------------------------------------------
-                                   1573 ;Allocation info for local variables in function 'UART_Init'
-                                   1574 ;------------------------------------------------------------
-                                   1575 ;	Receiver.c:319: void UART_Init()
-                                   1576 ;	-----------------------------------------
-                                   1577 ;	 function UART_Init
-                                   1578 ;	-----------------------------------------
-      00061C                       1579 _UART_Init:
-                                   1580 ;	Receiver.c:321: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
-      00061C 75 89 20         [24] 1581 	mov	_TMOD,#0x20
-                                   1582 ;	Receiver.c:322: TH1 = 0xFD;		/* Load value for 9600 baud rate */
-      00061F 75 8D FD         [24] 1583 	mov	_TH1,#0xfd
-                                   1584 ;	Receiver.c:323: SCON = 0x50;		/* Mode 1, reception enable */
-      000622 75 98 50         [24] 1585 	mov	_SCON,#0x50
-                                   1586 ;	Receiver.c:324: TR1 = 1;		/* Start timer 1 */
-                                   1587 ;	assignBit
-      000625 D2 8E            [12] 1588 	setb	_TR1
-                                   1589 ;	Receiver.c:325: }
-      000627 22               [24] 1590 	ret
-                                   1591 ;------------------------------------------------------------
-                                   1592 ;Allocation info for local variables in function 'Transmit_data'
-                                   1593 ;------------------------------------------------------------
-                                   1594 ;tx_data                   Allocated to registers 
-                                   1595 ;------------------------------------------------------------
-                                   1596 ;	Receiver.c:328: void Transmit_data(char tx_data)
-                                   1597 ;	-----------------------------------------
-                                   1598 ;	 function Transmit_data
-                                   1599 ;	-----------------------------------------
-      000628                       1600 _Transmit_data:
-      000628 85 82 99         [24] 1601 	mov	_SBUF,dpl
-                                   1602 ;	Receiver.c:331: while (TI==0);		/* Wait until stop bit transmit */
-      00062B                       1603 00101$:
-      00062B 30 99 FD         [24] 1604 	jnb	_TI,00101$
-                                   1605 ;	Receiver.c:332: }
-      00062E 22               [24] 1606 	ret
-                                   1607 ;------------------------------------------------------------
-                                   1608 ;Allocation info for local variables in function 'handshake'
-                                   1609 ;------------------------------------------------------------
-                                   1610 ;	Receiver.c:335: void handshake()
-                                   1611 ;	-----------------------------------------
-                                   1612 ;	 function handshake
-                                   1613 ;	-----------------------------------------
-      00062F                       1614 _handshake:
-                                   1615 ;	Receiver.c:337: while(data_r!='y')
-      00062F                       1616 00101$:
-      00062F 74 79            [12] 1617 	mov	a,#0x79
-      000631 B5 09 02         [24] 1618 	cjne	a,_data_r,00114$
-      000634 80 19            [24] 1619 	sjmp	00103$
-      000636                       1620 00114$:
-                                   1621 ;	Receiver.c:339: state=20;
-      000636 75 1A 14         [24] 1622 	mov	_state,#0x14
-      000639 75 1B 00         [24] 1623 	mov	(_state + 1),#0x00
-                                   1624 ;	Receiver.c:340: delay();
-      00063C 12 05 F3         [24] 1625 	lcall	_delay
-                                   1626 ;	Receiver.c:341: delay();
-      00063F 12 05 F3         [24] 1627 	lcall	_delay
-                                   1628 ;	Receiver.c:342: Transmit_data('x');
-      000642 75 82 78         [24] 1629 	mov	dpl,#0x78
-      000645 12 06 28         [24] 1630 	lcall	_Transmit_data
-                                   1631 ;	Receiver.c:343: data_r=SBUF;
-      000648 85 99 09         [24] 1632 	mov	_data_r,_SBUF
-                                   1633 ;	Receiver.c:344: RI = 0;
-                                   1634 ;	assignBit
-      00064B C2 98            [12] 1635 	clr	_RI
-      00064D 80 E0            [24] 1636 	sjmp	00101$
-      00064F                       1637 00103$:
-                                   1638 ;	Receiver.c:346: delay();
-      00064F 12 05 F3         [24] 1639 	lcall	_delay
-                                   1640 ;	Receiver.c:347: Transmit_data('m');
-      000652 75 82 6D         [24] 1641 	mov	dpl,#0x6d
-                                   1642 ;	Receiver.c:348: }
-      000655 02 06 28         [24] 1643 	ljmp	_Transmit_data
-                                   1644 ;------------------------------------------------------------
-                                   1645 ;Allocation info for local variables in function 'check_data'
-                                   1646 ;------------------------------------------------------------
-                                   1647 ;	Receiver.c:350: void check_data()
-                                   1648 ;	-----------------------------------------
-                                   1649 ;	 function check_data
-                                   1650 ;	-----------------------------------------
-      000658                       1651 _check_data:
-                                   1652 ;	Receiver.c:352: switch(data_r)
-      000658 AF 09            [24] 1653 	mov	r7,_data_r
-      00065A BF 61 02         [24] 1654 	cjne	r7,#0x61,00226$
-      00065D 80 44            [24] 1655 	sjmp	00102$
-      00065F                       1656 00226$:
-      00065F BF 62 02         [24] 1657 	cjne	r7,#0x62,00227$
-      000662 80 56            [24] 1658 	sjmp	00105$
-      000664                       1659 00227$:
-      000664 BF 63 02         [24] 1660 	cjne	r7,#0x63,00228$
-      000667 80 68            [24] 1661 	sjmp	00108$
-      000669                       1662 00228$:
-      000669 BF 64 02         [24] 1663 	cjne	r7,#0x64,00229$
-      00066C 80 7A            [24] 1664 	sjmp	00111$
-      00066E                       1665 00229$:
-      00066E BF 65 03         [24] 1666 	cjne	r7,#0x65,00230$
-      000671 02 06 FF         [24] 1667 	ljmp	00114$
-      000674                       1668 00230$:
-      000674 BF 66 03         [24] 1669 	cjne	r7,#0x66,00231$
-      000677 02 07 16         [24] 1670 	ljmp	00117$
-      00067A                       1671 00231$:
-      00067A BF 67 03         [24] 1672 	cjne	r7,#0x67,00232$
-      00067D 02 07 2D         [24] 1673 	ljmp	00120$
-      000680                       1674 00232$:
-      000680 BF 6C 02         [24] 1675 	cjne	r7,#0x6c,00233$
-      000683 80 0F            [24] 1676 	sjmp	00101$
-      000685                       1677 00233$:
-      000685 BF 6E 03         [24] 1678 	cjne	r7,#0x6e,00234$
-      000688 02 07 40         [24] 1679 	ljmp	00123$
-      00068B                       1680 00234$:
-      00068B BF 75 03         [24] 1681 	cjne	r7,#0x75,00235$
-      00068E 02 07 53         [24] 1682 	ljmp	00126$
-      000691                       1683 00235$:
-      000691 02 07 66         [24] 1684 	ljmp	00129$
-                                   1685 ;	Receiver.c:354: case 'l':time_delay=30;state = 0;auto_led=0;break;
-      000694                       1686 00101$:
-      000694 75 10 1E         [24] 1687 	mov	_time_delay,#0x1e
-      000697 E4               [12] 1688 	clr	a
-      000698 F5 11            [12] 1689 	mov	(_time_delay + 1),a
-      00069A F5 1A            [12] 1690 	mov	_state,a
-      00069C F5 1B            [12] 1691 	mov	(_state + 1),a
-                                   1692 ;	assignBit
-      00069E C2 A1            [12] 1693 	clr	_P2_1
-      0006A0 02 07 AC         [24] 1694 	ljmp	00133$
-                                   1695 ;	Receiver.c:356: case 'a':time_delay=20;state = 1;	
-      0006A3                       1696 00102$:
-      0006A3 75 10 14         [24] 1697 	mov	_time_delay,#0x14
-      0006A6 75 11 00         [24] 1698 	mov	(_time_delay + 1),#0x00
-      0006A9 75 1A 01         [24] 1699 	mov	_state,#0x01
-      0006AC 75 1B 00         [24] 1700 	mov	(_state + 1),#0x00
-                                   1701 ;	Receiver.c:357: if(auto_flag)auto_led=1;break;
-      0006AF 20 00 03         [24] 1702 	jb	_auto_flag,00236$
-      0006B2 02 07 AC         [24] 1703 	ljmp	00133$
-      0006B5                       1704 00236$:
-                                   1705 ;	assignBit
-      0006B5 D2 A1            [12] 1706 	setb	_P2_1
-      0006B7 02 07 AC         [24] 1707 	ljmp	00133$
-                                   1708 ;	Receiver.c:359: case 'b':time_delay=10;state = 2;
-      0006BA                       1709 00105$:
-      0006BA 75 10 0A         [24] 1710 	mov	_time_delay,#0x0a
-      0006BD 75 11 00         [24] 1711 	mov	(_time_delay + 1),#0x00
-      0006C0 75 1A 02         [24] 1712 	mov	_state,#0x02
-      0006C3 75 1B 00         [24] 1713 	mov	(_state + 1),#0x00
-                                   1714 ;	Receiver.c:360: if(auto_flag)auto_led=1;break;
-      0006C6 20 00 03         [24] 1715 	jb	_auto_flag,00237$
-      0006C9 02 07 AC         [24] 1716 	ljmp	00133$
-      0006CC                       1717 00237$:
-                                   1718 ;	assignBit
-      0006CC D2 A1            [12] 1719 	setb	_P2_1
-      0006CE 02 07 AC         [24] 1720 	ljmp	00133$
-                                   1721 ;	Receiver.c:362: case 'c':time_delay=7 ;state = 3;
-      0006D1                       1722 00108$:
-      0006D1 75 10 07         [24] 1723 	mov	_time_delay,#0x07
-      0006D4 75 11 00         [24] 1724 	mov	(_time_delay + 1),#0x00
-      0006D7 75 1A 03         [24] 1725 	mov	_state,#0x03
-      0006DA 75 1B 00         [24] 1726 	mov	(_state + 1),#0x00
-                                   1727 ;	Receiver.c:363: if(auto_flag)auto_led=1;break;
-      0006DD 20 00 03         [24] 1728 	jb	_auto_flag,00238$
-      0006E0 02 07 AC         [24] 1729 	ljmp	00133$
-      0006E3                       1730 00238$:
-                                   1731 ;	assignBit
-      0006E3 D2 A1            [12] 1732 	setb	_P2_1
-      0006E5 02 07 AC         [24] 1733 	ljmp	00133$
-                                   1734 ;	Receiver.c:365: case 'd':time_delay=7 ;state = 7;
-      0006E8                       1735 00111$:
-      0006E8 75 10 07         [24] 1736 	mov	_time_delay,#0x07
-      0006EB 75 11 00         [24] 1737 	mov	(_time_delay + 1),#0x00
-      0006EE 75 1A 07         [24] 1738 	mov	_state,#0x07
-      0006F1 75 1B 00         [24] 1739 	mov	(_state + 1),#0x00
-                                   1740 ;	Receiver.c:366: if(auto_flag)auto_led=1;break;
-      0006F4 20 00 03         [24] 1741 	jb	_auto_flag,00239$
-      0006F7 02 07 AC         [24] 1742 	ljmp	00133$
-      0006FA                       1743 00239$:
-                                   1744 ;	assignBit
-      0006FA D2 A1            [12] 1745 	setb	_P2_1
-      0006FC 02 07 AC         [24] 1746 	ljmp	00133$
-                                   1747 ;	Receiver.c:368: case 'e':time_delay=7 ;state = 4;
-      0006FF                       1748 00114$:
-      0006FF 75 10 07         [24] 1749 	mov	_time_delay,#0x07
-      000702 75 11 00         [24] 1750 	mov	(_time_delay + 1),#0x00
-      000705 75 1A 04         [24] 1751 	mov	_state,#0x04
-      000708 75 1B 00         [24] 1752 	mov	(_state + 1),#0x00
-                                   1753 ;	Receiver.c:369: if(auto_flag)auto_led=1;break;
-      00070B 20 00 03         [24] 1754 	jb	_auto_flag,00240$
-      00070E 02 07 AC         [24] 1755 	ljmp	00133$
-      000711                       1756 00240$:
-                                   1757 ;	assignBit
-      000711 D2 A1            [12] 1758 	setb	_P2_1
-      000713 02 07 AC         [24] 1759 	ljmp	00133$
-                                   1760 ;	Receiver.c:371: case 'f':time_delay=10;state = 5;
-      000716                       1761 00117$:
-      000716 75 10 0A         [24] 1762 	mov	_time_delay,#0x0a
+      0005EC C2 A6            [12] 1521 	clr	_P2_6
+                                   1522 ;	Receiver.c:307: delay();delay();
+      0005EE 12 05 FB         [24] 1523 	lcall	_delay
+      0005F1 12 05 FB         [24] 1524 	lcall	_delay
+                                   1525 ;	Receiver.c:308: up_led_main =0;center_led =0;down_led_main=0;
+                                   1526 ;	assignBit
+      0005F4 C2 81            [12] 1527 	clr	_P0_1
+                                   1528 ;	assignBit
+      0005F6 C2 80            [12] 1529 	clr	_P0_0
+                                   1530 ;	assignBit
+      0005F8 C2 A6            [12] 1531 	clr	_P2_6
+                                   1532 ;	Receiver.c:309: }
+      0005FA 22               [24] 1533 	ret
+                                   1534 ;------------------------------------------------------------
+                                   1535 ;Allocation info for local variables in function 'delay'
+                                   1536 ;------------------------------------------------------------
+                                   1537 ;i                         Allocated to registers r6 r7 
+                                   1538 ;j                         Allocated to registers r4 r5 
+                                   1539 ;------------------------------------------------------------
+                                   1540 ;	Receiver.c:311: void delay()
+                                   1541 ;	-----------------------------------------
+                                   1542 ;	 function delay
+                                   1543 ;	-----------------------------------------
+      0005FB                       1544 _delay:
+                                   1545 ;	Receiver.c:314: for(i=0;i<0x33;i++)
+      0005FB 7E 00            [12] 1546 	mov	r6,#0x00
+      0005FD 7F 00            [12] 1547 	mov	r7,#0x00
+      0005FF                       1548 00106$:
+                                   1549 ;	Receiver.c:315: for(j=0;j<0xff;j++);
+      0005FF 7C FF            [12] 1550 	mov	r4,#0xff
+      000601 7D 00            [12] 1551 	mov	r5,#0x00
+      000603                       1552 00105$:
+      000603 EC               [12] 1553 	mov	a,r4
+      000604 24 FF            [12] 1554 	add	a,#0xff
+      000606 FA               [12] 1555 	mov	r2,a
+      000607 ED               [12] 1556 	mov	a,r5
+      000608 34 FF            [12] 1557 	addc	a,#0xff
+      00060A FB               [12] 1558 	mov	r3,a
+      00060B 8A 04            [24] 1559 	mov	ar4,r2
+      00060D 8B 05            [24] 1560 	mov	ar5,r3
+      00060F EA               [12] 1561 	mov	a,r2
+      000610 4B               [12] 1562 	orl	a,r3
+      000611 70 F0            [24] 1563 	jnz	00105$
+                                   1564 ;	Receiver.c:314: for(i=0;i<0x33;i++)
+      000613 0E               [12] 1565 	inc	r6
+      000614 BE 00 01         [24] 1566 	cjne	r6,#0x00,00124$
+      000617 0F               [12] 1567 	inc	r7
+      000618                       1568 00124$:
+      000618 C3               [12] 1569 	clr	c
+      000619 EE               [12] 1570 	mov	a,r6
+      00061A 94 33            [12] 1571 	subb	a,#0x33
+      00061C EF               [12] 1572 	mov	a,r7
+      00061D 64 80            [12] 1573 	xrl	a,#0x80
+      00061F 94 80            [12] 1574 	subb	a,#0x80
+      000621 40 DC            [24] 1575 	jc	00106$
+                                   1576 ;	Receiver.c:316: }
+      000623 22               [24] 1577 	ret
+                                   1578 ;------------------------------------------------------------
+                                   1579 ;Allocation info for local variables in function 'UART_Init'
+                                   1580 ;------------------------------------------------------------
+                                   1581 ;	Receiver.c:319: void UART_Init()
+                                   1582 ;	-----------------------------------------
+                                   1583 ;	 function UART_Init
+                                   1584 ;	-----------------------------------------
+      000624                       1585 _UART_Init:
+                                   1586 ;	Receiver.c:321: TMOD = 0x20;		/* Timer 1, 8-bit auto reload mode */
+      000624 75 89 20         [24] 1587 	mov	_TMOD,#0x20
+                                   1588 ;	Receiver.c:322: TH1 = 0xFD;		/* Load value for 9600 baud rate */
+      000627 75 8D FD         [24] 1589 	mov	_TH1,#0xfd
+                                   1590 ;	Receiver.c:323: SCON = 0x50;		/* Mode 1, reception enable */
+      00062A 75 98 50         [24] 1591 	mov	_SCON,#0x50
+                                   1592 ;	Receiver.c:324: TR1 = 1;		/* Start timer 1 */
+                                   1593 ;	assignBit
+      00062D D2 8E            [12] 1594 	setb	_TR1
+                                   1595 ;	Receiver.c:325: }
+      00062F 22               [24] 1596 	ret
+                                   1597 ;------------------------------------------------------------
+                                   1598 ;Allocation info for local variables in function 'Transmit_data'
+                                   1599 ;------------------------------------------------------------
+                                   1600 ;tx_data                   Allocated to registers 
+                                   1601 ;------------------------------------------------------------
+                                   1602 ;	Receiver.c:328: void Transmit_data(char tx_data)
+                                   1603 ;	-----------------------------------------
+                                   1604 ;	 function Transmit_data
+                                   1605 ;	-----------------------------------------
+      000630                       1606 _Transmit_data:
+      000630 85 82 99         [24] 1607 	mov	_SBUF,dpl
+                                   1608 ;	Receiver.c:331: while (TI==0);		/* Wait until stop bit transmit */
+      000633                       1609 00101$:
+      000633 30 99 FD         [24] 1610 	jnb	_TI,00101$
+                                   1611 ;	Receiver.c:332: }
+      000636 22               [24] 1612 	ret
+                                   1613 ;------------------------------------------------------------
+                                   1614 ;Allocation info for local variables in function 'handshake'
+                                   1615 ;------------------------------------------------------------
+                                   1616 ;	Receiver.c:335: void handshake()
+                                   1617 ;	-----------------------------------------
+                                   1618 ;	 function handshake
+                                   1619 ;	-----------------------------------------
+      000637                       1620 _handshake:
+                                   1621 ;	Receiver.c:337: while(data_r!='y')
+      000637                       1622 00101$:
+      000637 74 79            [12] 1623 	mov	a,#0x79
+      000639 B5 09 02         [24] 1624 	cjne	a,_data_r,00114$
+      00063C 80 19            [24] 1625 	sjmp	00103$
+      00063E                       1626 00114$:
+                                   1627 ;	Receiver.c:339: state=20;
+      00063E 75 1A 14         [24] 1628 	mov	_state,#0x14
+      000641 75 1B 00         [24] 1629 	mov	(_state + 1),#0x00
+                                   1630 ;	Receiver.c:340: delay();
+      000644 12 05 FB         [24] 1631 	lcall	_delay
+                                   1632 ;	Receiver.c:341: delay();
+      000647 12 05 FB         [24] 1633 	lcall	_delay
+                                   1634 ;	Receiver.c:342: Transmit_data('x');
+      00064A 75 82 78         [24] 1635 	mov	dpl,#0x78
+      00064D 12 06 30         [24] 1636 	lcall	_Transmit_data
+                                   1637 ;	Receiver.c:343: data_r=SBUF;
+      000650 85 99 09         [24] 1638 	mov	_data_r,_SBUF
+                                   1639 ;	Receiver.c:344: RI = 0;
+                                   1640 ;	assignBit
+      000653 C2 98            [12] 1641 	clr	_RI
+      000655 80 E0            [24] 1642 	sjmp	00101$
+      000657                       1643 00103$:
+                                   1644 ;	Receiver.c:346: delay();
+      000657 12 05 FB         [24] 1645 	lcall	_delay
+                                   1646 ;	Receiver.c:347: Transmit_data('m');
+      00065A 75 82 6D         [24] 1647 	mov	dpl,#0x6d
+                                   1648 ;	Receiver.c:348: }
+      00065D 02 06 30         [24] 1649 	ljmp	_Transmit_data
+                                   1650 ;------------------------------------------------------------
+                                   1651 ;Allocation info for local variables in function 'check_data'
+                                   1652 ;------------------------------------------------------------
+                                   1653 ;	Receiver.c:350: void check_data()
+                                   1654 ;	-----------------------------------------
+                                   1655 ;	 function check_data
+                                   1656 ;	-----------------------------------------
+      000660                       1657 _check_data:
+                                   1658 ;	Receiver.c:352: switch(data_r)
+      000660 AF 09            [24] 1659 	mov	r7,_data_r
+      000662 BF 61 02         [24] 1660 	cjne	r7,#0x61,00177$
+      000665 80 48            [24] 1661 	sjmp	00102$
+      000667                       1662 00177$:
+      000667 BF 62 02         [24] 1663 	cjne	r7,#0x62,00178$
+      00066A 80 52            [24] 1664 	sjmp	00103$
+      00066C                       1665 00178$:
+      00066C BF 63 02         [24] 1666 	cjne	r7,#0x63,00179$
+      00066F 80 5C            [24] 1667 	sjmp	00104$
+      000671                       1668 00179$:
+      000671 BF 64 02         [24] 1669 	cjne	r7,#0x64,00180$
+      000674 80 66            [24] 1670 	sjmp	00105$
+      000676                       1671 00180$:
+      000676 BF 65 02         [24] 1672 	cjne	r7,#0x65,00181$
+      000679 80 70            [24] 1673 	sjmp	00106$
+      00067B                       1674 00181$:
+      00067B BF 66 02         [24] 1675 	cjne	r7,#0x66,00182$
+      00067E 80 7A            [24] 1676 	sjmp	00107$
+      000680                       1677 00182$:
+      000680 BF 67 03         [24] 1678 	cjne	r7,#0x67,00183$
+      000683 02 07 08         [24] 1679 	ljmp	00108$
+      000686                       1680 00183$:
+      000686 BF 6C 02         [24] 1681 	cjne	r7,#0x6c,00184$
+      000689 80 15            [24] 1682 	sjmp	00101$
+      00068B                       1683 00184$:
+      00068B BF 6E 03         [24] 1684 	cjne	r7,#0x6e,00185$
+      00068E 02 07 16         [24] 1685 	ljmp	00109$
+      000691                       1686 00185$:
+      000691 BF 71 03         [24] 1687 	cjne	r7,#0x71,00186$
+      000694 02 07 32         [24] 1688 	ljmp	00111$
+      000697                       1689 00186$:
+      000697 BF 75 03         [24] 1690 	cjne	r7,#0x75,00187$
+      00069A 02 07 24         [24] 1691 	ljmp	00110$
+      00069D                       1692 00187$:
+      00069D 02 07 71         [24] 1693 	ljmp	00116$
+                                   1694 ;	Receiver.c:354: case 'l':time_delay=30;state = 0;auto_led=0;break;
+      0006A0                       1695 00101$:
+      0006A0 75 10 1E         [24] 1696 	mov	_time_delay,#0x1e
+      0006A3 E4               [12] 1697 	clr	a
+      0006A4 F5 11            [12] 1698 	mov	(_time_delay + 1),a
+      0006A6 F5 1A            [12] 1699 	mov	_state,a
+      0006A8 F5 1B            [12] 1700 	mov	(_state + 1),a
+                                   1701 ;	assignBit
+      0006AA C2 A1            [12] 1702 	clr	_P2_1
+      0006AC 02 07 71         [24] 1703 	ljmp	00116$
+                                   1704 ;	Receiver.c:356: case 'a':time_delay=20;state = 1;	
+      0006AF                       1705 00102$:
+      0006AF 75 10 14         [24] 1706 	mov	_time_delay,#0x14
+      0006B2 75 11 00         [24] 1707 	mov	(_time_delay + 1),#0x00
+      0006B5 75 1A 01         [24] 1708 	mov	_state,#0x01
+      0006B8 75 1B 00         [24] 1709 	mov	(_state + 1),#0x00
+                                   1710 ;	Receiver.c:357: break;
+      0006BB 02 07 71         [24] 1711 	ljmp	00116$
+                                   1712 ;	Receiver.c:359: case 'b':time_delay=10;state = 2;
+      0006BE                       1713 00103$:
+      0006BE 75 10 0A         [24] 1714 	mov	_time_delay,#0x0a
+      0006C1 75 11 00         [24] 1715 	mov	(_time_delay + 1),#0x00
+      0006C4 75 1A 02         [24] 1716 	mov	_state,#0x02
+      0006C7 75 1B 00         [24] 1717 	mov	(_state + 1),#0x00
+                                   1718 ;	Receiver.c:360: break;
+      0006CA 02 07 71         [24] 1719 	ljmp	00116$
+                                   1720 ;	Receiver.c:362: case 'c':time_delay=7 ;state = 3;
+      0006CD                       1721 00104$:
+      0006CD 75 10 07         [24] 1722 	mov	_time_delay,#0x07
+      0006D0 75 11 00         [24] 1723 	mov	(_time_delay + 1),#0x00
+      0006D3 75 1A 03         [24] 1724 	mov	_state,#0x03
+      0006D6 75 1B 00         [24] 1725 	mov	(_state + 1),#0x00
+                                   1726 ;	Receiver.c:363: break;
+      0006D9 02 07 71         [24] 1727 	ljmp	00116$
+                                   1728 ;	Receiver.c:365: case 'd':time_delay=7 ;state = 7;
+      0006DC                       1729 00105$:
+      0006DC 75 10 07         [24] 1730 	mov	_time_delay,#0x07
+      0006DF 75 11 00         [24] 1731 	mov	(_time_delay + 1),#0x00
+      0006E2 75 1A 07         [24] 1732 	mov	_state,#0x07
+      0006E5 75 1B 00         [24] 1733 	mov	(_state + 1),#0x00
+                                   1734 ;	Receiver.c:366: break;
+      0006E8 02 07 71         [24] 1735 	ljmp	00116$
+                                   1736 ;	Receiver.c:368: case 'e':time_delay=7 ;state = 4;
+      0006EB                       1737 00106$:
+      0006EB 75 10 07         [24] 1738 	mov	_time_delay,#0x07
+      0006EE 75 11 00         [24] 1739 	mov	(_time_delay + 1),#0x00
+      0006F1 75 1A 04         [24] 1740 	mov	_state,#0x04
+      0006F4 75 1B 00         [24] 1741 	mov	(_state + 1),#0x00
+                                   1742 ;	Receiver.c:369: break;
+      0006F7 02 07 71         [24] 1743 	ljmp	00116$
+                                   1744 ;	Receiver.c:371: case 'f':time_delay=10;state = 5;
+      0006FA                       1745 00107$:
+      0006FA 75 10 0A         [24] 1746 	mov	_time_delay,#0x0a
+      0006FD 75 11 00         [24] 1747 	mov	(_time_delay + 1),#0x00
+      000700 75 1A 05         [24] 1748 	mov	_state,#0x05
+      000703 75 1B 00         [24] 1749 	mov	(_state + 1),#0x00
+                                   1750 ;	Receiver.c:372: break;
+                                   1751 ;	Receiver.c:374: case 'g':time_delay=20;state = 6;
+      000706 80 69            [24] 1752 	sjmp	00116$
+      000708                       1753 00108$:
+      000708 75 10 14         [24] 1754 	mov	_time_delay,#0x14
+      00070B 75 11 00         [24] 1755 	mov	(_time_delay + 1),#0x00
+      00070E 75 1A 06         [24] 1756 	mov	_state,#0x06
+      000711 75 1B 00         [24] 1757 	mov	(_state + 1),#0x00
+                                   1758 ;	Receiver.c:375: break;
+                                   1759 ;	Receiver.c:377: case 'n':time_delay=15;state = 8;
+      000714 80 5B            [24] 1760 	sjmp	00116$
+      000716                       1761 00109$:
+      000716 75 10 0F         [24] 1762 	mov	_time_delay,#0x0f
       000719 75 11 00         [24] 1763 	mov	(_time_delay + 1),#0x00
-      00071C 75 1A 05         [24] 1764 	mov	_state,#0x05
+      00071C 75 1A 08         [24] 1764 	mov	_state,#0x08
       00071F 75 1B 00         [24] 1765 	mov	(_state + 1),#0x00
-                                   1766 ;	Receiver.c:372: if(auto_flag)auto_led=1;break;
-      000722 20 00 03         [24] 1767 	jb	_auto_flag,00241$
-      000725 02 07 AC         [24] 1768 	ljmp	00133$
-      000728                       1769 00241$:
-                                   1770 ;	assignBit
-      000728 D2 A1            [12] 1771 	setb	_P2_1
-      00072A 02 07 AC         [24] 1772 	ljmp	00133$
-                                   1773 ;	Receiver.c:374: case 'g':time_delay=20;state = 6;
-      00072D                       1774 00120$:
-      00072D 75 10 14         [24] 1775 	mov	_time_delay,#0x14
-      000730 75 11 00         [24] 1776 	mov	(_time_delay + 1),#0x00
-      000733 75 1A 06         [24] 1777 	mov	_state,#0x06
-      000736 75 1B 00         [24] 1778 	mov	(_state + 1),#0x00
-                                   1779 ;	Receiver.c:375: if(auto_flag)auto_led=1;break;
-      000739 30 00 70         [24] 1780 	jnb	_auto_flag,00133$
-                                   1781 ;	assignBit
-      00073C D2 A1            [12] 1782 	setb	_P2_1
-                                   1783 ;	Receiver.c:377: case 'n':time_delay=15;state = 8;
-      00073E 80 6C            [24] 1784 	sjmp	00133$
-      000740                       1785 00123$:
-      000740 75 10 0F         [24] 1786 	mov	_time_delay,#0x0f
-      000743 75 11 00         [24] 1787 	mov	(_time_delay + 1),#0x00
-      000746 75 1A 08         [24] 1788 	mov	_state,#0x08
-      000749 75 1B 00         [24] 1789 	mov	(_state + 1),#0x00
-                                   1790 ;	Receiver.c:378: if(auto_flag)auto_led=1;break;
-      00074C 30 00 5D         [24] 1791 	jnb	_auto_flag,00133$
+                                   1766 ;	Receiver.c:378: break;
+                                   1767 ;	Receiver.c:380: case 'u':time_delay=15;state = 9;
+      000722 80 4D            [24] 1768 	sjmp	00116$
+      000724                       1769 00110$:
+      000724 75 10 0F         [24] 1770 	mov	_time_delay,#0x0f
+      000727 75 11 00         [24] 1771 	mov	(_time_delay + 1),#0x00
+      00072A 75 1A 09         [24] 1772 	mov	_state,#0x09
+      00072D 75 1B 00         [24] 1773 	mov	(_state + 1),#0x00
+                                   1774 ;	Receiver.c:381: break;
+                                   1775 ;	Receiver.c:383: case 'q' :ES=0;
+      000730 80 3F            [24] 1776 	sjmp	00116$
+      000732                       1777 00111$:
+                                   1778 ;	assignBit
+      000732 C2 AC            [12] 1779 	clr	_ES
+                                   1780 ;	Receiver.c:384: serialCount=0;
+      000734 E4               [12] 1781 	clr	a
+      000735 F5 0C            [12] 1782 	mov	_serialCount,a
+      000737 F5 0D            [12] 1783 	mov	(_serialCount + 1),a
+                                   1784 ;	Receiver.c:385: state=20;
+      000739 75 1A 14         [24] 1785 	mov	_state,#0x14
+                                   1786 ;	1-genFromRTrack replaced	mov	(_state + 1),#0x00
+      00073C F5 1B            [12] 1787 	mov	(_state + 1),a
+                                   1788 ;	Receiver.c:386: timerCount=0;
+      00073E F5 0A            [12] 1789 	mov	_timerCount,a
+      000740 F5 0B            [12] 1790 	mov	(_timerCount + 1),a
+                                   1791 ;	Receiver.c:387: P0_1 =0;
                                    1792 ;	assignBit
-      00074F D2 A1            [12] 1793 	setb	_P2_1
-                                   1794 ;	Receiver.c:380: case 'u':time_delay=15;state = 9;
-      000751 80 59            [24] 1795 	sjmp	00133$
-      000753                       1796 00126$:
-      000753 75 10 0F         [24] 1797 	mov	_time_delay,#0x0f
-      000756 75 11 00         [24] 1798 	mov	(_time_delay + 1),#0x00
-      000759 75 1A 09         [24] 1799 	mov	_state,#0x09
-      00075C 75 1B 00         [24] 1800 	mov	(_state + 1),#0x00
-                                   1801 ;	Receiver.c:381: if(auto_flag)auto_led=1;break;
-      00075F 30 00 4A         [24] 1802 	jnb	_auto_flag,00133$
-                                   1803 ;	assignBit
-      000762 D2 A1            [12] 1804 	setb	_P2_1
-                                   1805 ;	Receiver.c:383: default :ES=0;
-      000764 80 46            [24] 1806 	sjmp	00133$
-      000766                       1807 00129$:
-                                   1808 ;	assignBit
-      000766 C2 AC            [12] 1809 	clr	_ES
-                                   1810 ;	Receiver.c:384: serialCount=0;
-      000768 E4               [12] 1811 	clr	a
-      000769 F5 0C            [12] 1812 	mov	_serialCount,a
-      00076B F5 0D            [12] 1813 	mov	(_serialCount + 1),a
-                                   1814 ;	Receiver.c:385: state=20;
-      00076D 75 1A 14         [24] 1815 	mov	_state,#0x14
-                                   1816 ;	1-genFromRTrack replaced	mov	(_state + 1),#0x00
-      000770 F5 1B            [12] 1817 	mov	(_state + 1),a
-                                   1818 ;	Receiver.c:386: timerCount=0;
-      000772 F5 0A            [12] 1819 	mov	_timerCount,a
-      000774 F5 0B            [12] 1820 	mov	(_timerCount + 1),a
-                                   1821 ;	Receiver.c:387: P0_1 =0;
-                                   1822 ;	assignBit
-      000776 C2 81            [12] 1823 	clr	_P0_1
-                                   1824 ;	Receiver.c:388: P0_0 =0;
-                                   1825 ;	assignBit
-      000778 C2 80            [12] 1826 	clr	_P0_0
-                                   1827 ;	Receiver.c:389: P2_6=0;
-                                   1828 ;	assignBit
-      00077A C2 A6            [12] 1829 	clr	_P2_6
-                                   1830 ;	Receiver.c:390: up_led=0;
-                                   1831 ;	assignBit
-      00077C C2 A7            [12] 1832 	clr	_P2_7
-                                   1833 ;	Receiver.c:391: down_led=0;
-                                   1834 ;	assignBit
-      00077E C2 A4            [12] 1835 	clr	_P2_4
-                                   1836 ;	Receiver.c:393: Transmit_data('x');
-      000780 75 82 78         [24] 1837 	mov	dpl,#0x78
-      000783 12 06 28         [24] 1838 	lcall	_Transmit_data
-                                   1839 ;	Receiver.c:394: __asm nop __endasm;
-      000786 00               [12] 1840 	nop	
-                                   1841 ;	Receiver.c:395: __asm nop __endasm;
-      000787 00               [12] 1842 	nop	
-                                   1843 ;	Receiver.c:396: __asm nop __endasm;
-      000788 00               [12] 1844 	nop	
-                                   1845 ;	Receiver.c:397: __asm nop __endasm;
-      000789 00               [12] 1846 	nop	
-                                   1847 ;	Receiver.c:398: while(data_r!='y')
-      00078A                       1848 00130$:
-      00078A 74 79            [12] 1849 	mov	a,#0x79
-      00078C B5 09 02         [24] 1850 	cjne	a,_data_r,00245$
-      00078F 80 19            [24] 1851 	sjmp	00132$
-      000791                       1852 00245$:
-                                   1853 ;	Receiver.c:400: state=20;
-      000791 75 1A 14         [24] 1854 	mov	_state,#0x14
-      000794 75 1B 00         [24] 1855 	mov	(_state + 1),#0x00
-                                   1856 ;	Receiver.c:401: delay();
-      000797 12 05 F3         [24] 1857 	lcall	_delay
-                                   1858 ;	Receiver.c:402: delay();
-      00079A 12 05 F3         [24] 1859 	lcall	_delay
-                                   1860 ;	Receiver.c:403: Transmit_data('x');
-      00079D 75 82 78         [24] 1861 	mov	dpl,#0x78
-      0007A0 12 06 28         [24] 1862 	lcall	_Transmit_data
-                                   1863 ;	Receiver.c:404: data_r=SBUF;
-      0007A3 85 99 09         [24] 1864 	mov	_data_r,_SBUF
-                                   1865 ;	Receiver.c:405: RI = 0;
-                                   1866 ;	assignBit
-      0007A6 C2 98            [12] 1867 	clr	_RI
-      0007A8 80 E0            [24] 1868 	sjmp	00130$
-      0007AA                       1869 00132$:
-                                   1870 ;	Receiver.c:407: ES=1;
+      000742 C2 81            [12] 1793 	clr	_P0_1
+                                   1794 ;	Receiver.c:388: P0_0 =0;
+                                   1795 ;	assignBit
+      000744 C2 80            [12] 1796 	clr	_P0_0
+                                   1797 ;	Receiver.c:389: P2_6=0;
+                                   1798 ;	assignBit
+      000746 C2 A6            [12] 1799 	clr	_P2_6
+                                   1800 ;	Receiver.c:390: up_led=0;
+                                   1801 ;	assignBit
+      000748 C2 A7            [12] 1802 	clr	_P2_7
+                                   1803 ;	Receiver.c:391: down_led=0;
+                                   1804 ;	assignBit
+      00074A C2 A4            [12] 1805 	clr	_P2_4
+                                   1806 ;	Receiver.c:393: data_r=0;
+      00074C 75 09 00         [24] 1807 	mov	_data_r,#0x00
+                                   1808 ;	Receiver.c:394: while(data_r!='y')
+      00074F                       1809 00112$:
+      00074F 74 79            [12] 1810 	mov	a,#0x79
+      000751 B5 09 02         [24] 1811 	cjne	a,_data_r,00188$
+      000754 80 19            [24] 1812 	sjmp	00114$
+      000756                       1813 00188$:
+                                   1814 ;	Receiver.c:396: state=20;
+      000756 75 1A 14         [24] 1815 	mov	_state,#0x14
+      000759 75 1B 00         [24] 1816 	mov	(_state + 1),#0x00
+                                   1817 ;	Receiver.c:397: delay();
+      00075C 12 05 FB         [24] 1818 	lcall	_delay
+                                   1819 ;	Receiver.c:398: delay();
+      00075F 12 05 FB         [24] 1820 	lcall	_delay
+                                   1821 ;	Receiver.c:399: Transmit_data('x');
+      000762 75 82 78         [24] 1822 	mov	dpl,#0x78
+      000765 12 06 30         [24] 1823 	lcall	_Transmit_data
+                                   1824 ;	Receiver.c:400: data_r=SBUF;
+      000768 85 99 09         [24] 1825 	mov	_data_r,_SBUF
+                                   1826 ;	Receiver.c:401: RI = 0;
+                                   1827 ;	assignBit
+      00076B C2 98            [12] 1828 	clr	_RI
+      00076D 80 E0            [24] 1829 	sjmp	00112$
+      00076F                       1830 00114$:
+                                   1831 ;	Receiver.c:403: ES=1;break;
+                                   1832 ;	assignBit
+      00076F D2 AC            [12] 1833 	setb	_ES
+                                   1834 ;	Receiver.c:406: }//switch end
+      000771                       1835 00116$:
+                                   1836 ;	Receiver.c:409: if(serialCount>4000)
+      000771 C3               [12] 1837 	clr	c
+      000772 74 A0            [12] 1838 	mov	a,#0xa0
+      000774 95 0C            [12] 1839 	subb	a,_serialCount
+      000776 74 8F            [12] 1840 	mov	a,#(0x0f ^ 0x80)
+      000778 85 0D F0         [24] 1841 	mov	b,(_serialCount + 1)
+      00077B 63 F0 80         [24] 1842 	xrl	b,#0x80
+      00077E 95 F0            [12] 1843 	subb	a,b
+      000780 50 08            [24] 1844 	jnc	00119$
+                                   1845 ;	Receiver.c:410: {serialCount=0;data_r='q';}
+      000782 E4               [12] 1846 	clr	a
+      000783 F5 0C            [12] 1847 	mov	_serialCount,a
+      000785 F5 0D            [12] 1848 	mov	(_serialCount + 1),a
+      000787 75 09 71         [24] 1849 	mov	_data_r,#0x71
+      00078A                       1850 00119$:
+                                   1851 ;	Receiver.c:411: }
+      00078A 22               [24] 1852 	ret
+                                   1853 ;------------------------------------------------------------
+                                   1854 ;Allocation info for local variables in function 'InitTimer0'
+                                   1855 ;------------------------------------------------------------
+                                   1856 ;	Receiver.c:413: void InitTimer0(void)
+                                   1857 ;	-----------------------------------------
+                                   1858 ;	 function InitTimer0
+                                   1859 ;	-----------------------------------------
+      00078B                       1860 _InitTimer0:
+                                   1861 ;	Receiver.c:415: TMOD |= 0x01;    // Set timer0 in mode 1
+      00078B 43 89 01         [24] 1862 	orl	_TMOD,#0x01
+                                   1863 ;	Receiver.c:416: TH0 = 0xee;      // 5 msec reloading time
+      00078E 75 8C EE         [24] 1864 	mov	_TH0,#0xee
+                                   1865 ;	Receiver.c:417: TL0 = 0x00;      // First time value
+      000791 75 8A 00         [24] 1866 	mov	_TL0,#0x00
+                                   1867 ;	Receiver.c:418: TR0 = 1;         // Start Timer 1
+                                   1868 ;	assignBit
+      000794 D2 8C            [12] 1869 	setb	_TR0
+                                   1870 ;	Receiver.c:419: ET0 = 1;         // Enable Timer1 interrupts	
                                    1871 ;	assignBit
-      0007AA D2 AC            [12] 1872 	setb	_ES
-                                   1873 ;	Receiver.c:408: }//switch end
-      0007AC                       1874 00133$:
-                                   1875 ;	Receiver.c:411: if(serialCount>4000)
-      0007AC C3               [12] 1876 	clr	c
-      0007AD 74 A0            [12] 1877 	mov	a,#0xa0
-      0007AF 95 0C            [12] 1878 	subb	a,_serialCount
-      0007B1 74 8F            [12] 1879 	mov	a,#(0x0f ^ 0x80)
-      0007B3 85 0D F0         [24] 1880 	mov	b,(_serialCount + 1)
-      0007B6 63 F0 80         [24] 1881 	xrl	b,#0x80
-      0007B9 95 F0            [12] 1882 	subb	a,b
-      0007BB 50 08            [24] 1883 	jnc	00136$
-                                   1884 ;	Receiver.c:412: {serialCount=0;data_r='q';}
-      0007BD E4               [12] 1885 	clr	a
-      0007BE F5 0C            [12] 1886 	mov	_serialCount,a
-      0007C0 F5 0D            [12] 1887 	mov	(_serialCount + 1),a
-      0007C2 75 09 71         [24] 1888 	mov	_data_r,#0x71
-      0007C5                       1889 00136$:
-                                   1890 ;	Receiver.c:413: }
-      0007C5 22               [24] 1891 	ret
-                                   1892 ;------------------------------------------------------------
-                                   1893 ;Allocation info for local variables in function 'InitTimer0'
-                                   1894 ;------------------------------------------------------------
-                                   1895 ;	Receiver.c:415: void InitTimer0(void)
-                                   1896 ;	-----------------------------------------
-                                   1897 ;	 function InitTimer0
-                                   1898 ;	-----------------------------------------
-      0007C6                       1899 _InitTimer0:
-                                   1900 ;	Receiver.c:417: TMOD |= 0x01;    // Set timer0 in mode 1
-      0007C6 43 89 01         [24] 1901 	orl	_TMOD,#0x01
-                                   1902 ;	Receiver.c:418: TH0 = 0xee;      // 5 msec reloading time
-      0007C9 75 8C EE         [24] 1903 	mov	_TH0,#0xee
-                                   1904 ;	Receiver.c:419: TL0 = 0x00;      // First time value
-      0007CC 75 8A 00         [24] 1905 	mov	_TL0,#0x00
-                                   1906 ;	Receiver.c:420: TR0 = 1;         // Start Timer 1
-                                   1907 ;	assignBit
-      0007CF D2 8C            [12] 1908 	setb	_TR0
-                                   1909 ;	Receiver.c:421: ET0 = 1;         // Enable Timer1 interrupts	
-                                   1910 ;	assignBit
-      0007D1 D2 A9            [12] 1911 	setb	_ET0
-                                   1912 ;	Receiver.c:422: }
-      0007D3 22               [24] 1913 	ret
-                                   1914 ;------------------------------------------------------------
-                                   1915 ;Allocation info for local variables in function 'check_switches'
-                                   1916 ;------------------------------------------------------------
-                                   1917 ;	Receiver.c:424: void check_switches()
-                                   1918 ;	-----------------------------------------
-                                   1919 ;	 function check_switches
-                                   1920 ;	-----------------------------------------
-      0007D4                       1921 _check_switches:
-                                   1922 ;	Receiver.c:426: if(!ac_key)
-      0007D4 20 93 4F         [24] 1923 	jb	_P1_3,00111$
-                                   1924 ;	Receiver.c:428: if(!ac_key)
-      0007D7 20 93 4C         [24] 1925 	jb	_P1_3,00111$
-                                   1926 ;	Receiver.c:430: delay();
-      0007DA 12 05 F3         [24] 1927 	lcall	_delay
-                                   1928 ;	Receiver.c:431: ac_state++;		
-      0007DD 05 1E            [12] 1929 	inc	_ac_state
-                                   1930 ;	Receiver.c:432: if(ac_state==3)
-      0007DF 74 03            [12] 1931 	mov	a,#0x03
-      0007E1 B5 1E 03         [24] 1932 	cjne	a,_ac_state,00102$
-                                   1933 ;	Receiver.c:433: ac_state=0;
-      0007E4 75 1E 00         [24] 1934 	mov	_ac_state,#0x00
-      0007E7                       1935 00102$:
-                                   1936 ;	Receiver.c:434: switch(ac_state)
-      0007E7 E4               [12] 1937 	clr	a
-      0007E8 B5 1E 02         [24] 1938 	cjne	a,_ac_state,00191$
-      0007EB 80 0E            [24] 1939 	sjmp	00103$
-      0007ED                       1940 00191$:
-      0007ED 74 01            [12] 1941 	mov	a,#0x01
-      0007EF B5 1E 02         [24] 1942 	cjne	a,_ac_state,00192$
-      0007F2 80 16            [24] 1943 	sjmp	00104$
-      0007F4                       1944 00192$:
-      0007F4 74 02            [12] 1945 	mov	a,#0x02
-                                   1946 ;	Receiver.c:436: case 0:Transmit_data('l');ac_led_up=1;ac_led_down=1;delay();break;
-      0007F6 B5 1E 2D         [24] 1947 	cjne	a,_ac_state,00111$
-      0007F9 80 1E            [24] 1948 	sjmp	00105$
-      0007FB                       1949 00103$:
-      0007FB 75 82 6C         [24] 1950 	mov	dpl,#0x6c
-      0007FE 12 06 28         [24] 1951 	lcall	_Transmit_data
-                                   1952 ;	assignBit
-      000801 D2 A2            [12] 1953 	setb	_P2_2
-                                   1954 ;	assignBit
-      000803 D2 A3            [12] 1955 	setb	_P2_3
-      000805 12 05 F3         [24] 1956 	lcall	_delay
-                                   1957 ;	Receiver.c:437: case 1:Transmit_data('m');ac_led_up=1;ac_led_down=0;delay();break;
-      000808 80 1C            [24] 1958 	sjmp	00111$
-      00080A                       1959 00104$:
-      00080A 75 82 6D         [24] 1960 	mov	dpl,#0x6d
-      00080D 12 06 28         [24] 1961 	lcall	_Transmit_data
-                                   1962 ;	assignBit
-      000810 D2 A2            [12] 1963 	setb	_P2_2
-                                   1964 ;	assignBit
-      000812 C2 A3            [12] 1965 	clr	_P2_3
-      000814 12 05 F3         [24] 1966 	lcall	_delay
-                                   1967 ;	Receiver.c:438: case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;delay();break;
-      000817 80 0D            [24] 1968 	sjmp	00111$
-      000819                       1969 00105$:
-      000819 75 82 68         [24] 1970 	mov	dpl,#0x68
-      00081C 12 06 28         [24] 1971 	lcall	_Transmit_data
-                                   1972 ;	assignBit
-      00081F C2 A2            [12] 1973 	clr	_P2_2
-                                   1974 ;	assignBit
-      000821 D2 A3            [12] 1975 	setb	_P2_3
-      000823 12 05 F3         [24] 1976 	lcall	_delay
-                                   1977 ;	Receiver.c:440: }//switch end
-      000826                       1978 00111$:
-                                   1979 ;	Receiver.c:443: if(!dim_key)
-      000826 20 94 37         [24] 1980 	jb	_P1_4,00115$
-                                   1981 ;	Receiver.c:445: delay();
-      000829 12 05 F3         [24] 1982 	lcall	_delay
-                                   1983 ;	Receiver.c:447: dim_val = dim_val + 10;
-      00082C 74 0A            [12] 1984 	mov	a,#0x0a
-      00082E 25 12            [12] 1985 	add	a,_dim_val
-      000830 F5 12            [12] 1986 	mov	_dim_val,a
-      000832 E4               [12] 1987 	clr	a
-      000833 35 13            [12] 1988 	addc	a,(_dim_val + 1)
-      000835 F5 13            [12] 1989 	mov	(_dim_val + 1),a
-                                   1990 ;	Receiver.c:448: dim_val2=50-dim_val;
-      000837 74 32            [12] 1991 	mov	a,#0x32
-      000839 C3               [12] 1992 	clr	c
-      00083A 95 12            [12] 1993 	subb	a,_dim_val
-      00083C F5 14            [12] 1994 	mov	_dim_val2,a
-      00083E E4               [12] 1995 	clr	a
-      00083F 95 13            [12] 1996 	subb	a,(_dim_val + 1)
-      000841 F5 15            [12] 1997 	mov	(_dim_val2 + 1),a
-                                   1998 ;	Receiver.c:449: if(dim_val>50){dim_val=1;dim_val2=50;}
-      000843 C3               [12] 1999 	clr	c
-      000844 74 32            [12] 2000 	mov	a,#0x32
-      000846 95 12            [12] 2001 	subb	a,_dim_val
-      000848 74 80            [12] 2002 	mov	a,#(0x00 ^ 0x80)
-      00084A 85 13 F0         [24] 2003 	mov	b,(_dim_val + 1)
-      00084D 63 F0 80         [24] 2004 	xrl	b,#0x80
-      000850 95 F0            [12] 2005 	subb	a,b
-      000852 50 0C            [24] 2006 	jnc	00115$
-      000854 75 12 01         [24] 2007 	mov	_dim_val,#0x01
-      000857 75 13 00         [24] 2008 	mov	(_dim_val + 1),#0x00
-      00085A 75 14 32         [24] 2009 	mov	_dim_val2,#0x32
-      00085D 75 15 00         [24] 2010 	mov	(_dim_val2 + 1),#0x00
-      000860                       2011 00115$:
-                                   2012 ;	Receiver.c:452: if(!auto_key)
-      000860 20 92 05         [24] 2013 	jb	_P1_2,00117$
-                                   2014 ;	Receiver.c:454: delay();
-      000863 12 05 F3         [24] 2015 	lcall	_delay
-                                   2016 ;	Receiver.c:455: auto_flag=!auto_flag;
-      000866 B2 00            [12] 2017 	cpl	_auto_flag
-      000868                       2018 00117$:
-                                   2019 ;	Receiver.c:458: if(!pwr_key)
-      000868 20 97 28         [24] 2020 	jb	_P1_7,00122$
-                                   2021 ;	Receiver.c:460: delay();
-      00086B 12 05 F3         [24] 2022 	lcall	_delay
-                                   2023 ;	Receiver.c:461: delay();
-      00086E 12 05 F3         [24] 2024 	lcall	_delay
-                                   2025 ;	Receiver.c:462: delay();
-      000871 12 05 F3         [24] 2026 	lcall	_delay
-                                   2027 ;	Receiver.c:463: if(!pwr_key)
-      000874 20 97 1C         [24] 2028 	jb	_P1_7,00122$
-                                   2029 ;	Receiver.c:465: pwr_led=0;up_led_main =0;center_led =0;down_led_main=0;ac_led_up=0;ac_led_down=0;auto_led=0;
-                                   2030 ;	assignBit
-      000877 C2 A0            [12] 2031 	clr	_P2_0
+      000796 D2 A9            [12] 1872 	setb	_ET0
+                                   1873 ;	Receiver.c:420: }
+      000798 22               [24] 1874 	ret
+                                   1875 ;------------------------------------------------------------
+                                   1876 ;Allocation info for local variables in function 'check_switches'
+                                   1877 ;------------------------------------------------------------
+                                   1878 ;	Receiver.c:422: void check_switches()
+                                   1879 ;	-----------------------------------------
+                                   1880 ;	 function check_switches
+                                   1881 ;	-----------------------------------------
+      000799                       1882 _check_switches:
+                                   1883 ;	Receiver.c:424: if(!ac_key)
+      000799 20 93 47         [24] 1884 	jb	_P1_3,00111$
+                                   1885 ;	Receiver.c:426: delay();
+      00079C 12 05 FB         [24] 1886 	lcall	_delay
+                                   1887 ;	Receiver.c:427: if(!ac_key)
+      00079F 20 93 41         [24] 1888 	jb	_P1_3,00111$
+                                   1889 ;	Receiver.c:429: ac_state++;		
+      0007A2 05 1E            [12] 1890 	inc	_ac_state
+                                   1891 ;	Receiver.c:430: if(ac_state>=3)
+      0007A4 74 FD            [12] 1892 	mov	a,#0x100 - 0x03
+      0007A6 25 1E            [12] 1893 	add	a,_ac_state
+      0007A8 50 03            [24] 1894 	jnc	00102$
+                                   1895 ;	Receiver.c:431: ac_state=0;
+      0007AA 75 1E 00         [24] 1896 	mov	_ac_state,#0x00
+      0007AD                       1897 00102$:
+                                   1898 ;	Receiver.c:432: switch(ac_state)
+      0007AD E4               [12] 1899 	clr	a
+      0007AE B5 1E 02         [24] 1900 	cjne	a,_ac_state,00190$
+      0007B1 80 0E            [24] 1901 	sjmp	00103$
+      0007B3                       1902 00190$:
+      0007B3 74 01            [12] 1903 	mov	a,#0x01
+      0007B5 B5 1E 02         [24] 1904 	cjne	a,_ac_state,00191$
+      0007B8 80 13            [24] 1905 	sjmp	00104$
+      0007BA                       1906 00191$:
+      0007BA 74 02            [12] 1907 	mov	a,#0x02
+                                   1908 ;	Receiver.c:434: case 0:Transmit_data('l');ac_led_up=1;ac_led_down=1;break;
+      0007BC B5 1E 24         [24] 1909 	cjne	a,_ac_state,00111$
+      0007BF 80 18            [24] 1910 	sjmp	00105$
+      0007C1                       1911 00103$:
+      0007C1 75 82 6C         [24] 1912 	mov	dpl,#0x6c
+      0007C4 12 06 30         [24] 1913 	lcall	_Transmit_data
+                                   1914 ;	assignBit
+      0007C7 D2 A2            [12] 1915 	setb	_P2_2
+                                   1916 ;	assignBit
+      0007C9 D2 A3            [12] 1917 	setb	_P2_3
+                                   1918 ;	Receiver.c:435: case 1:Transmit_data('m');ac_led_up=1;ac_led_down=0;break;
+      0007CB 80 16            [24] 1919 	sjmp	00111$
+      0007CD                       1920 00104$:
+      0007CD 75 82 6D         [24] 1921 	mov	dpl,#0x6d
+      0007D0 12 06 30         [24] 1922 	lcall	_Transmit_data
+                                   1923 ;	assignBit
+      0007D3 D2 A2            [12] 1924 	setb	_P2_2
+                                   1925 ;	assignBit
+      0007D5 C2 A3            [12] 1926 	clr	_P2_3
+                                   1927 ;	Receiver.c:436: case 2:Transmit_data('h');ac_led_up=0;ac_led_down=1;break;
+      0007D7 80 0A            [24] 1928 	sjmp	00111$
+      0007D9                       1929 00105$:
+      0007D9 75 82 68         [24] 1930 	mov	dpl,#0x68
+      0007DC 12 06 30         [24] 1931 	lcall	_Transmit_data
+                                   1932 ;	assignBit
+      0007DF C2 A2            [12] 1933 	clr	_P2_2
+                                   1934 ;	assignBit
+      0007E1 D2 A3            [12] 1935 	setb	_P2_3
+                                   1936 ;	Receiver.c:438: }//switch end
+      0007E3                       1937 00111$:
+                                   1938 ;	Receiver.c:442: if(!dim_key)
+      0007E3 20 94 37         [24] 1939 	jb	_P1_4,00115$
+                                   1940 ;	Receiver.c:444: delay();
+      0007E6 12 05 FB         [24] 1941 	lcall	_delay
+                                   1942 ;	Receiver.c:446: dim_val = dim_val + 10;
+      0007E9 74 0A            [12] 1943 	mov	a,#0x0a
+      0007EB 25 12            [12] 1944 	add	a,_dim_val
+      0007ED F5 12            [12] 1945 	mov	_dim_val,a
+      0007EF E4               [12] 1946 	clr	a
+      0007F0 35 13            [12] 1947 	addc	a,(_dim_val + 1)
+      0007F2 F5 13            [12] 1948 	mov	(_dim_val + 1),a
+                                   1949 ;	Receiver.c:447: dim_val2=50-dim_val;
+      0007F4 74 32            [12] 1950 	mov	a,#0x32
+      0007F6 C3               [12] 1951 	clr	c
+      0007F7 95 12            [12] 1952 	subb	a,_dim_val
+      0007F9 F5 14            [12] 1953 	mov	_dim_val2,a
+      0007FB E4               [12] 1954 	clr	a
+      0007FC 95 13            [12] 1955 	subb	a,(_dim_val + 1)
+      0007FE F5 15            [12] 1956 	mov	(_dim_val2 + 1),a
+                                   1957 ;	Receiver.c:448: if(dim_val>50){dim_val=1;dim_val2=50;}
+      000800 C3               [12] 1958 	clr	c
+      000801 74 32            [12] 1959 	mov	a,#0x32
+      000803 95 12            [12] 1960 	subb	a,_dim_val
+      000805 74 80            [12] 1961 	mov	a,#(0x00 ^ 0x80)
+      000807 85 13 F0         [24] 1962 	mov	b,(_dim_val + 1)
+      00080A 63 F0 80         [24] 1963 	xrl	b,#0x80
+      00080D 95 F0            [12] 1964 	subb	a,b
+      00080F 50 0C            [24] 1965 	jnc	00115$
+      000811 75 12 01         [24] 1966 	mov	_dim_val,#0x01
+      000814 75 13 00         [24] 1967 	mov	(_dim_val + 1),#0x00
+      000817 75 14 32         [24] 1968 	mov	_dim_val2,#0x32
+      00081A 75 15 00         [24] 1969 	mov	(_dim_val2 + 1),#0x00
+      00081D                       1970 00115$:
+                                   1971 ;	Receiver.c:451: if(!auto_key)
+      00081D 20 92 05         [24] 1972 	jb	_P1_2,00117$
+                                   1973 ;	Receiver.c:453: delay();
+      000820 12 05 FB         [24] 1974 	lcall	_delay
+                                   1975 ;	Receiver.c:454: auto_flag=!auto_flag;
+      000823 B2 00            [12] 1976 	cpl	_auto_flag
+      000825                       1977 00117$:
+                                   1978 ;	Receiver.c:457: if(!pwr_key)
+      000825 20 97 28         [24] 1979 	jb	_P1_7,00122$
+                                   1980 ;	Receiver.c:459: delay();
+      000828 12 05 FB         [24] 1981 	lcall	_delay
+                                   1982 ;	Receiver.c:460: delay();
+      00082B 12 05 FB         [24] 1983 	lcall	_delay
+                                   1984 ;	Receiver.c:461: delay();
+      00082E 12 05 FB         [24] 1985 	lcall	_delay
+                                   1986 ;	Receiver.c:462: if(!pwr_key)
+      000831 20 97 1C         [24] 1987 	jb	_P1_7,00122$
+                                   1988 ;	Receiver.c:464: pwr_led=0;up_led_main =0;center_led =0;down_led_main=0;ac_led_up=0;ac_led_down=0;auto_led=0;
+                                   1989 ;	assignBit
+      000834 C2 A0            [12] 1990 	clr	_P2_0
+                                   1991 ;	assignBit
+      000836 C2 81            [12] 1992 	clr	_P0_1
+                                   1993 ;	assignBit
+      000838 C2 80            [12] 1994 	clr	_P0_0
+                                   1995 ;	assignBit
+      00083A C2 A6            [12] 1996 	clr	_P2_6
+                                   1997 ;	assignBit
+      00083C C2 A2            [12] 1998 	clr	_P2_2
+                                   1999 ;	assignBit
+      00083E C2 A3            [12] 2000 	clr	_P2_3
+                                   2001 ;	assignBit
+      000840 C2 A1            [12] 2002 	clr	_P2_1
+                                   2003 ;	Receiver.c:465: TR0 = 0;         // Stop Timer 1
+                                   2004 ;	assignBit
+      000842 C2 8C            [12] 2005 	clr	_TR0
+                                   2006 ;	Receiver.c:466: ET0 = 0;         // Enable Timer1 interrupts	
+                                   2007 ;	assignBit
+      000844 C2 A9            [12] 2008 	clr	_ET0
+                                   2009 ;	Receiver.c:467: delay();delay();
+      000846 12 05 FB         [24] 2010 	lcall	_delay
+      000849 12 05 FB         [24] 2011 	lcall	_delay
+                                   2012 ;	Receiver.c:468: pwr_out=1;
+                                   2013 ;	assignBit
+      00084C D2 87            [12] 2014 	setb	_P0_7
+                                   2015 ;	Receiver.c:469: shutdown:
+      00084E                       2016 00118$:
+                                   2017 ;	Receiver.c:470: goto shutdown;
+      00084E 80 FE            [24] 2018 	sjmp	00118$
+      000850                       2019 00122$:
+                                   2020 ;	Receiver.c:475: if(!manual_up_key)
+      000850 20 90 0D         [24] 2021 	jb	_P1_0,00127$
+                                   2022 ;	Receiver.c:477: up_led=1;
+                                   2023 ;	assignBit
+      000853 D2 A7            [12] 2024 	setb	_P2_7
+                                   2025 ;	Receiver.c:478: down_led=0;
+                                   2026 ;	assignBit
+      000855 C2 A4            [12] 2027 	clr	_P2_4
+                                   2028 ;	Receiver.c:479: up_led_main=1;
+                                   2029 ;	assignBit
+      000857 D2 81            [12] 2030 	setb	_P0_1
+                                   2031 ;	Receiver.c:480: center_led=0;
                                    2032 ;	assignBit
-      000879 C2 81            [12] 2033 	clr	_P0_1
-                                   2034 ;	assignBit
-      00087B C2 80            [12] 2035 	clr	_P0_0
-                                   2036 ;	assignBit
-      00087D C2 A6            [12] 2037 	clr	_P2_6
+      000859 C2 80            [12] 2033 	clr	_P0_0
+                                   2034 ;	Receiver.c:481: down_led_main=0;
+                                   2035 ;	assignBit
+      00085B C2 A6            [12] 2036 	clr	_P2_6
+                                   2037 ;	Receiver.c:482: TR0=0;
                                    2038 ;	assignBit
-      00087F C2 A2            [12] 2039 	clr	_P2_2
-                                   2040 ;	assignBit
-      000881 C2 A3            [12] 2041 	clr	_P2_3
-                                   2042 ;	assignBit
-      000883 C2 A1            [12] 2043 	clr	_P2_1
-                                   2044 ;	Receiver.c:466: TR0 = 0;         // Stop Timer 1
+      00085D C2 8C            [12] 2039 	clr	_TR0
+      00085F 22               [24] 2040 	ret
+      000860                       2041 00127$:
+                                   2042 ;	Receiver.c:485: else if(!manual_down_key)
+      000860 20 91 0D         [24] 2043 	jb	_P1_1,00124$
+                                   2044 ;	Receiver.c:487: up_led=0;
                                    2045 ;	assignBit
-      000885 C2 8C            [12] 2046 	clr	_TR0
-                                   2047 ;	Receiver.c:467: ET0 = 0;         // Enable Timer1 interrupts	
+      000863 C2 A7            [12] 2046 	clr	_P2_7
+                                   2047 ;	Receiver.c:488: down_led=1;
                                    2048 ;	assignBit
-      000887 C2 A9            [12] 2049 	clr	_ET0
-                                   2050 ;	Receiver.c:468: delay();delay();
-      000889 12 05 F3         [24] 2051 	lcall	_delay
-      00088C 12 05 F3         [24] 2052 	lcall	_delay
-                                   2053 ;	Receiver.c:469: pwr_out=1;
+      000865 D2 A4            [12] 2049 	setb	_P2_4
+                                   2050 ;	Receiver.c:489: up_led_main=0;
+                                   2051 ;	assignBit
+      000867 C2 81            [12] 2052 	clr	_P0_1
+                                   2053 ;	Receiver.c:490: center_led=0;
                                    2054 ;	assignBit
-      00088F D2 87            [12] 2055 	setb	_P0_7
-                                   2056 ;	Receiver.c:470: shutdown:
-      000891                       2057 00118$:
-                                   2058 ;	Receiver.c:471: goto shutdown;
-      000891 80 FE            [24] 2059 	sjmp	00118$
-      000893                       2060 00122$:
-                                   2061 ;	Receiver.c:476: if(!manual_up_key)
-      000893 20 90 0D         [24] 2062 	jb	_P1_0,00127$
-                                   2063 ;	Receiver.c:478: up_led=1;
-                                   2064 ;	assignBit
-      000896 D2 A7            [12] 2065 	setb	_P2_7
-                                   2066 ;	Receiver.c:479: down_led=0;
-                                   2067 ;	assignBit
-      000898 C2 A4            [12] 2068 	clr	_P2_4
-                                   2069 ;	Receiver.c:480: up_led_main=1;
-                                   2070 ;	assignBit
-      00089A D2 81            [12] 2071 	setb	_P0_1
-                                   2072 ;	Receiver.c:481: center_led=0;
-                                   2073 ;	assignBit
-      00089C C2 80            [12] 2074 	clr	_P0_0
-                                   2075 ;	Receiver.c:482: down_led_main=0;
-                                   2076 ;	assignBit
-      00089E C2 A6            [12] 2077 	clr	_P2_6
-                                   2078 ;	Receiver.c:483: TR0=0;
-                                   2079 ;	assignBit
-      0008A0 C2 8C            [12] 2080 	clr	_TR0
-      0008A2 22               [24] 2081 	ret
-      0008A3                       2082 00127$:
-                                   2083 ;	Receiver.c:486: else if(!manual_down_key)
-      0008A3 20 91 0D         [24] 2084 	jb	_P1_1,00124$
-                                   2085 ;	Receiver.c:488: up_led=0;
-                                   2086 ;	assignBit
-      0008A6 C2 A7            [12] 2087 	clr	_P2_7
-                                   2088 ;	Receiver.c:489: down_led=1;
-                                   2089 ;	assignBit
-      0008A8 D2 A4            [12] 2090 	setb	_P2_4
-                                   2091 ;	Receiver.c:490: up_led_main=0;
-                                   2092 ;	assignBit
-      0008AA C2 81            [12] 2093 	clr	_P0_1
-                                   2094 ;	Receiver.c:491: center_led=0;
-                                   2095 ;	assignBit
-      0008AC C2 80            [12] 2096 	clr	_P0_0
-                                   2097 ;	Receiver.c:492: down_led_main=1;
-                                   2098 ;	assignBit
-      0008AE D2 A6            [12] 2099 	setb	_P2_6
-                                   2100 ;	Receiver.c:493: TR0=0;
-                                   2101 ;	assignBit
-      0008B0 C2 8C            [12] 2102 	clr	_TR0
-      0008B2 22               [24] 2103 	ret
-      0008B3                       2104 00124$:
-                                   2105 ;	Receiver.c:498: TR0=1;
-                                   2106 ;	assignBit
-      0008B3 D2 8C            [12] 2107 	setb	_TR0
-                                   2108 ;	Receiver.c:501: }
-      0008B5 22               [24] 2109 	ret
-                                   2110 	.area CSEG    (CODE)
-                                   2111 	.area CONST   (CODE)
-                                   2112 	.area XINIT   (CODE)
-                                   2113 	.area CABS    (ABS,CODE)
+      000869 C2 80            [12] 2055 	clr	_P0_0
+                                   2056 ;	Receiver.c:491: down_led_main=1;
+                                   2057 ;	assignBit
+      00086B D2 A6            [12] 2058 	setb	_P2_6
+                                   2059 ;	Receiver.c:492: TR0=0;
+                                   2060 ;	assignBit
+      00086D C2 8C            [12] 2061 	clr	_TR0
+      00086F 22               [24] 2062 	ret
+      000870                       2063 00124$:
+                                   2064 ;	Receiver.c:497: TR0=1;
+                                   2065 ;	assignBit
+      000870 D2 8C            [12] 2066 	setb	_TR0
+                                   2067 ;	Receiver.c:500: }
+      000872 22               [24] 2068 	ret
+                                   2069 	.area CSEG    (CODE)
+                                   2070 	.area CONST   (CODE)
+                                   2071 	.area XINIT   (CODE)
+                                   2072 	.area CABS    (ABS,CODE)
